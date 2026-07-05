@@ -288,7 +288,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 .home__vignette{ position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
     radial-gradient(100vmax 70vmax at 50% 50%, transparent 45%, rgba(1,3,10,.45) 92%),
-    linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 20%, transparent 55%, rgba(1,3,10,.4) 100%);
+    linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 18%, transparent 46%, rgba(1,3,10,.55) 80%, rgba(1,3,10,.97) 100%);
 }
 
 /* Editorial eyebrow label — Söhne Mono Bold */
@@ -304,8 +304,8 @@ main, .nav, .footer{ position:relative; z-index:3; }
   font-family:"Söhne Breit", var(--font-sans);
   font-weight:800;
   line-height:.9;
-  letter-spacing:-.045em;
-  font-size:clamp(2.3rem, 8.9vw, 9.2rem);
+  letter-spacing:-.05em;
+  font-size:clamp(2.4rem, 8.9vw, 11rem);
   text-align:center;
   color:#fff;
   white-space:nowrap;
@@ -438,23 +438,15 @@ main, .nav, .footer{ position:relative; z-index:3; }
    blue glow + section vignette + card spotlights + drifting specks.
    ===================================================================== */
 .route:not(.route--home){ position:relative; overflow:hidden; }
-.route:not(.route--home)::before{ content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.6; }
+/* Fixed (viewport-anchored) so the glow is one smooth wash that never bands as
+   the tall route scrolls — a soft blue light from the top, fading down. */
+.route:not(.route--home)::before{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none; }
 .route:not(.route--home) > *{ position:relative; z-index:1; }
-.route--about::before{ background:
-  radial-gradient(50vmax 36vmax at 28% 22%, rgba(63,130,240,.16), transparent 60%),
-  radial-gradient(40vmax 30vmax at 78% 68%, rgba(30,80,180,.10), transparent 56%); }
-.route--meetings::before{ background:
-  radial-gradient(55vmax 40vmax at 68% 12%, rgba(50,110,220,.14), transparent 58%),
-  radial-gradient(36vmax 26vmax at 18% 72%, rgba(63,130,240,.10), transparent 52%); }
-.route--notes::before{ background:
-  radial-gradient(46vmax 34vmax at 38% 18%, rgba(40,100,210,.13), transparent 56%),
-  radial-gradient(32vmax 24vmax at 82% 58%, rgba(63,130,240,.08), transparent 52%); }
-.route--team::before{ background:
-  radial-gradient(50vmax 36vmax at 55% 26%, rgba(63,130,240,.15), transparent 58%),
-  radial-gradient(34vmax 24vmax at 20% 78%, rgba(30,80,180,.09), transparent 54%); }
-.route--join::before{ background:
-  radial-gradient(50vmax 40vmax at 44% 22%, rgba(50,110,220,.13), transparent 56%),
-  radial-gradient(34vmax 26vmax at 74% 76%, rgba(30,80,180,.10), transparent 52%); }
+.route--about::before{ background: radial-gradient(90vmax 62vmax at 30% -6%, rgba(63,130,240,.13), transparent 66%); }
+.route--meetings::before{ background: radial-gradient(90vmax 62vmax at 64% -6%, rgba(50,110,220,.12), transparent 66%); }
+.route--notes::before{ background: radial-gradient(90vmax 62vmax at 40% -6%, rgba(45,100,205,.12), transparent 64%); }
+.route--team::before{ background: radial-gradient(90vmax 62vmax at 56% -6%, rgba(63,130,240,.13), transparent 66%); }
+.route--join::before{ background: radial-gradient(90vmax 62vmax at 46% -6%, rgba(50,110,220,.12), transparent 64%); }
 
 /* Section vignette — content reads as lit from the centre */
 .route:not(.route--home) .chapter{ position:relative; }
@@ -777,9 +769,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    ===================================================================== */
 .join{ display:grid; grid-template-columns:1.05fr 1fr; gap:clamp(2.5rem,5vw,4rem); align-items:start; margin-bottom:5rem; }
 /* When&Where + Next meeting on the left; Contact + Elsewhere stacked to the right */
-.join__pair{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.5rem,3vw,2.5rem); align-items:start; margin-top:.4rem; }
+.join__pair{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.5rem,3vw,2.5rem); align-items:start; margin-top:.2rem; }
 .join__pair-a, .join__pair-b{ display:flex; flex-direction:column; min-width:0; }
 .join__pair-b .field:first-of-type{ border-top:1px solid var(--line-2); }
+/* Calmer, tighter rhythm so the two columns don't feel gappy/lopsided */
+.join__pair .field{ padding:1.25rem 0; }
+.join__pair-a .nextmeet{ margin-top:.9rem; }
+.join__pair-b .field__head{ margin-bottom:.7rem; }
+.join__pair-b .field__v{ font-size:1rem; margin-bottom:.2rem; }
+.join__pair-b .field__mail{ font-size:1rem; }
 
 .join__benefits{ margin:.4rem 0 1.6rem; padding:0; display:grid; gap:.55rem; }
 .join__benefits li{ display:grid; grid-template-columns:22px 1fr; gap:.7rem; align-items:baseline; color:var(--ink); font-size:1.02rem; line-height:1.5; }
@@ -931,6 +929,27 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .footer__nav a{ font-size:.92rem; color:var(--ink-soft); transition:color .2s var(--ease); }
 .footer__nav a:hover{ color:var(--accent); }
 .footer__legal{ margin:0; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.02em; color:var(--ink-mute); text-align:right; text-transform:none; }
+
+/* =====================================================================
+   HEAVY DISPLAY SANS — the hero wordmark face carried across section and
+   card titles for a bolder, more consistent hierarchy (overrides the serif
+   defaults; placed after all component rules so it wins the cascade).
+   ===================================================================== */
+.chapter__title,
+.field__title,
+.signup__title,
+.modal__title,
+.route__next-title,
+.mcard__title,
+.ncard__title,
+.tcard__name,
+.arc__title{
+  font-family:"Söhne Breit", var(--font-sans);
+  font-weight:700;
+  letter-spacing:-.025em;
+}
+.chapter__title{ font-weight:800; font-size:clamp(2.5rem,7vw,5.4rem); line-height:1; }
+.mcard__title, .tcard__name, .ncard__title{ line-height:1.12; }
 
 /* =====================================================================
    RESPONSIVE
