@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Astrophysics Club · Fremont High School, Sunnyvale CA</title>
+<meta name="description" content="The Astrophysics Club at Fremont High School, Sunnyvale. Thirteen meetings from the scale of the universe to the edges of time." />
+<meta name="theme-color" content="#04070F" />
+<meta property="og:title" content="Astrophysics Club · Fremont High School" />
+<meta property="og:description" content="From the scale of the universe to the edges of time. A student-run astrophysics club in Sunnyvale." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2304070F'/%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23BCD7FF' stroke-width='1.3'/%3E%3Ccircle cx='18' cy='15' r='4.6' fill='none' stroke='%23BCD7FF' stroke-width='1.3'/%3E%3Cellipse cx='18' cy='15' rx='8.5' ry='2.8' fill='none' stroke='%23BCD7FF' stroke-width='1.1' transform='rotate(-20 18 15)'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<!-- Instrument Serif (display) from Google Fonts. Söhne (body) + Söhne Mono (labels)
+     load from local assets/fonts/*.woff2 via @font-face in styles.css. -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<!-- KaTeX renders the drifting hero equations as real LaTeX. Loaded from CDN so
+     it's cached across sessions; equations render once on load then just animate. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#/">Skip to content</a>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span><span class="cursor__label"></span></div>
+
+<!-- Warp bloom (light-speed transition center flash) -->
+<div class="warp-bloom" id="warpBloom" aria-hidden="true"></div>
+<!-- Light-speed intro (CSS lines radiating from center; generated on load) -->
+<div class="warp-intro" id="warpIntro" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#/" data-route="/" aria-label="Astrophysics Club, home">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="17.5" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".5"/>
+        <circle cx="23" cy="18.5" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <ellipse cx="23" cy="18.5" rx="10.6" ry="3.2" fill="none" stroke="currentColor" stroke-width="1.1" transform="rotate(-22 23 18.5)"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__title">Astrophysics&nbsp;Club</span>
+      </span>
+    </a>
+
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <a href="#/about"    data-route="/about">About</a>
+      <a href="#/meetings" data-route="/meetings">Meetings</a>
+      <a href="#/notes"    data-route="/notes">Notes</a>
+      <a href="#/team"     data-route="/team">Team</a>
+      <a href="#/join"     data-route="/join" class="nav__cta">Join</a>
+    </nav>
+
+    <div class="nav__social" aria-label="Social links">
+      <a class="nav__soc nav__soc--ig" href="https://www.instagram.com/fhs.astrophysicsclub/" target="_blank" rel="noopener" aria-label="Follow on Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <radialGradient id="igNav" cx="30%" cy="107%" r="150%">
+              <stop offset="0%"  stop-color="#FDD35C"/>
+              <stop offset="10%" stop-color="#FDD35C"/>
+              <stop offset="28%" stop-color="#F8823C"/>
+              <stop offset="50%" stop-color="#E1306C"/>
+              <stop offset="72%" stop-color="#C13584"/>
+              <stop offset="100%" stop-color="#5B51D8"/>
+            </radialGradient>
+          </defs>
+          <rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="url(#igNav)" stroke-width="1.9"/>
+          <circle cx="12" cy="12" r="4" fill="none" stroke="url(#igNav)" stroke-width="1.9"/>
+          <circle cx="17.4" cy="6.6" r="1.25" fill="url(#igNav)"/>
+        </svg>
+      </a>
+      <a class="nav__soc nav__soc--dc" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener" aria-label="Join on Discord">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="#5865F2">
+          <path d="M20 5.3A17 17 0 0 0 15.7 4l-.2.4a12.6 12.6 0 0 1 3.8 1.9 12 12 0 0 0-10.6 0A12.6 12.6 0 0 1 12.5 4.4L12.3 4A17 17 0 0 0 8 5.3C5.6 8.9 4.9 12.4 5.2 15.8a17 17 0 0 0 5.2 2.6l.4-.6c-.6-.2-1.2-.5-1.7-.8l.4-.3a9.2 9.2 0 0 0 8 0l.4.3c-.5.3-1.1.6-1.7.8l.4.6a17 17 0 0 0 5.2-2.6c.4-4-.7-7.4-2.4-10.5ZM9.7 14c-.8 0-1.5-.8-1.5-1.7s.6-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm4.6 0c-.8 0-1.5-.8-1.5-1.7s.6-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/>
+        </svg>
+      </a>
+    </div>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__ticker" aria-hidden="true">
+    <span class="nav__ticker-inner" id="ticker"></span>
+  </div>
+</header>
+
+<main class="router" id="router">
+
+<!-- ==================================================================
+     ROUTE - HOME (serif wordmark + astronaut + Earth)
+     ================================================================== -->
+<section class="route route--home" data-route="/">
+  <div class="home">
+
+    <div class="home__glow" aria-hidden="true"></div>
+
+    <!-- Animated cosmic backdrop: a black hole with a spinning accretion disk, a
+         star being born (pulsing nebula), a dying star (periodic supernova flash),
+         a drifting spaceship, and pulsar points. Subtle + slow so it's alive
+         without being busy. Parallaxes with the cursor (see initHeroInteractions). -->
+    <div class="home__cosmos" aria-hidden="true">
+      <span class="cosmo cosmo--blackhole"></span>
+      <span class="cosmo cosmo--nebula"></span>
+      <span class="cosmo cosmo--supernova"></span>
+      <span class="cosmo cosmo--pulsar cosmo--pulsar-a"></span>
+      <span class="cosmo cosmo--pulsar cosmo--pulsar-b"></span>
+      <span class="cosmo cosmo--ship">
+        <svg viewBox="0 0 210 76" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sh-hull" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F4F8FF"/><stop offset=".5" stop-color="#C6D0E0"/><stop offset="1" stop-color="#79839B"/>
+            </linearGradient>
+            <linearGradient id="sh-wing" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#B4BFD2"/><stop offset="1" stop-color="#525B70"/>
+            </linearGradient>
+            <linearGradient id="sh-fin" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#CBD4E4"/><stop offset="1" stop-color="#6A7488"/>
+            </linearGradient>
+            <radialGradient id="sh-glass" cx="38%" cy="30%" r="82%">
+              <stop offset="0" stop-color="#EAF4FF"/><stop offset=".45" stop-color="#5F98EC"/><stop offset="1" stop-color="#0E2E5E"/>
+            </radialGradient>
+            <radialGradient id="sh-core" cx="84%" cy="50%" r="62%">
+              <stop offset="0" stop-color="#FFFFFF"/><stop offset=".3" stop-color="#FFEBA6"/><stop offset=".66" stop-color="#FF9A3C"/><stop offset="1" stop-color="rgba(255,120,40,0)"/>
+            </radialGradient>
+            <radialGradient id="sh-halo" cx="86%" cy="50%" r="60%">
+              <stop offset="0" stop-color="rgba(150,190,255,.9)"/><stop offset="1" stop-color="rgba(120,170,255,0)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- thruster flares (twin engines, behind the hull) -->
+          <g class="cosmo__thrust">
+            <ellipse cx="42" cy="29" rx="40" ry="8.5" fill="url(#sh-halo)"/>
+            <ellipse cx="38" cy="29" rx="27" ry="4.6" fill="url(#sh-core)"/>
+            <ellipse cx="42" cy="47" rx="40" ry="8.5" fill="url(#sh-halo)"/>
+            <ellipse cx="38" cy="47" rx="27" ry="4.6" fill="url(#sh-core)"/>
+          </g>
+
+          <!-- swept rear fins -->
+          <path d="M86,30 L112,9 L132,28 Z"  fill="url(#sh-fin)"/>
+          <path d="M86,46 L112,67 L132,48 Z" fill="url(#sh-fin)"/>
+          <!-- delta wing sweeping back from mid-hull -->
+          <path d="M150,44 L104,44 L92,60 L138,56 Z" fill="url(#sh-wing)"/>
+
+          <!-- engine block -->
+          <rect x="52" y="24" width="26" height="28" rx="9" fill="url(#sh-wing)"/>
+          <circle cx="60" cy="31" r="2.4" fill="#3f4859"/>
+          <circle cx="60" cy="45" r="2.4" fill="#3f4859"/>
+
+          <!-- fuselage -->
+          <path d="M64,24 C108,15 156,17 194,38 C156,59 108,61 64,52 C56,45 56,31 64,24 Z"
+                fill="url(#sh-hull)" stroke="#8893A9" stroke-width="1"/>
+          <!-- hull panel seams -->
+          <path d="M76,28 q60,-5 112,10 M76,48 q60,5 112,-10" fill="none" stroke="rgba(88,98,120,.4)" stroke-width="1"/>
+          <path d="M120,22 L120,54" stroke="rgba(88,98,120,.28)" stroke-width="1"/>
+
+          <!-- cockpit canopy -->
+          <ellipse cx="156" cy="38" rx="21" ry="10" fill="url(#sh-glass)" stroke="#3A6AB0" stroke-width="1"/>
+          <ellipse cx="149" cy="34" rx="7" ry="3.2" fill="rgba(255,255,255,.6)"/>
+          <!-- nose sheen -->
+          <path d="M168,31 C182,33 190,36 194,38 C190,40 182,43 168,45" fill="rgba(255,255,255,.3)"/>
+
+          <!-- running lights + antenna -->
+          <circle class="cosmo__navlight cosmo__navlight--r" cx="120" cy="20" r="2.3" fill="#ff5a5a"/>
+          <circle class="cosmo__navlight cosmo__navlight--g" cx="120" cy="56" r="2.3" fill="#5affa0"/>
+          <path d="M128,18 L133,7" stroke="#9aa4b3" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="133" cy="6" r="1.8" fill="#BCD7FF"/>
+        </svg>
+      </span>
+    </div>
+
+    <!-- Drifting astrophysics equations that fade in and out behind the wordmark.
+         Rendered as real LaTeX by KaTeX on load (see initHeroEquations in app.js).
+         `data-tex` is the source; the fallback text inside is what shows if KaTeX
+         hasn't loaded yet, and gets overwritten the moment it does. Positions +
+         durations + negative delays are deliberately spread so the whole grid is
+         always mid-fade — one continuous seamless loop, no visible "reset". -->
+    <div class="home__equations" aria-hidden="true">
+      <span class="eqn" data-tex="E = mc^2"                                                                                     style="--x:6%;  --y:14%; --dur:15s; --delay:-1s;"></span>
+      <span class="eqn" data-tex="R_s = \tfrac{2GM}{c^2}"                                                                        style="--x:78%; --y:11%; --dur:19s; --delay:-4s;"></span>
+      <span class="eqn" data-tex="F = \tfrac{G m_1 m_2}{r^2}"                                                                    style="--x:16%; --y:62%; --dur:21s; --delay:-8s;"></span>
+      <span class="eqn" data-tex="\lambda = \tfrac{h}{p}"                                                                        style="--x:86%; --y:56%; --dur:17s; --delay:-2s;"></span>
+      <span class="eqn" data-tex="\Omega_m + \Omega_\Lambda = 1"                                                                 style="--x:52%; --y:78%; --dur:23s; --delay:-11s;"></span>
+      <span class="eqn" data-tex="\Delta t' = \tfrac{\Delta t}{\sqrt{1 - v^2/c^2}}"                                              style="--x:32%; --y:32%; --dur:18s; --delay:-6s;"></span>
+      <span class="eqn" data-tex="L = 4\pi R^2 \sigma T^4"                                                                       style="--x:63%; --y:38%; --dur:20s; --delay:-14s;"></span>
+      <span class="eqn" data-tex="\rho_c = \tfrac{3H^2}{8\pi G}"                                                                 style="--x:4%;  --y:44%; --dur:22s; --delay:-9s;"></span>
+      <span class="eqn" data-tex="G_{\mu\nu} = 8\pi G\, T_{\mu\nu}"                                                              style="--x:90%; --y:82%; --dur:19s; --delay:-16s;"></span>
+      <span class="eqn" data-tex="c \approx 3 \times 10^{8}\ \text{m/s}"                                                         style="--x:44%; --y:8%;  --dur:24s; --delay:-13s;"></span>
+      <span class="eqn" data-tex="E^2 = (pc)^2 + (mc^2)^2"                                                                       style="--x:22%; --y:22%; --dur:16s; --delay:-3s;"></span>
+      <span class="eqn" data-tex="H^2 = \tfrac{8\pi G}{3}\rho"                                                                   style="--x:70%; --y:26%; --dur:20s; --delay:-7s;"></span>
+      <span class="eqn" data-tex="\tfrac{1}{\lambda} = R\!\left(\tfrac{1}{n_1^2} - \tfrac{1}{n_2^2}\right)"                       style="--x:11%; --y:82%; --dur:22s; --delay:-5s;"></span>
+      <span class="eqn" data-tex="v_{\text{esc}} = \sqrt{\tfrac{2GM}{R}}"                                                        style="--x:38%; --y:52%; --dur:17s; --delay:-10s;"></span>
+      <span class="eqn" data-tex="T_H = \tfrac{\hbar c^3}{8\pi G M k_B}"                                                         style="--x:82%; --y:38%; --dur:21s; --delay:-15s;"></span>
+      <span class="eqn" data-tex="1 + z = \tfrac{a_0}{a}"                                                                        style="--x:56%; --y:20%; --dur:15s; --delay:-2s;"></span>
+      <span class="eqn" data-tex="N(t) = N_0\, e^{-\lambda t}"                                                                   style="--x:5%;  --y:70%; --dur:19s; --delay:-12s;"></span>
+      <span class="eqn" data-tex="\lambda_{\max} T = 2.898 \times 10^{-3}\ \text{m·K}"                                            style="--x:64%; --y:66%; --dur:23s; --delay:-8s;"></span>
+      <span class="eqn" data-tex="v_{\text{orb}} = \sqrt{\tfrac{GM}{r}}"                                                         style="--x:28%; --y:88%; --dur:18s; --delay:-17s;"></span>
+      <span class="eqn" data-tex="M_{\text{Ch}} \approx 1.4\, M_\odot"                                                           style="--x:92%; --y:20%; --dur:20s; --delay:-4s;"></span>
+      <span class="eqn" data-tex="H_0 \approx 70\ \text{km/s/Mpc}"                                                               style="--x:48%; --y:46%; --dur:22s; --delay:-19s;"></span>
+      <span class="eqn" data-tex="\ell_p = \sqrt{\tfrac{\hbar G}{c^3}}"                                                          style="--x:76%; --y:74%; --dur:16s; --delay:-6s;"></span>
+      <span class="eqn" data-tex="B_\nu = \tfrac{2h\nu^3/c^2}{e^{h\nu/kT}-1}"                                                    style="--x:14%; --y:36%; --dur:24s; --delay:-11s;"></span>
+      <span class="eqn" data-tex="\tfrac{L}{L_\odot} = \left(\tfrac{M}{M_\odot}\right)^{3.5}"                                     style="--x:88%; --y:64%; --dur:19s; --delay:-3s;"></span>
+      <span class="eqn" data-tex="\nabla^2 \phi = 4\pi G \rho"                                                                   style="--x:34%; --y:70%; --dur:17s; --delay:-14s;"></span>
+      <span class="eqn" data-tex="p = \tfrac{mv}{\sqrt{1 - v^2/c^2}}"                                                            style="--x:66%; --y:88%; --dur:21s; --delay:-9s;"></span>
+      <span class="eqn" data-tex="\tfrac{\Delta\nu}{\nu} = \tfrac{v}{c}"                                                         style="--x:20%; --y:12%; --dur:15s; --delay:-16s;"></span>
+      <span class="eqn" data-tex="\Lambda \approx 10^{-52}\ \text{m}^{-2}"                                                       style="--x:96%; --y:44%; --dur:23s; --delay:-5s;"></span>
+      <span class="eqn" data-tex="t_p = \sqrt{\tfrac{\hbar G}{c^5}}"                                                             style="--x:50%; --y:60%; --dur:20s; --delay:-18s;"></span>
+      <span class="eqn" data-tex="S = \tfrac{k_B c^3 A}{4 \hbar G}"                                                              style="--x:8%;  --y:26%; --dur:18s; --delay:-7s;"></span>
+      <span class="eqn" data-tex="\rho + 3p/c^2 \gtrless 0"                                                                       style="--x:42%; --y:24%; --dur:16s; --delay:-13s;"></span>
+      <span class="eqn" data-tex="a(t) \propto t^{2/3}"                                                                          style="--x:74%; --y:50%; --dur:22s; --delay:-2s;"></span>
+      <span class="eqn" data-tex="\Delta E \Delta t \gtrsim \tfrac{\hbar}{2}"                                                    style="--x:26%; --y:44%; --dur:19s; --delay:-15s;"></span>
+      <span class="eqn" data-tex="T \propto 1/a(t)"                                                                              style="--x:60%; --y:10%; --dur:14s; --delay:-6s;"></span>
+      <span class="eqn" data-tex="\Delta \phi = \tfrac{4GM}{c^2 b}"                                                              style="--x:10%; --y:54%; --dur:23s; --delay:-10s;"></span>
+      <span class="eqn" data-tex="M \dot v = -\dot M v_e"                                                                        style="--x:72%; --y:82%; --dur:17s; --delay:-1s;"></span>
+    </div>
+
+    <p class="home__eyebrow">Fremont High School · Sunnyvale, California</p>
+
+    <div class="home__stage">
+      <h1 class="home__title" aria-label="Astrophysics Club"><span>Astrophysics</span> <span>Club</span></h1>
+      <!-- Astronaut floating in front of the letters. Wrapper carries the position,
+           filter, glow aura (::before) and JS ragdoll transforms; the <img> is the art. -->
+      <div class="home__astro-wrap" aria-hidden="true">
+        <img class="home__astro" src="assets/astronaut.png" alt="" aria-hidden="true" draggable="false" onerror="this.style.visibility='hidden'" />
+      </div>
+    </div>
+
+    <!-- Upward atmosphere beam glowing from the Earth into the starfield -->
+    <div class="home__beam" aria-hidden="true"></div>
+
+    <!-- Orbital rings behind the planet -->
+    <svg class="home__rings" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <g fill="none" stroke="rgba(150,190,255,.14)">
+        <ellipse cx="800" cy="1120" rx="560" ry="540" stroke-width="1"/>
+        <ellipse cx="800" cy="1120" rx="720" ry="690" stroke-width="1" opacity=".7"/>
+        <ellipse cx="800" cy="1120" rx="880" ry="840" stroke-width="1" opacity=".45"/>
+      </g>
+    </svg>
+
+    <!-- Earth curve at bottom -->
+    <div class="home__earth-wrap" aria-hidden="true">
+      <div class="home__earth-glow"></div>
+      <div class="home__earth">
+        <div class="home__earth-clouds"></div>
+        <div class="home__earth-terminator"></div>
+        <div class="home__earth-limb"></div>
+      </div>
+    </div>
+
+    <div class="home__vignette" aria-hidden="true"></div>
+
+    <div class="home__foot">
+      <p class="home__tag">From the scale of the universe to the edges of time.</p>
+      <div class="home__actions">
+        <a class="btn btn--solid magnetic" href="#/meetings" data-route="/meetings">
+          <span class="btn__label">Enter the archive</span>
+          <span class="btn__arw" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn--ghost magnetic" href="#/join" data-route="/join">Join the club</a>
+      </div>
+    </div>
+
+    <a class="home__scroll" href="#/about" data-route="/about">
+      <span class="home__scroll-line"></span>Scroll
+    </a>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - ABOUT
+     ================================================================== -->
+<section class="route route--about" data-route="/about">
+  <div class="chapter">
+    <h1 class="chapter__title split-chars">About</h1>
+    <p class="chapter__lede">A curiosity-first club for the cosmos.</p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="about section-in">
+      <div class="about__lead">
+        <p class="lede reveal">
+          The Astrophysics Club is a student-run club at Fremont High School. We meet every
+          other Wednesday to work through real astrophysics: the physics behind stars, black
+          holes, exoplanets, relativity and cosmology, from first principles to real data.
+        </p>
+        <p class="reveal about__note">
+          Everything below is drawn from the club's real record: thirteen meetings, sixteen
+          handouts, one year that ran from the scale of the universe to the edges of time.
+        </p>
+      </div>
+
+      <ul class="readout reveal" aria-label="Club at a glance">
+        <li><span class="readout__k">Meetings held</span><span class="readout__v odom" data-count="13">00</span></li>
+        <li><span class="readout__k">Lecture handouts</span><span class="readout__v odom" data-count="16">00</span></li>
+        <li><span class="readout__k">Officers</span><span class="readout__v odom" data-count="3">00</span></li>
+        <li><span class="readout__k">Questions asked</span><span class="readout__v">∞</span></li>
+      </ul>
+    </div>
+
+    <div class="arc reveal section-in">
+      <div class="arc__head">
+        <h2 class="arc__title">The Year, In One Arc</h2>
+      </div>
+      <div class="arc__scroller">
+        <div class="arc__track" id="arcTrack"></div>
+      </div>
+    </div>
+
+    <div class="goals section-in">
+      <div class="goals__head"><h2 class="goals__title">What We Do</h2></div>
+      <ol class="goal-grid">
+        <li class="goal reveal" style="--i:0"><span class="goal__idx">01</span><h3 class="goal__t">Lectures</h3><p>Every topic comes with a typeset LaTeX handout you can keep.</p></li>
+        <li class="goal reveal" style="--i:1"><span class="goal__idx">02</span><h3 class="goal__t">Data labs</h3><p>Hands-on sessions with real telescope data in Python.</p></li>
+        <li class="goal reveal" style="--i:2"><span class="goal__idx">03</span><h3 class="goal__t">Problem sets</h3><p>Worked activities and answer keys to test what stuck.</p></li>
+      </ol>
+    </div>
+
+    <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/meetings" data-route="/meetings">
+        <span class="mono dim">Continue</span>
+        <span class="route__next-title">Meeting Archive</span>
+        <span class="route__next-arw" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - MEETINGS
+     ================================================================== -->
+<section class="route route--meetings" data-route="/meetings">
+  <div class="chapter">
+    <span class="chapter__kicker">Year One · 2025–2026</span>
+    <h1 class="chapter__title split-chars">Meeting Archive</h1>
+    <p class="chapter__lede">Every meeting, every slide deck. <br/><span class="dim">Thirteen sessions. Click a card to preview the deck before downloading.</span></p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="meetings-index reveal" id="meetingsIndex" aria-label="Meeting index"></div>
+    <div class="meetings" id="meetingsGrid"></div>
+    <noscript><p class="dim">Enable JavaScript to browse the archive.</p></noscript>
+
+    <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/notes" data-route="/notes">
+        <span class="mono dim">Continue</span>
+        <span class="route__next-title">Lecture Notes</span>
+        <span class="route__next-arw" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - NOTES
+     ================================================================== -->
+<section class="route route--notes" data-route="/notes">
+  <div class="chapter">
+    <span class="chapter__kicker">Year One · 16 documents</span>
+    <h1 class="chapter__title split-chars">Lecture Notes</h1>
+    <p class="chapter__lede">Typeset handouts, written by us. <br/><span class="dim">Sixteen LaTeX documents. Hover a card to see its topics.</span></p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="notes-filter reveal" id="notesFilter"></div>
+    <div class="notes-grid" id="notesGrid"></div>
+
+    <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/team" data-route="/team">
+        <span class="mono dim">Continue</span>
+        <span class="route__next-title">The Team</span>
+        <span class="route__next-arw" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - TEAM
+     ================================================================== -->
+<section class="route route--team" data-route="/team">
+  <div class="chapter">
+    <h1 class="chapter__title split-chars">The Team</h1>
+    <p class="chapter__lede">The officers. <br/><span class="dim">The students who run the club.</span></p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="team-grid" id="teamGrid"></div>
+
+    <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/join" data-route="/join">
+        <span class="mono dim">Continue</span>
+        <span class="route__next-title">Get Involved</span>
+        <span class="route__next-arw" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - JOIN
+     ================================================================== -->
+<section class="route route--join" data-route="/join">
+  <div class="chapter">
+    <h1 class="chapter__title split-chars">Come Find Us</h1>
+    <p class="chapter__lede">Every other Wednesday, during lunch. Room 153.</p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="join">
+      <div class="join__col reveal">
+        <ul class="join__benefits">
+          <li><span><b>Real astrophysics.</b> Lectures, data labs, and problem sets from first principles.</span></li>
+          <li><span><b>Typeset notes.</b> Every meeting comes with a LaTeX handout you get to keep.</span></li>
+          <li><span><b>Low-pressure.</b> No prerequisites. Come for one meeting. Or every meeting.</span></li>
+          <li><span><b>Snacks provided at every meeting.</b> Come hungry.</span></li>
+        </ul>
+
+        <div class="join__pair">
+        <div class="join__pair-a">
+        <div class="field">
+          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">When &amp; Where</h2></div>
+          <p class="field__v">Every other Wednesday, during lunch.</p>
+          <p class="field__sub">Room 153. Mr. Bob's room, engineering building.</p>
+        </div>
+
+        <div class="nextmeet" id="nextMeeting">
+          <span class="nextmeet__k">§ Next meeting</span>
+          <ul class="nextmeet__grid">
+            <li><span class="nextmeet__label">Date</span><span class="nextmeet__val">TBA</span></li>
+            <li><span class="nextmeet__label">Time</span><span class="nextmeet__val">TBA</span></li>
+            <li><span class="nextmeet__label">Topic</span><span class="nextmeet__val">TBA</span></li>
+          </ul>
+          <p class="nextmeet__note">Check back soon. Or get on the list and we'll email you.</p>
+        </div>
+        </div>
+
+        <div class="join__pair-b">
+        <div class="field">
+          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Contact</h2></div>
+          <p class="field__v">
+            <a class="ulink field__mail js-copy" href="mailto:amehta251@student.fuhsd.org" data-copy="amehta251@student.fuhsd.org">amehta251@student.fuhsd.org</a>
+            <button class="field__copy js-copy-btn" data-copy="amehta251@student.fuhsd.org" aria-label="Copy Abir's email address" title="Copy email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+            </button>
+          </p>
+          <p class="field__v">
+            <a class="ulink field__mail js-copy" href="mailto:dlagu234@student.fuhsd.org" data-copy="dlagu234@student.fuhsd.org">dlagu234@student.fuhsd.org</a>
+            <button class="field__copy js-copy-btn" data-copy="dlagu234@student.fuhsd.org" aria-label="Copy Dhruv's email address" title="Copy email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+            </button>
+          </p>
+        </div>
+
+        <div class="field">
+          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Elsewhere</h2></div>
+          <div class="socials">
+            <a class="slink slink--ig" href="https://www.instagram.com/fhs.astrophysicsclub/" target="_blank" rel="noopener" aria-label="Follow the club on Instagram at fhs.astrophysicsclub">
+              <span class="slink__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </span>
+              <span class="slink__name">Instagram</span>
+              <span class="slink__arw" aria-hidden="true">↗</span>
+            </a>
+            <a class="slink slink--dc" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener" aria-label="Join the club on Discord">
+              <span class="slink__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 5.3A17 17 0 0 0 15.7 4l-.2.4a12.6 12.6 0 0 1 3.8 1.9 12 12 0 0 0-10.6 0A12.6 12.6 0 0 1 12.5 4.4L12.3 4A17 17 0 0 0 8 5.3C5.6 8.9 4.9 12.4 5.2 15.8a17 17 0 0 0 5.2 2.6l.4-.6c-.6-.2-1.2-.5-1.7-.8l.4-.3a9.2 9.2 0 0 0 8 0l.4.3c-.5.3-1.1.6-1.7.8l.4.6a17 17 0 0 0 5.2-2.6c.4-4-.7-7.4-2.4-10.5ZM9.7 14c-.8 0-1.5-.8-1.5-1.7s.6-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm4.6 0c-.8 0-1.5-.8-1.5-1.7s.6-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/></svg>
+              </span>
+              <span class="slink__name">Discord</span>
+              <span class="slink__arw" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+        </div>
+        </div>
+
+      </div>
+
+      <div class="join__col reveal">
+        <form class="signup" id="emailSignup" action="https://forms.gle/cSwdE6HvF92m9wq28" target="_blank" rel="noopener">
+          <span class="signup__eyebrow">↗ Get on the meeting list</span>
+          <h3 class="signup__title">A nudge before every session.</h3>
+          <p class="signup__desc">We'll email you the day before each meeting. Location, topic, whether there's food.</p>
+          <div class="signup__row">
+            <input class="signup__input" type="email" name="email" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
+            <button class="signup__btn" type="submit">
+              <span>Sign up</span>
+              <span class="signup__btn-arw" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <span class="signup__meta">Google Form · opens in a new tab</span>
+          <p class="signup__fine">We only email about club meetings. No spam. Unsubscribe anytime.</p>
+        </form>
+      </div>
+    </div>
+
+    <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/" data-route="/">
+        <span class="mono dim">Return</span>
+        <span class="route__next-title">Back to home</span>
+        <span class="route__next-arw" aria-hidden="true">↑</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Meeting modal (populated dynamically) -->
+<div class="modal" id="meetingModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__panel" role="document">
+    <button class="modal__close" data-close aria-label="Close preview">✕</button>
+    <div class="modal__eyebrow" id="modalEyebrow">Meeting</div>
+    <h2 class="modal__title" id="modalTitle">Title</h2>
+    <p class="modal__sum" id="modalSum">Summary</p>
+    <div class="modal__topics" id="modalTopics"></div>
+    <div class="modal__thumbs" id="modalThumbs" aria-label="Deck preview"></div>
+    <div class="modal__actions">
+      <a class="modal__primary" id="modalPrimary" href="#" target="_blank" rel="noopener">
+        <span>Open lecture notes</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+      <a class="modal__secondary" id="modalSecondary" href="#" target="_blank" rel="noopener">
+        <span>Download slide deck</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Back to top -->
+<button class="back-top" id="backTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+</button>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="17.5" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".5"/>
+        <circle cx="23" cy="18.5" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <ellipse cx="23" cy="18.5" rx="10.6" ry="3.2" fill="none" stroke="currentColor" stroke-width="1.1" transform="rotate(-22 23 18.5)"/>
+      </svg>
+      <div>
+        <p class="footer__title">Astrophysics Club</p>
+        <p class="footer__sub">Fremont High School · Sunnyvale, California</p>
+      </div>
+    </div>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="#/about"    data-route="/about">About</a>
+      <a href="#/meetings" data-route="/meetings">Meetings</a>
+      <a href="#/notes"    data-route="/notes">Notes</a>
+      <a href="#/team"     data-route="/team">Team</a>
+      <a href="#/join"     data-route="/join">Join</a>
+      <a href="https://www.instagram.com/fhs.astrophysicsclub/" target="_blank" rel="noopener" aria-label="Follow on Instagram">Instagram</a>
+      <a href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener" aria-label="Join on Discord">Discord</a>
+    </nav>
+    <p class="footer__legal mono">© <span id="year"></span> Astrophysics Club. Built by students, for students.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
