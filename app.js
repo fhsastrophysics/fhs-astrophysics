@@ -240,7 +240,11 @@
      depth-scaled. Reduced-motion / coarse-pointer: static, no loop.
      ------------------------------------------------------------------- */
   function initHeroInteractions() {
-    if (REDUCED) return;
+    // Touch devices get no cursor parallax and no JS ragdoll rAF — the astronaut
+    // floats via a lightweight CSS animation instead (see .home__astro-wrap in the
+    // mobile stylesheet). Skipping this loop removes a second continuous rAF on
+    // phones, which — with the cosmos + starfield — was part of the crash.
+    if (REDUCED || !FINE) return;
     const astro = $(".home__astro-wrap");   // wrapper carries the transform + glow aura
     if (!astro) return;
     const earth = $(".home__earth-wrap");
@@ -394,6 +398,32 @@
       document.body.appendChild(ta); ta.select();
       try { document.execCommand("copy"); } catch {}
       document.body.removeChild(ta); res();
+    });
+  }
+
+  /* -------------------------------------------------------------------
+     Signup — carry the typed email into the Google Form.
+     The form has a real "Email (School)" text field (entry.624766096); we
+     prefill it so a submitted address actually lands in the form instead of
+     opening a blank one. Native validation gates empty/invalid input; the
+     <form method=get action=viewform> is a no-JS fallback that prefills too.
+     ------------------------------------------------------------------- */
+  const SIGNUP_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSdN1lY5leFFF1xiokBPWNjmFCU14EdVnXaPRvGqAHnIF_3uSw/viewform";
+  const SIGNUP_EMAIL_ENTRY = "entry.624766096";
+  function initSignup() {
+    const form = $("#emailSignup");
+    if (!form) return;
+    form.addEventListener("submit", (e) => {
+      const input = $(".signup__input", form);
+      // Let the browser show its native error for empty/invalid emails.
+      if (!form.checkValidity()) return;
+      const email = (input.value || "").trim();
+      e.preventDefault();
+      const url = SIGNUP_FORM + "?usp=pp_url&" + SIGNUP_EMAIL_ENTRY + "=" + encodeURIComponent(email);
+      window.open(url, "_blank", "noopener");
+      toast("Opening sign-up · " + email);
+      input.value = "";
+      input.blur();
     });
   }
 
@@ -730,7 +760,16 @@
   function navigate(route, opts = {}) {
     if (transitioning) return;
     if (route === currentRoute) return;
-    if (REDUCED) { activateRoute(route, { instant: true }); location.hash = route === "/" ? "/" : route; return; }
+    // Reduced-motion AND touch devices get a light, cheap crossfade — no canvas
+    // warp streaks and no full-page blur. Those GPU-heavy effects are what left
+    // the "lightspeed" streaks stuck and could exhaust memory / crash on phones.
+    if (REDUCED || !FINE) {
+      activateRoute(route, { instant: true });
+      const t = $(".route.active");
+      if (t && !REDUCED) { t.classList.add("route-fade"); setTimeout(() => t.classList.remove("route-fade"), 460); }
+      location.hash = route === "/" ? "/" : route;
+      return;
+    }
     transitioning = true;
     const current = $(".route.active");
     const bloom = $("#warpBloom");
@@ -912,7 +951,8 @@
   function initWarpIntro() {
     const box = $("#warpIntro");
     if (!box) return;
-    if (REDUCED) { box.remove(); return; }
+    // No light-speed intro on reduced-motion or touch — phones get a clean fade-up.
+    if (REDUCED || !FINE) { box.remove(); return; }
     const N = 26;
     for (let i = 0; i < N; i++) {
       const s = document.createElement("span");
@@ -1013,6 +1053,7 @@
     initMagnetic();
     initModal();
     initCopy();
+    initSignup();
     initBackTop();
     initScrollSpy();
     initHeroInteractions();

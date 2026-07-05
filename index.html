@@ -337,13 +337,17 @@
      ================================================================== -->
 <section class="route route--meetings" data-route="/meetings">
   <div class="chapter">
-    <span class="chapter__kicker">Year One · 2025–2026</span>
     <h1 class="chapter__title split-chars">Meeting Archive</h1>
     <p class="chapter__lede">Every meeting, every slide deck. <br/><span class="dim">Thirteen sessions. Click a card to preview the deck before downloading.</span></p>
     <div class="chapter__rule"><span></span><span></span><span></span></div>
   </div>
 
   <div class="wrap">
+    <div class="yearband reveal">
+      <span class="yearband__tag">§ Year One</span>
+      <span class="yearband__range">2025 – 2026</span>
+      <span class="yearband__count">Thirteen sessions</span>
+    </div>
     <div class="meetings-index reveal" id="meetingsIndex" aria-label="Meeting index"></div>
     <div class="meetings" id="meetingsGrid"></div>
     <noscript><p class="dim">Enable JavaScript to browse the archive.</p></noscript>
@@ -363,13 +367,17 @@
      ================================================================== -->
 <section class="route route--notes" data-route="/notes">
   <div class="chapter">
-    <span class="chapter__kicker">Year One · 16 documents</span>
     <h1 class="chapter__title split-chars">Lecture Notes</h1>
     <p class="chapter__lede">Typeset handouts, written by us. <br/><span class="dim">Sixteen LaTeX documents. Hover a card to see its topics.</span></p>
     <div class="chapter__rule"><span></span><span></span><span></span></div>
   </div>
 
   <div class="wrap">
+    <div class="yearband reveal">
+      <span class="yearband__tag">§ Year One</span>
+      <span class="yearband__range">2025 – 2026</span>
+      <span class="yearband__count">Sixteen documents</span>
+    </div>
     <div class="notes-filter reveal" id="notesFilter"></div>
     <div class="notes-grid" id="notesGrid"></div>
 
@@ -441,13 +449,18 @@
             <li><span class="nextmeet__label">Time</span><span class="nextmeet__val">TBA</span></li>
             <li><span class="nextmeet__label">Topic</span><span class="nextmeet__val">TBA</span></li>
           </ul>
-          <p class="nextmeet__note">Check back soon. Or get on the list and we'll email you.</p>
         </div>
         </div>
 
         <div class="join__pair-b">
         <div class="field">
           <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Contact</h2></div>
+          <p class="field__v">
+            <a class="ulink field__mail js-copy" href="mailto:fhsastrophysics@gmail.com" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+            <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+            </button>
+          </p>
           <p class="field__v">
             <a class="ulink field__mail js-copy" href="mailto:amehta251@student.fuhsd.org" data-copy="amehta251@student.fuhsd.org">amehta251@student.fuhsd.org</a>
             <button class="field__copy js-copy-btn" data-copy="amehta251@student.fuhsd.org" aria-label="Copy Abir's email address" title="Copy email">
@@ -487,12 +500,12 @@
       </div>
 
       <div class="join__col reveal">
-        <form class="signup" id="emailSignup" action="https://forms.gle/cSwdE6HvF92m9wq28" target="_blank" rel="noopener">
+        <form class="signup" id="emailSignup" method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSdN1lY5leFFF1xiokBPWNjmFCU14EdVnXaPRvGqAHnIF_3uSw/viewform" target="_blank" rel="noopener">
           <span class="signup__eyebrow">↗ Get on the meeting list</span>
           <h3 class="signup__title">A nudge before every session.</h3>
           <p class="signup__desc">We'll email you the day before each meeting. Location, topic, whether there's food.</p>
           <div class="signup__row">
-            <input class="signup__input" type="email" name="email" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
+            <input class="signup__input" type="email" name="entry.624766096" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
             <button class="signup__btn" type="submit">
               <span>Sign up</span>
               <span class="signup__btn-arw" aria-hidden="true">→</span>

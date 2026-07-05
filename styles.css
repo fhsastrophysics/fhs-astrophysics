@@ -67,36 +67,39 @@ html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; background:var(--vo
 
 body{
   margin:0;
-  /* Realistic nebula fallback: indigo central bloom fading to true black at the edges */
-  background:
-    radial-gradient(1300px 900px at 50% 26%, rgba(38, 82, 172, .34) 0%, rgba(16, 40, 96, .18) 32%, transparent 60%),
-    radial-gradient(1000px 720px at 80% 6%, rgba(30, 66, 146, .20) 0%, transparent 56%),
-    radial-gradient(950px 950px at 14% 98%, rgba(22, 52, 122, .18) 0%, transparent 58%),
-    radial-gradient(1700px 1200px at 50% 46%, transparent 48%, rgba(1,3,10,.94) 100%),
-    var(--void);
+  background: var(--void);
   color: var(--ink-soft);
   font-family: var(--font-sans); font-size:16px; line-height:1.6;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }
-/* Fixed deep-space backdrop behind everything.
-   Drop a real photo at assets/lower-space.jpg to use it (recommended for realism);
-   until then it falls back to the procedural nebula + pinpoint stars below. */
+/* Fixed deep-space backdrop behind everything. Everything atmospheric lives here
+   and is VIEWPORT-anchored (position:fixed) so it reads as one continuous, smooth
+   wash on every page — it can never band or "bar" as a tall route scrolls, which
+   is what the old document-height body gradients did. Sizes are in vmax so the
+   blooms scale with the screen, not the (arbitrarily tall) page. */
 body::before{
-  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.92;
-  background-image:
-    url("assets/lower-space.jpg"),
-    radial-gradient(1.2px 1.2px at 12% 18%, rgba(255,255,255,.95), transparent 60%),
-    radial-gradient(1px 1px at 34% 62%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1.5px 1.5px at 58% 28%, rgba(255,255,255,.9), transparent 60%),
-    radial-gradient(0.9px 0.9px at 72% 74%, rgba(230,240,255,.7), transparent 60%),
-    radial-gradient(1.3px 1.3px at 88% 42%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 22% 86%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(0.7px 0.7px at 46% 8%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(0.7px 0.7px at 8% 44%, rgba(200,220,255,.55), transparent 60%);
-  background-size: cover, 480px 480px, 360px 360px, 520px 520px, 300px 300px, 440px 440px, 340px 340px, 260px 260px, 280px 280px;
-  background-position: center, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    /* cool nebula bloom easing down from the top */
+    radial-gradient(125vmax 82vmax at 50% -14%, rgba(44, 92, 188, .30) 0%, rgba(22, 52, 122, .13) 34%, transparent 64%),
+    /* two quiet off-axis glows for depth */
+    radial-gradient(80vmax 68vmax at 86% 2%, rgba(30, 66, 150, .15) 0%, transparent 56%),
+    radial-gradient(92vmax 82vmax at 8% 104%, rgba(22, 54, 128, .16) 0%, transparent 60%),
+    /* gentle deepening toward the lower edge so pages settle into the void */
+    linear-gradient(180deg, transparent 0%, transparent 54%, rgba(1,3,10,.5) 100%),
+    /* pinpoint starfield (static, layered under the animated #stars canvas) */
+    radial-gradient(1.2px 1.2px at 12% 18%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 34% 62%, rgba(255,255,255,.68), transparent 60%),
+    radial-gradient(1.5px 1.5px at 58% 28%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(0.9px 0.9px at 72% 74%, rgba(230,240,255,.68), transparent 60%),
+    radial-gradient(1.3px 1.3px at 88% 42%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 22% 86%, rgba(255,255,255,.58), transparent 60%),
+    radial-gradient(0.7px 0.7px at 46% 8%, rgba(255,255,255,.58), transparent 60%),
+    radial-gradient(0.7px 0.7px at 8% 44%, rgba(200,220,255,.52), transparent 60%);
+  background-size: auto, auto, auto, auto, 480px 480px, 360px 360px, 520px 520px, 300px 300px, 440px 440px, 340px 340px, 260px 260px, 280px 280px;
+  background-position: center, center, center, center, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
 }
 
 /* Instrument Serif ships a single weight — use 400 everywhere and lean on
@@ -244,6 +247,10 @@ main, .nav, .footer{ position:relative; z-index:3; }
 /* Outgoing page dissolves as the streaks accelerate (fade out during warp-up) */
 .route.warp-out{ animation: warpOut .55s var(--ease) both; pointer-events:none; }
 @keyframes warpOut{ 0%{ opacity:1; filter:blur(0); transform:none; } 60%{ opacity:.35; filter:blur(6px); } 100%{ opacity:0; filter:blur(16px); transform:scale(1.06); } }
+/* Light crossfade for touch / reduced-motion route swaps — no canvas warp, no
+   full-page blur (both are GPU-heavy and were implicated in the mobile crash). */
+.route.route-fade{ animation: routeFade .46s var(--ease-out) both; }
+@keyframes routeFade{ 0%{ opacity:0; transform:translateY(8px); } 100%{ opacity:1; transform:none; } }
 
 /* Staggered section reveal on route enter */
 .route.active .stagger > *{ opacity:0; transform:translateY(18px); animation:staggerIn .7s var(--ease-out) forwards; animation-delay: calc(var(--i,0) * 90ms + .15s); }
@@ -255,7 +262,6 @@ main, .nav, .footer{ position:relative; z-index:3; }
 .chapter{ padding:clamp(7rem,12vw,12rem) var(--gutter) clamp(1.75rem,3.5vw,3.25rem); max-width:var(--wrap); margin:0 auto; }
 /* Quiet hairline separating each content route from the one before it (never on the home hero) */
 .route:not(.route--home) .chapter{ border-top:1px solid rgba(255,255,255,0.05); }
-.chapter__kicker{ display:block; margin-bottom:1.1rem; font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .chapter__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(3rem,9vw,6.5rem); line-height:1.02; letter-spacing:-.02em; padding-bottom:.05em; }
 .chapter__lede{ margin:1.8rem 0 2.4rem; font-family:var(--font-sans); font-size:clamp(1.15rem,2.2vw,1.5rem); font-weight:400; color:var(--ink-soft); line-height:1.45; max-width:52ch; }
 .chapter__lede .dim{ color:var(--ink-mute); }
@@ -305,7 +311,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
   font-weight:800;
   line-height:.9;
   letter-spacing:-.05em;
-  font-size:clamp(2.4rem, 8.9vw, 11rem);
+  font-size:clamp(2.6rem, 9.7vw, 12rem);
   text-align:center;
   color:#fff;
   white-space:nowrap;
@@ -354,6 +360,15 @@ main, .nav, .footer{ position:relative; z-index:3; }
   0%,100%{ transform:scale(1); }
   50%    { transform:scale(1.06); }
 }
+/* Touch-device astronaut float — the JS ragdoll is fine-pointer only, so on
+   touch the astronaut would otherwise sit dead still. This gentle bob keeps it
+   alive; the phone-specific raise is handled by top: in the ≤640 block. */
+@keyframes astroFloat{ 0%,100%{ transform:translate(-50%,-48%); } 50%{ transform:translate(-50%,-52%); } }
+@media (hover:none){
+  /* No JS drag on touch, so let touches over the astronaut scroll the page
+     normally (touch-action:none / grab cursor were for the disabled ragdoll). */
+  .home__astro-wrap{ animation:astroFloat 6s ease-in-out infinite; touch-action:auto; cursor:default; }
+}
 
 /* =====================================================================
    HOME — animated cosmic backdrop (black hole, star birth/death, ship)
@@ -382,20 +397,29 @@ main, .nav, .footer{ position:relative; z-index:3; }
   filter:blur(6px); opacity:.7; animation:nebulaBreathe 12s ease-in-out infinite; }
 @keyframes nebulaBreathe{ 0%,100%{ transform:scale(.9); opacity:.5; } 50%{ transform:scale(1.12); opacity:.85; } }
 
-/* Dying star — a point that periodically flares into a supernova */
-.cosmo--supernova{ top:26%; left:40%; width:6px; height:6px; border-radius:50%; background:#fff;
-  box-shadow:0 0 8px 2px rgba(255,240,214,.9); animation:supernova 15s ease-in-out infinite; }
-.cosmo--supernova::before{ content:""; position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%;
-  transform:translate(-50%,-50%); border:1.5px solid rgba(255,228,180,.7); opacity:0; animation:supernovaRing 15s ease-in-out infinite; }
+/* Dying star — a quiet point that periodically flares into a supernova.
+   The flare is a radial-gradient revealed by OPACITY on a fixed-size element:
+   the old approach scaled a 6px box-shadow up ~3.6× via transform, so its raster
+   (baked at 6px) was magnified — that's what went blocky/pixelated on mobile. */
+.cosmo--supernova{ top:26%; left:40%; width:240px; height:240px; margin:-120px 0 0 -120px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,246,224,.95) 0%, rgba(255,226,172,.6) 5%, rgba(255,208,150,.22) 12%, rgba(255,196,140,.08) 22%, transparent 42%);
+  opacity:0; animation:supernova 15s ease-in-out infinite; }
+/* the star itself — always faintly visible at the centre */
+.cosmo--supernova::before{ content:""; position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%;
+  transform:translate(-50%,-50%); background:#E6EEFF; box-shadow:0 0 7px 2px rgba(255,240,214,.75); }
+/* expanding shockwave ring — modest scale from a large base so the stroke stays clean */
+.cosmo--supernova::after{ content:""; position:absolute; left:50%; top:50%; width:90px; height:90px; border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2); border:1.5px solid rgba(255,228,180,.7); opacity:0; animation:supernovaRing 15s ease-in-out infinite; }
 @keyframes supernova{
-  0%,58%,100%{ transform:scale(1); box-shadow:0 0 8px 2px rgba(255,240,214,.6); background:#DDE9FF; }
-  64%{ transform:scale(3.6); box-shadow:0 0 40px 14px rgba(255,224,170,.95); background:#FFF3DC; }
-  76%{ transform:scale(1); box-shadow:0 0 6px 1px rgba(255,240,214,.4); }
+  0%,58%,100%{ opacity:0; }
+  63%{ opacity:1; }
+  71%{ opacity:.9; }
+  82%{ opacity:0; }
 }
 @keyframes supernovaRing{
-  0%,58%,100%{ transform:translate(-50%,-50%) scale(1); opacity:0; }
-  62%{ opacity:.8; }
-  80%{ transform:translate(-50%,-50%) scale(14); opacity:0; }
+  0%,58%,100%{ transform:translate(-50%,-50%) scale(.2); opacity:0; }
+  62%{ opacity:.85; }
+  84%{ transform:translate(-50%,-50%) scale(2.4); opacity:0; }
 }
 /* Pulsars — slow-twinkling points */
 .cosmo--pulsar{ width:4px; height:4px; border-radius:50%; background:#EAF2FF; box-shadow:0 0 6px 2px rgba(188,215,255,.7); animation:pulsar 4.5s ease-in-out infinite; }
@@ -624,6 +648,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .route__next-link:hover .route__next-arw{ color:var(--accent); transform:translateX(8px); }
 
 /* =====================================================================
+   YEAR BAND — groups a year's archive as its own section BELOW the page
+   header (meetings + notes). Future years drop in as sibling bands.
+   ===================================================================== */
+.yearband{ display:flex; align-items:baseline; gap:.55rem 1.2rem; flex-wrap:wrap; margin:0 0 2.4rem; padding-bottom:1.15rem; border-bottom:1px solid var(--line-2); }
+.yearband__tag{ font-family:var(--font-mono); font-weight:700; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+.yearband__range{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.5rem,2.6vw,2.1rem); line-height:1; letter-spacing:-.01em; color:var(--ink); }
+.yearband__count{ margin-left:auto; font-family:var(--font-mono); font-weight:700; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-mute); }
+
+/* =====================================================================
    MEETINGS — glass cards
    ===================================================================== */
 .meetings-index{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:1rem; margin-bottom:5rem; }
@@ -816,7 +849,6 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .nextmeet__grid li{ display:flex; flex-direction:column; gap:.4rem; }
 .nextmeet__label{ font-family:var(--font-mono); font-weight:700; font-size:.6rem; letter-spacing:-.01em; text-transform:uppercase; color:var(--ink-mute); }
 .nextmeet__val{ font-family:var(--font-display); font-weight:400; font-size:1.6rem; line-height:1; color:var(--ink); letter-spacing:-.01em; }
-.nextmeet__note{ margin:1.2rem 0 0; padding-top:1rem; border-top:1px solid var(--line); font-size:.9rem; color:var(--ink-soft); }
 
 /* Elsewhere — clean inline text links (no card boxes), brand-color on hover */
 .socials{ display:flex; flex-direction:column; gap:.9rem; margin-top:.2rem; align-items:flex-start; }
@@ -971,6 +1003,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 }
 @media (max-width:640px){
   body{ font-size:16px; }
+  /* Lighter backdrop blur across every glass surface — big GPU win on phones. */
+  :root{ --glass-blur:10px; }
   .nav__inner{ display:flex; justify-content:space-between; }
   .nav__social{ display:none; }
   .nav__links{ position:fixed; inset:0 0 0 auto; width:min(84vw,340px); flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0; padding:5.5rem 1.4rem 2rem; background:rgba(4,7,15,.98); backdrop-filter:blur(20px); border-left:1px solid var(--line-2); transform:translateX(100%); transition:transform .4s var(--ease); z-index:105; }
@@ -979,13 +1013,27 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   .nav__links a:not(.nav__cta)::after{ display:none; }
   .nav__cta{ margin:1rem 0 0; justify-content:center; padding:1rem !important; text-align:center; }
   .nav__toggle{ display:flex; z-index:110; }
-  .home{ padding-top:5rem; padding-bottom:1rem; }
-  .home__eyebrow{ font-size:.6rem; letter-spacing:.14em; padding:0 1rem; white-space:normal; line-height:1.5; }
+  .home{ padding-top:5rem; padding-bottom:1.5rem; }
+  .home__eyebrow{ font-size:.58rem; letter-spacing:.13em; padding:0 1rem; white-space:normal; line-height:1.5; }
   .home__tag{ padding:0 .5rem; }
-  .home__stage{ min-height:30vh; }
-  .home__title{ white-space:normal; font-size:clamp(2rem, 12vw, 4.2rem); line-height:1; }
-  .home__astro-wrap{ width:68vw; }
-  .home__earth-wrap{ bottom:-72vmin; width:180vmin; height:180vmin; }
+  .home__stage{ min-height:40vh; }
+  /* Wordmark sits behind the astronaut like desktop, but sized with breathing
+     room on both sides so it reads centred, not cramped edge-to-edge. */
+  .home__title{ white-space:normal; font-size:clamp(1.85rem, 9vw, 3rem); line-height:1.04; padding:0 1rem; }
+  /* Astronaut floats ABOVE the wordmark (raised via top:, which is orthogonal to
+     the transform so it works whether the JS ragdoll or the CSS float drives it)
+     so the letters stay readable — and it's smaller, so much lighter for the GPU. */
+  .home__astro-wrap{ top:42%; width:min(54vw, 232px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
+  /* A calmer planet limb, not a bright wall filling the lower half. */
+  .home__earth-wrap{ bottom:-84vmin; width:148vmin; height:148vmin; }
+  .home__earth-glow{ filter:blur(16px); }
+  /* Trim the heaviest hero layers on phones (the crash was GPU memory on return
+     to home): drop the big blurred beam and the filtered ship, static grain,
+     and keep only the first dozen drifting equations. */
+  .home__beam{ display:none; }
+  .cosmo--ship{ display:none; }
+  .grain{ animation:none; opacity:.3; }
+  .home__equations .eqn:nth-child(n+13){ display:none; }
   .home__foot{ padding-top:1rem; }
   .home__actions{ width:100%; flex-direction:column; gap:.55rem; }
   .home__actions .btn{ width:100%; justify-content:center; padding:.9rem 1rem; font-size:.95rem; }
@@ -1003,6 +1051,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   .field-row{ grid-template-columns:1fr; gap:0; }
   .field-row .field:first-of-type + .field{ border-top:1px solid var(--line); }
   .signup__row{ flex-direction:column; }
+  /* In a column flex, flex-basis is the HEIGHT — 220px basis made the input a
+     giant pill. Pin it to natural height and full width. */
+  .signup__input{ flex:0 0 auto; width:100%; }
   .signup__btn{ width:100%; justify-content:center; }
   .back-top{ right:1rem; bottom:1rem; width:46px; height:46px; }
 }
