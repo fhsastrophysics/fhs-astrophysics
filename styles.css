@@ -247,10 +247,15 @@ main, .nav, .footer{ position:relative; z-index:3; }
 /* Outgoing page dissolves as the streaks accelerate (fade out during warp-up) */
 .route.warp-out{ animation: warpOut .55s var(--ease) both; pointer-events:none; }
 @keyframes warpOut{ 0%{ opacity:1; filter:blur(0); transform:none; } 60%{ opacity:.35; filter:blur(6px); } 100%{ opacity:0; filter:blur(16px); transform:scale(1.06); } }
-/* Light crossfade for touch / reduced-motion route swaps — no canvas warp, no
-   full-page blur (both are GPU-heavy and were implicated in the mobile crash). */
-.route.route-fade{ animation: routeFade .46s var(--ease-out) both; }
-@keyframes routeFade{ 0%{ opacity:0; transform:translateY(8px); } 100%{ opacity:1; transform:none; } }
+/* Phones/touch keep the light-speed canvas streaks but skip the full-page
+   filter:blur() — blurring a whole route each frame is the GPU-heavy part that
+   stuttered and could crash mobile. Opacity + a hair of scale reads just as fast. */
+@media (max-width:640px), (hover:none){
+  .route.warp-out{ animation: warpOutLite .5s var(--ease) both; }
+  .route.warp-in{ animation: warpInLite .7s var(--ease-out) both; }
+}
+@keyframes warpOutLite{ 0%{ opacity:1; transform:none; } 100%{ opacity:0; transform:scale(1.05); } }
+@keyframes warpInLite{ 0%{ opacity:0; transform:scale(.965); } 100%{ opacity:1; transform:none; } }
 
 /* Staggered section reveal on route enter */
 .route.active .stagger > *{ opacity:0; transform:translateY(18px); animation:staggerIn .7s var(--ease-out) forwards; animation-delay: calc(var(--i,0) * 90ms + .15s); }
@@ -368,6 +373,10 @@ main, .nav, .footer{ position:relative; z-index:3; }
   /* No JS drag on touch, so let touches over the astronaut scroll the page
      normally (touch-action:none / grab cursor were for the disabled ragdoll). */
   .home__astro-wrap{ animation:astroFloat 6s ease-in-out infinite; touch-action:auto; cursor:default; }
+  /* Cursor parallax is off on touch, so these layers never transform — drop the
+     will-change promotion so each doesn't retain its own compositor layer. Fewer
+     large layers held in GPU memory = headroom against the return-to-home crash. */
+  .home__glow, .home__cosmos, .home__equations, .home__rings, .home__earth-wrap, .grain{ will-change:auto; }
 }
 
 /* =====================================================================
@@ -1022,8 +1031,12 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   .home__title{ white-space:normal; font-size:clamp(1.85rem, 9vw, 3rem); line-height:1.04; padding:0 1rem; }
   /* Astronaut floats ABOVE the wordmark (raised via top:, which is orthogonal to
      the transform so it works whether the JS ragdoll or the CSS float drives it)
-     so the letters stay readable — and it's smaller, so much lighter for the GPU. */
-  .home__astro-wrap{ top:42%; width:min(54vw, 232px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
+     so the wordmark reads as one clean, centred line with only the boots grazing
+     the letters — and it's smaller, so much lighter for the GPU. */
+  .home__astro-wrap{ top:35%; width:min(52vw, 214px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
+  /* Make the wordmark centring bulletproof: normal centred block (no full-bleed
+     100vw + negative-margin trick, which can drift), flex-centred in the stage. */
+  .home__title{ width:auto; max-width:100%; margin-inline:0; }
   /* A calmer planet limb, not a bright wall filling the lower half. */
   .home__earth-wrap{ bottom:-84vmin; width:148vmin; height:148vmin; }
   .home__earth-glow{ filter:blur(16px); }

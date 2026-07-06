@@ -760,16 +760,10 @@
   function navigate(route, opts = {}) {
     if (transitioning) return;
     if (route === currentRoute) return;
-    // Reduced-motion AND touch devices get a light, cheap crossfade — no canvas
-    // warp streaks and no full-page blur. Those GPU-heavy effects are what left
-    // the "lightspeed" streaks stuck and could exhaust memory / crash on phones.
-    if (REDUCED || !FINE) {
-      activateRoute(route, { instant: true });
-      const t = $(".route.active");
-      if (t && !REDUCED) { t.classList.add("route-fade"); setTimeout(() => t.classList.remove("route-fade"), 460); }
-      location.hash = route === "/" ? "/" : route;
-      return;
-    }
+    if (REDUCED) { activateRoute(route, { instant: true }); location.hash = route === "/" ? "/" : route; return; }
+    // Touch devices keep the light-speed canvas warp — only the full-page filter:blur()
+    // on .warp-out/.warp-in is swapped for a blur-free transition in the mobile CSS
+    // (that blur, not the streaks, was the GPU-heavy part that stuttered on phones).
     transitioning = true;
     const current = $(".route.active");
     const bloom = $("#warpBloom");
@@ -951,8 +945,7 @@
   function initWarpIntro() {
     const box = $("#warpIntro");
     if (!box) return;
-    // No light-speed intro on reduced-motion or touch — phones get a clean fade-up.
-    if (REDUCED || !FINE) { box.remove(); return; }
+    if (REDUCED) { box.remove(); return; }
     const N = 26;
     for (let i = 0; i < N; i++) {
       const s = document.createElement("span");
