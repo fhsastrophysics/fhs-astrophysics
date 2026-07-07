@@ -98,7 +98,7 @@
     { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: null, email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
     { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: null, email: "sdoshi468@student.fuhsd.org",
-      bio: "Runs the Instagram, posters, and the reason anyone at Fremont has heard of the club at all." },
+      bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
   ];
 
   const ROUTES = ["/", "/about", "/meetings", "/notes", "/team", "/join"];
@@ -767,24 +767,31 @@
        540 – 1290  decelerate: streaks compress back to dots WHILE the new page fades in   */
   const WARP_TOTAL = 1350;
   const WARP_SWAP = 540;
-  // Touch jump is a touch quicker — the streaks read fast and we don't want the
-  // overlay lingering over the (now lighter) homepage.
+  // Tablet (iPad) light-speed jump timing.
   const WARP_TOUCH_TOTAL = 1050;
   const WARP_TOUCH_SWAP = 430;
+  // Phones: a fast, overlay-free cross-fade. No streak overlay/bloom — navigation is
+  // where a low-memory iPhone crashes, so the transition adds zero extra layers.
+  const WARP_PHONE_TOTAL = 560;
+  const WARP_PHONE_SWAP = 210;
 
   // Spawn a transient light-speed streak overlay (radial lines + tunnel vignette)
   // for one route jump on touch, then remove it. This is the mobile stand-in for
   // the desktop canvas warp: same look, but it exists only for ~1s per navigation
   // and leaves zero always-on GPU/memory cost behind.
+  // Light-speed streak overlay for one route jump. A single UNIFORM veil (fades in,
+  // holds, fades out) covers the bright sky during the swap so there's no harsh
+  // lighting flash, with bright streaks radiating over it. Tablet/desktop-touch only
+  // — phones skip it (see navigate) because the overlay is what tips a low-memory
+  // iPhone over the edge during navigation.
   function warpJump(dur) {
-    const box = el("div", "warp-intro");
+    const box = el("div", "warp-intro warp-intro--jump");
     box.setAttribute("aria-hidden", "true");
-    // Fewer streak nodes on phones — the transition is the moment memory peaks
-    // (old route + new route + this overlay all live), so keep the overlay cheap.
-    fillWarpLines(box, COARSE ? 10 : 20);
+    fillWarpLines(box, 26);
     document.body.appendChild(box);
-    setTimeout(() => box.classList.add("done"), Math.max(0, dur - 300));
-    setTimeout(() => { if (box.parentNode) box.remove(); }, dur + 150);
+    requestAnimationFrame(() => box.classList.add("show"));
+    setTimeout(() => box.classList.remove("show"), Math.max(0, dur - 280));
+    setTimeout(() => { if (box.parentNode) box.remove(); }, dur + 140);
   }
 
   function navigate(route, opts = {}) {
@@ -792,26 +799,21 @@
     if (route === currentRoute) return;
     if (REDUCED) { activateRoute(route, { instant: true }); location.hash = route === "/" ? "/" : route; return; }
 
-    // Touch devices (phones + tablets): the SAME light-speed jump as desktop, but
-    // built from a transient CSS streak overlay (warpJump) instead of the always-on
-    // canvas — that canvas + the full-page blur were the memory/GPU hogs that
-    // crashed mobile Safari. The routes underneath just fade (opacity-led, no blur,
-    // no scale re-raster); the streaks + bloom sell the warp. The incoming page's
-    // sections then stagger in on their own (.route.active .stagger > *).
+    // Touch devices. Tablets (iPad) get the light-speed streak overlay; phones get a
+    // clean, overlay-free cross-fade (navigation is where a low-memory iPhone crashes,
+    // so we add ZERO extra layers there). No bloom on either — that flash, plus the
+    // old vignette, was the "weird lighting change". Routes just cross-fade underneath.
     if (COARSE) {
       transitioning = true;
       const current = $(".route.active");
-      const bloom = $("#warpBloom");
-      warpJump(WARP_TOUCH_TOTAL);
-      // Force the leave fade to commit before the hamburger close() mutates the
-      // fixed nav overlay in the same tick (WebKit would otherwise coalesce them
-      // and skip the fade). Plain timers drive the swap so navigation always
-      // completes even if rAF is throttled/paused.
+      const phone = window.innerWidth <= 640;
+      const swap = phone ? WARP_PHONE_SWAP : WARP_TOUCH_SWAP;
+      const total = phone ? WARP_PHONE_TOTAL : WARP_TOUCH_TOTAL;
+      if (!phone) warpJump(total);
+      // Force the leave fade to commit before the hamburger close() mutates the fixed
+      // nav overlay in the same tick (WebKit would otherwise coalesce them and skip
+      // the fade). Plain timers drive the swap so navigation always completes.
       if (current) { current.classList.add("warp-out-touch"); void current.offsetHeight; }
-      if (bloom) {
-        setTimeout(() => bloom.classList.add("on"), WARP_TOUCH_SWAP - 120);
-        setTimeout(() => bloom.classList.remove("on"), WARP_TOUCH_SWAP + 280);
-      }
       setTimeout(() => {
         if (current) current.classList.remove("warp-out-touch");
         activateRoute(route, opts);
@@ -821,8 +823,8 @@
           setTimeout(() => target.classList.remove("warp-in-touch"), 700);
         }
         location.hash = route === "/" ? "/" : route;
-      }, WARP_TOUCH_SWAP);
-      setTimeout(() => { transitioning = false; }, WARP_TOUCH_TOTAL);
+      }, swap);
+      setTimeout(() => { transitioning = false; }, total);
       return;
     }
 
@@ -1042,7 +1044,7 @@
       const dx = (Math.random() * 90 - 45).toFixed(0);
       const dy = (Math.random() * 90 - 45).toFixed(0);
       const sc = (0.62 + Math.random() * 0.5).toFixed(2);
-      const op = (0.10 + Math.random() * 0.10).toFixed(2);
+      const op = (0.34 + Math.random() * 0.24).toFixed(2);
       n.style.setProperty("--dx", dx + "px");
       n.style.setProperty("--dy", dy + "px");
       n.style.setProperty("--sc", sc);
