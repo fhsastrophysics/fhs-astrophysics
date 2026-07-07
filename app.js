@@ -779,7 +779,9 @@
   function warpJump(dur) {
     const box = el("div", "warp-intro");
     box.setAttribute("aria-hidden", "true");
-    fillWarpLines(box, 20);
+    // Fewer streak nodes on phones — the transition is the moment memory peaks
+    // (old route + new route + this overlay all live), so keep the overlay cheap.
+    fillWarpLines(box, COARSE ? 10 : 20);
     document.body.appendChild(box);
     setTimeout(() => box.classList.add("done"), Math.max(0, dur - 300));
     setTimeout(() => { if (box.parentNode) box.remove(); }, dur + 150);

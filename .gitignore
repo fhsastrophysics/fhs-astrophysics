@@ -1,7 +1,6 @@
 .DS_Store
 **/.DS_Store
 .claude/
-# Raw NASA/ESA Hubble source images (large). The dark processed derivatives
-# (assets/bg/*-processed*.jpg) are committed and are what the site actually uses.
-assets/bg/nebula-veil.jpg
-assets/bg/nebula-carina.jpg
+# raw background source images (large); only the processed web assets are committed
+assets/bg/*-src.*
+assets/bg/cand-*.jpg

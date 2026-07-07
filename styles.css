@@ -38,7 +38,7 @@
   --earth:     #4FA0FF;
   --earth-hi:  #A6D2FF;
 
-  --glass:     rgba(255,255,255,0.05);
+  --glass:     rgba(13,19,38,0.52);   /* dark frosted glass — reads over the bold sky photo (was a 5% white wash, invisible over bright nebula) */
   --glass-2:   rgba(255,255,255,0.075);
   --glass-brd: rgba(255,255,255,0.10);
   --glass-brd-hover: rgba(188,215,255,0.42);
@@ -78,29 +78,11 @@ body{
    wash on every page — it can never band or "bar" as a tall route scrolls, which
    is what the old document-height body gradients did. Sizes are in vmax so the
    blooms scale with the screen, not the (arbitrarily tall) page. */
-/* Per-route AMBIENT COLOR ZONE. The old pinpoint starfield + animated #stars dots
-   are gone (replaced by the nebula texture + these colour washes); the light-speed
-   warp still uses the #stars canvas, it just draws nothing when idle. The zone hue
-   is set on <body data-route="..."> by the router (activateRoute) and read here, so
-   every route gets its own colour of deep space. */
-:root{ --zone-hue:220; --zone-sat:36%; }
-body[data-route="/"]         { --zone-hue:220; --zone-sat:36%; }  /* home — brand blue     */
-body[data-route="/meetings"] { --zone-hue:230; --zone-sat:40%; }  /* deep indigo           */
-body[data-route="/notes"]    { --zone-hue:35;  --zone-sat:26%; }  /* warm amber-black      */
-body[data-route="/about"]    { --zone-hue:210; --zone-sat:35%; }  /* cold blue             */
-body[data-route="/team"]     { --zone-hue:262; --zone-sat:32%; }  /* violet                */
-body[data-route="/join"]     { --zone-hue:190; --zone-sat:36%; }  /* teal-ice              */
-body::before{
-  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    /* two offset colour blooms in the zone hue, kept dark (≤13% L) for readability */
-    radial-gradient(ellipse 82% 60% at 28% 14%,
-      hsla(var(--zone-hue), var(--zone-sat), 13%, .62), transparent 68%),
-    radial-gradient(ellipse 64% 78% at 78% 84%,
-      hsla(calc(var(--zone-hue) + 22), var(--zone-sat), 9%, .5), transparent 62%),
-    /* gentle deepening toward the lower edge so pages settle into the void */
-    linear-gradient(180deg, transparent 0%, transparent 54%, rgba(1,3,10,.5) 100%);
-}
+/* ONE CONTINUOUS SKY -- a single bold deep-space photo (Pleiades / M45) is the fixed
+   backdrop on EVERY route (see .bg-nebula below). No per-route colour zones any more:
+   the starfield is the star, one uninterrupted window into space. Text contrast is
+   handled by a vignette scrim baked into that one layer + a small top scrim on inner
+   routes -- deliberately NOT a global dim, so the bold centre stays bold. */
 
 /* Instrument Serif ships a single weight — use 400 everywhere and lean on
    size for hierarchy so the browser never fakes a bold. */
@@ -123,17 +105,21 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    AMBIENT LAYERS
    ===================================================================== */
 #stars{ position:fixed; inset:0; z-index:0; width:100%; height:100%; pointer-events:none; }
-/* Real nebula texture (NASA/ESA Hubble, processed to a dark wash). Fixed, single
-   raster layer — far lighter than the old multi-layer starfield. Only Home and
-   Notes light it up; every other route fades it out to the pure colour zone. */
+/* THE SKY — one bold Pleiades photo, fixed to the viewport (a window into space
+   that doesn't scroll), shown on every route. A single raster layer, so it's light
+   on the GPU. Decoded-image RAM is what crashes low-memory phones, so the file size
+   steps DOWN as the screen shrinks: 2560px desktop → 1200px tablet → 800px phone. */
 .bg-nebula{ position:fixed; inset:0; z-index:0; pointer-events:none;
-  background-position:center; background-size:cover; background-repeat:no-repeat;
-  opacity:0; transition:opacity .9s var(--ease); }
-body[data-route="/"] .bg-nebula{ background-image:url("assets/bg/nebula-hero-processed.jpg"); opacity:.85; }
-body[data-route="/notes"] .bg-nebula{ background-image:url("assets/bg/nebula-warm-processed.jpg"); opacity:.7; }
-@media (max-width:768px){
-  body[data-route="/"] .bg-nebula{ background-image:url("assets/bg/nebula-hero-processed-sm.jpg"); }
-}
+  background:url("assets/bg/pleiades-bg.jpg") center center / cover no-repeat; }
+/* Vignette scrim baked over the photo (not the whole page): darkens the edges, the
+   top nav band, and the lower hero/footer band where copy sits, while leaving the
+   bold blue centre untouched. This is the "localised, not global" darkening. */
+.bg-nebula::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 132% 92% at 50% 40%, transparent 40%, rgba(3,5,12,.5) 100%),
+    linear-gradient(180deg, rgba(3,5,12,.42) 0%, transparent 20%, transparent 50%, rgba(3,5,12,.62) 100%); }
+@media (max-width:1200px){ .bg-nebula{ background-image:url("assets/bg/pleiades-bg-sm.jpg"); } }
+@media (max-width:640px){  .bg-nebula{ background-image:url("assets/bg/pleiades-bg-xs.jpg"); } }
 .bg-planet{ display:none; }
 
 /* Grain — visible filmic texture over the dark background */
@@ -297,7 +283,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 /* Quiet hairline separating each content route from the one before it (never on the home hero) */
 .route:not(.route--home) .chapter{ border-top:1px solid rgba(255,255,255,0.05); }
 .chapter__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(3rem,9vw,6.5rem); line-height:1.02; letter-spacing:-.02em; padding-bottom:.05em; }
-.chapter__lede{ margin:1.8rem 0 2.4rem; font-family:var(--font-sans); font-size:clamp(1.15rem,2.2vw,1.5rem); font-weight:400; color:var(--ink-soft); line-height:1.45; max-width:52ch; }
+.chapter__lede{ margin:1.8rem 0 2.4rem; font-family:var(--font-sans); font-size:clamp(1.15rem,2.2vw,1.5rem); font-weight:400; color:var(--ink-soft); line-height:1.45; max-width:52ch; text-shadow:0 1px 12px rgba(1,3,10,.7); }
 .chapter__lede .dim{ color:var(--ink-mute); }
 .chapter__rule{ display:flex; align-items:center; gap:1rem; }
 .chapter__rule span{ height:1.5px; background:var(--line-2); }
@@ -323,6 +309,18 @@ main, .nav, .footer{ position:relative; z-index:3; }
     radial-gradient(40vmax 30vmax at 50% 40%, rgba(30,80,180,.18), transparent 55%);
   filter:saturate(1.05);
 }
+/* Featured Hubble nebula (Kohoutek 4-55) as a glowing orb in the hero, upper-left
+   (opposite the black hole). mix-blend:screen drops its black background so only the
+   blue ring + gold stars add light over the sky; the radial mask fades the square
+   into a soft orb. Sits behind the wordmark/astronaut (z-1). Phones hide it. */
+.hero-neb{ position:absolute; z-index:1; pointer-events:none;
+  left:8%; top:23%; width:clamp(190px, 23vw, 360px); aspect-ratio:1;
+  background:url("assets/bg/k455-accent.jpg") center center / cover no-repeat;
+  mix-blend-mode:screen; opacity:.92;
+  -webkit-mask:radial-gradient(circle at 50% 50%, #000 36%, transparent 68%);
+          mask:radial-gradient(circle at 50% 50%, #000 36%, transparent 68%);
+  animation:heroNebFloat 17s ease-in-out infinite; will-change:transform; }
+@keyframes heroNebFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-16px); } }
 .home__vignette{ position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
     radial-gradient(100vmax 70vmax at 50% 50%, transparent 45%, rgba(1,3,10,.45) 92%),
@@ -498,19 +496,20 @@ main, .nav, .footer{ position:relative; z-index:3; }
    blue glow + section vignette + card spotlights + drifting specks.
    ===================================================================== */
 .route:not(.route--home){ position:relative; overflow:hidden; }
-/* Fixed (viewport-anchored) so the glow is one smooth wash that never bands as
-   the tall route scrolls — a soft blue light from the top, fading down. */
-/* A soft top glow tinted with the active route's zone hue, over the body colour
-   zone. One rule for every inner route now (the colour comes from --zone-hue). */
+/* Reading scrim on inner routes (viewport-anchored so it never bands as the tall
+   route scrolls). Content routes are meant to be READ, so they get a stronger, full
+   dark wash — heaviest under the nav where titles land, easing to a steady ~46% below
+   — while the bold sky still shows through. The home hero keeps the boldest sky. */
 .route:not(.route--home)::before{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background: radial-gradient(90vmax 62vmax at 50% -6%,
-    hsla(var(--zone-hue,220), var(--zone-sat,35%), 20%, .16), transparent 66%); }
+  background: linear-gradient(180deg, rgba(3,5,12,.66) 0%, rgba(3,5,12,.4) 34%, rgba(3,5,12,.34) 100%); }
 .route:not(.route--home) > *{ position:relative; z-index:1; }
 
-/* Section vignette — content reads as lit from the centre */
+/* Localised reading backing behind each chapter header (title + lede), left-anchored
+   where the copy sits. This is the "localised dark overlay behind text", so the global
+   sky can stay bold while the naked header text still has guaranteed contrast. */
 .route:not(.route--home) .chapter{ position:relative; }
-.route:not(.route--home) .chapter::after{ content:""; position:absolute; inset:-30% -12% -12%; z-index:-1; pointer-events:none;
-  background:radial-gradient(ellipse 68% 60% at 50% 38%, transparent 42%, rgba(1,3,10,.28) 100%); }
+.route:not(.route--home) .chapter::after{ content:""; position:absolute; inset:-24% -10% -10%; z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse 82% 74% at 32% 44%, rgba(3,5,12,.74) 0%, rgba(3,5,12,.42) 46%, transparent 76%); }
 
 /* Cursor spotlight on the plainer cards (goal + arc-node); --mx/--my from JS */
 .goal, .arc-node{ position:relative; }
@@ -1042,6 +1041,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   .home__beam{ display:none; }
   .cosmo--ship{ display:none; }
   .grain{ display:none; }
+  /* Drop the K 4-55 orb on touch — a screen-blended layer is a needless compositor
+     buffer on phones, and the crash lives in the compositor. */
+  .hero-neb{ display:none; }
   .home__equations .eqn:nth-child(n+11){ display:none; }
   .home__earth-glow{ filter:blur(14px); }
   :root{ --glass-blur:10px; }
@@ -1124,6 +1126,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   .grain{ animation:none; opacity:.3; }
   .home__equations .eqn:nth-child(n+7){ display:none; }   /* 6 drifting equations, not ~10 */
   .cosmo--nebula, .cosmo--supernova{ display:none; }      /* two big blurred / flashing layers */
+  .hero-neb{ display:none; }                              /* K 4-55 orb — cramped at phone width, and a needless compositor layer */
   .home__earth-clouds{ display:none; }                    /* a blurred, animating layer over a 148vmin surface */
   .home__glow{ filter:none; }                             /* stop promoting a full-screen filtered layer */
   .home__rings{ mix-blend-mode:normal; opacity:.55; }     /* screen-blend forces an offscreen buffer */
@@ -1176,6 +1179,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   .home__equations .eqn{ opacity:.1 !important; animation:none !important; }
   .cosmo--ship{ display:none !important; }
   .cosmo--supernova, .cosmo--supernova::before, .cosmo--blackhole, .cosmo--nebula, .cosmo--pulsar{ animation:none !important; }
+  .hero-neb{ animation:none !important; }
   .grain{ animation:none !important; }
   .cursor, .warp-bloom, .warp-intro{ display:none !important; }
   .route.warp-in, .route.warp-out{ animation:none !important; }

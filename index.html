@@ -28,8 +28,8 @@
 <a class="skip-link" href="#/">Skip to content</a>
 
 <canvas id="stars" aria-hidden="true"></canvas>
-<!-- Real nebula texture wash (NASA/ESA Hubble, processed). Shown only on Home
-     (Veil) and Notes (warm/Carina) via body[data-route]; see .bg-nebula in CSS. -->
+<!-- One continuous sky: bold Pleiades (M45) photo, fixed, on every route. See
+     .bg-nebula in CSS (responsive files step down in size for low-memory phones). -->
 <div class="bg-nebula" aria-hidden="true"></div>
 
 <div class="grain" aria-hidden="true"></div>
@@ -105,6 +105,11 @@
   <div class="home">
 
     <div class="home__glow" aria-hidden="true"></div>
+
+    <!-- Featured Hubble nebula (Kohoutek 4-55). A real photo screen-blended + radially
+         masked into a glowing orb; its black background drops out. Desktop/tablet only
+         (hidden on phones to save a compositor layer). See .hero-neb in CSS. -->
+    <div class="hero-neb" aria-hidden="true"></div>
 
     <!-- Animated cosmic backdrop: a black hole with a spinning accretion disk, a
          star being born (pulsing nebula), a dying star (periodic supernova flash),
@@ -232,7 +237,11 @@
       <!-- Astronaut floating in front of the letters. Wrapper carries the position,
            filter, glow aura (::before) and JS ragdoll transforms; the <img> is the art. -->
       <div class="home__astro-wrap" aria-hidden="true">
-        <img class="home__astro" src="assets/astronaut.png" alt="" aria-hidden="true" draggable="false" onerror="this.style.visibility='hidden'" />
+        <img class="home__astro" src="assets/astronaut.png"
+             srcset="assets/astronaut-sm.png 720w, assets/astronaut.png 1536w"
+             sizes="(max-width:640px) 214px, (max-width:980px) 440px, 560px"
+             alt="" aria-hidden="true" draggable="false" decoding="async"
+             onerror="this.style.visibility='hidden'" />
       </div>
     </div>
 
