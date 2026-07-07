@@ -7,6 +7,12 @@
 
   const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const FINE = window.matchMedia("(pointer: fine)").matches;
+  // Any touchscreen device (phones AND tablets, incl. an iPad with a trackpad —
+  // (any-pointer: coarse) is true whenever a coarse pointer exists at all).
+  // Motion on touch is deliberately calm and GPU-light: NO animated starfield
+  // canvas, NO canvas light-speed warp, NO full-page blur. Those were the
+  // memory/GPU hogs that crashed mobile Safari.
+  const COARSE = window.matchMedia("(any-pointer: coarse)").matches;
   const SLIDES = (id) => `https://docs.google.com/presentation/d/${id}/export/pdf`;
 
   /* -------------------------------------------------------------------
@@ -88,9 +94,9 @@
 
   const OFFICERS = [
     { name: "Abir Mehta",   role: "Co-Founder & President",       photo: null, email: "amehta251@student.fuhsd.org",
-      bio: "Founded the club in fall 2024. Runs the lecture arc, writes the LaTeX handouts, and wrangles the whiteboard the day of." },
+      bio: "Founded the Astrophysics Club with Dhruv in October of 2025 and develops the core curriculum, including general ideas for club success. Develops the typeset notes and handouts for biweekly meetings and handles communication and outreach to gain members. Outside the club, Abir is a huge physics enthusiast who spends a large majority of his time doing physics, with a wide variety of physics and math courses taken and a plethora of projects in the works. Message him for any inquiries about physics." },
     { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: null, email: "dlagu234@student.fuhsd.org",
-      bio: "Co-founder. Owns data labs and the Python side: TESS light curves, Colab notebooks, model evaluation." },
+      bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
     { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: null, email: "sdoshi468@student.fuhsd.org",
       bio: "Runs the Instagram, posters, and the reason anyone at Fremont has heard of the club at all." },
   ];
@@ -735,6 +741,10 @@
   function activateRoute(route, opts = {}) {
     const target = document.querySelector(`.route[data-route="${route}"]`);
     if (!target) return;
+    // Drive the per-route ambient colour zone + nebula texture (see CSS
+    // body[data-route="…"] rules). Set on <body> so the fixed backdrop layers,
+    // which live outside the route sections, can react to the active route.
+    document.body.setAttribute("data-route", route);
     $$(".nav__links a, .footer__nav a").forEach((a) => {
       a.classList.toggle("active", a.getAttribute("data-route") === route);
     });
@@ -757,13 +767,64 @@
        540 – 1290  decelerate: streaks compress back to dots WHILE the new page fades in   */
   const WARP_TOTAL = 1350;
   const WARP_SWAP = 540;
+  // Touch jump is a touch quicker — the streaks read fast and we don't want the
+  // overlay lingering over the (now lighter) homepage.
+  const WARP_TOUCH_TOTAL = 1050;
+  const WARP_TOUCH_SWAP = 430;
+
+  // Spawn a transient light-speed streak overlay (radial lines + tunnel vignette)
+  // for one route jump on touch, then remove it. This is the mobile stand-in for
+  // the desktop canvas warp: same look, but it exists only for ~1s per navigation
+  // and leaves zero always-on GPU/memory cost behind.
+  function warpJump(dur) {
+    const box = el("div", "warp-intro");
+    box.setAttribute("aria-hidden", "true");
+    fillWarpLines(box, 20);
+    document.body.appendChild(box);
+    setTimeout(() => box.classList.add("done"), Math.max(0, dur - 300));
+    setTimeout(() => { if (box.parentNode) box.remove(); }, dur + 150);
+  }
+
   function navigate(route, opts = {}) {
     if (transitioning) return;
     if (route === currentRoute) return;
     if (REDUCED) { activateRoute(route, { instant: true }); location.hash = route === "/" ? "/" : route; return; }
-    // Touch devices keep the light-speed canvas warp — only the full-page filter:blur()
-    // on .warp-out/.warp-in is swapped for a blur-free transition in the mobile CSS
-    // (that blur, not the streaks, was the GPU-heavy part that stuttered on phones).
+
+    // Touch devices (phones + tablets): the SAME light-speed jump as desktop, but
+    // built from a transient CSS streak overlay (warpJump) instead of the always-on
+    // canvas — that canvas + the full-page blur were the memory/GPU hogs that
+    // crashed mobile Safari. The routes underneath just fade (opacity-led, no blur,
+    // no scale re-raster); the streaks + bloom sell the warp. The incoming page's
+    // sections then stagger in on their own (.route.active .stagger > *).
+    if (COARSE) {
+      transitioning = true;
+      const current = $(".route.active");
+      const bloom = $("#warpBloom");
+      warpJump(WARP_TOUCH_TOTAL);
+      // Force the leave fade to commit before the hamburger close() mutates the
+      // fixed nav overlay in the same tick (WebKit would otherwise coalesce them
+      // and skip the fade). Plain timers drive the swap so navigation always
+      // completes even if rAF is throttled/paused.
+      if (current) { current.classList.add("warp-out-touch"); void current.offsetHeight; }
+      if (bloom) {
+        setTimeout(() => bloom.classList.add("on"), WARP_TOUCH_SWAP - 120);
+        setTimeout(() => bloom.classList.remove("on"), WARP_TOUCH_SWAP + 280);
+      }
+      setTimeout(() => {
+        if (current) current.classList.remove("warp-out-touch");
+        activateRoute(route, opts);
+        const target = $(".route.active");
+        if (target) {
+          target.classList.add("warp-in-touch");
+          setTimeout(() => target.classList.remove("warp-in-touch"), 700);
+        }
+        location.hash = route === "/" ? "/" : route;
+      }, WARP_TOUCH_SWAP);
+      setTimeout(() => { transitioning = false; }, WARP_TOUCH_TOTAL);
+      return;
+    }
+
+    // Desktop (fine pointer) keeps the full light-speed canvas warp.
     transitioning = true;
     const current = $(".route.active");
     const bloom = $("#warpBloom");
@@ -834,6 +895,11 @@
   function initStars() {
     const canvas = $("#stars");
     if (!canvas) return;
+    // Touch devices: drop the warp canvas entirely. A full-viewport, DPR-scaled
+    // canvas is a heavy, always-on GPU/memory cost on phones (a crash factor); the
+    // nebula texture + colour zones carry the backdrop, and touch gets its own CSS
+    // light-speed streaks (warpJump). Desktop keeps the canvas for the warp streaks.
+    if (COARSE) { canvas.remove(); return; }
     const ctx = canvas.getContext("2d");
     let w, h, dpr, stars = [], raf = null, scrollY = window.scrollY, shoot = null, shootTimer = 260;
     let warp = 0;
@@ -911,23 +977,13 @@
     }
     function frame() {
       ctx.clearRect(0, 0, w, h);
-      if (warp > 0.02) {
-        drawWarp();
-      } else {
-        for (const s of stars) { s.ph += s.tw; star(s, Math.max(0.04, s.a + Math.sin(s.ph) * 0.2)); }
-        if (!shoot && --shootTimer <= 0) { shoot = { x: Math.random() * w * 0.7, y: Math.random() * h * 0.3, vx: 6 + Math.random() * 3, vy: 2.2 + Math.random() * 1.2 }; shootTimer = 420 + Math.random() * 500; }
-        if (shoot) {
-          shoot.x += shoot.vx; shoot.y += shoot.vy;
-          const g = ctx.createLinearGradient(shoot.x - shoot.vx * 9, shoot.y - shoot.vy * 9, shoot.x, shoot.y);
-          g.addColorStop(0, "rgba(220,235,255,0)"); g.addColorStop(1, "rgba(240,247,255,.9)");
-          ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = 1.4; ctx.lineCap = "round";
-          ctx.beginPath(); ctx.moveTo(shoot.x - shoot.vx * 9, shoot.y - shoot.vy * 9); ctx.lineTo(shoot.x, shoot.y); ctx.stroke();
-          if (shoot.x > w + 60 || shoot.y > h + 60) shoot = null;
-        }
-      }
+      // The persistent starfield is gone (nebula texture + colour zones are the
+      // backdrop now). This canvas is warp-only: idle frames draw nothing, and the
+      // star array only seeds the light-speed streaks during a jump.
+      if (warp > 0.02) drawWarp();
       ctx.globalAlpha = 1; raf = requestAnimationFrame(frame);
     }
-    function statik() { ctx.clearRect(0, 0, w, h); for (const s of stars) star(s, s.a); ctx.globalAlpha = 1; }
+    function statik() { ctx.clearRect(0, 0, w, h); }
     resize();
     let dt; window.addEventListener("resize", () => { clearTimeout(dt); dt = setTimeout(() => { resize(); if (REDUCED) statik(); }, 200); });
     window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
@@ -942,18 +998,27 @@
   /* -------------------------------------------------------------------
      Light-speed intro
      ------------------------------------------------------------------- */
-  function initWarpIntro() {
-    const box = $("#warpIntro");
-    if (!box) return;
-    if (REDUCED) { box.remove(); return; }
-    const N = 26;
-    for (let i = 0; i < N; i++) {
+  // Fill a box with a radial burst of "light-speed" streak lines. Shared by the
+  // load intro and (on touch) the route-transition jump. Pure CSS/compositor and
+  // fully transient — nothing like the always-on canvas warp that crashed mobile.
+  function fillWarpLines(box, n) {
+    for (let i = 0; i < n; i++) {
       const s = document.createElement("span");
       s.className = "warp-line";
-      s.style.setProperty("--a", (i * (360 / N)).toFixed(1) + "deg");
+      s.style.setProperty("--a", (i * (360 / n)).toFixed(1) + "deg");
       s.style.setProperty("--d", (Math.floor(i / 3) * 45) + "ms");
       box.appendChild(s);
     }
+  }
+
+  function initWarpIntro() {
+    const box = $("#warpIntro");
+    if (!box) return;
+    // Reduced-motion gets no intro. Touch KEEPS the light-speed intro — it's a
+    // transient burst of compositor-only lines (gone by ~2.4s), not an always-on
+    // cost, so it was never the crash. The homepage layer density is (see CSS).
+    if (REDUCED) { box.remove(); return; }
+    fillWarpLines(box, COARSE ? 20 : 26);
     setTimeout(() => box.classList.add("done"), 1700);
     setTimeout(() => { if (box.parentNode) box.remove(); }, 2400);
   }
