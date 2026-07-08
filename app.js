@@ -1088,6 +1088,53 @@
   }
 
   /* -------------------------------------------------------------------
+     Space figures — feathered nebula/galaxy orbs placed through the site,
+     scrolling WITH the page and parallaxing slightly slower than content.
+     One shared scroll rAF drives all of them (transform only, compositor).
+     Skipped entirely on phones (≤640) and reduced-motion — extra decoded
+     image layers are exactly what crashes a low-memory iPhone.
+     ------------------------------------------------------------------- */
+  function initSpaceFigures() {
+    if (REDUCED) return;
+    // [image, top%, side, offset%, max-vw size, parallax speed]
+    const PLACEMENT = {
+      "/":         [["pleiades", 12, "left", 3, 30, 0.10]],
+      "/about":    [["andromeda", 15, "left", 3, 27, 0.15], ["whirlpool", 62, "right", 4, 24, 0.09]],
+      "/meetings": [["pillars", 13, "right", 3, 25, 0.13], ["orion", 60, "left", 4, 27, 0.08]],
+      "/notes":    [["cliffs", 15, "left", 3, 26, 0.14], ["ring", 64, "right", 5, 22, 0.10]],
+      "/team":     [["helix", 18, "right", 4, 25, 0.12]],
+      "/join":     [["tarantula", 16, "left", 4, 26, 0.11]],
+    };
+    const figs = [];
+    Object.keys(PLACEMENT).forEach((route) => {
+      const sec = document.querySelector(`.route[data-route="${route}"]`);
+      if (!sec) return;
+      PLACEMENT[route].forEach(([img, top, side, off, vw, speed]) => {
+        const d = el("div", "space-fig");
+        // position/z-index inline so they win over the `.route > *` content rule
+        // (which is position:relative z-index:1) — otherwise figures flow inline and
+        // shove the page content down instead of sitting absolutely behind it.
+        d.style.cssText = `position:absolute; z-index:0; top:${top}%; ${side}:${off}%; width:clamp(190px, ${vw}vw, 400px); background-image:url("assets/bg/fig-${img}.jpg");`;
+        d.dataset.sp = speed;
+        sec.insertBefore(d, sec.firstChild);
+        figs.push(d);
+      });
+    });
+    // Parallax only where the figures actually show (>640px). Phones keep them
+    // display:none (see CSS) — no decode, no scroll work — so the tab stays light.
+    if (!figs.length || !window.matchMedia("(min-width:641px)").matches) return;
+    let ticking = false;
+    const apply = () => {
+      const y = window.scrollY;
+      for (const d of figs) d.style.transform = `translate3d(0, ${(y * +d.dataset.sp).toFixed(1)}px, 0)`;
+      ticking = false;
+    };
+    window.addEventListener("scroll", () => {
+      if (ticking) return; ticking = true; requestAnimationFrame(apply);
+    }, { passive: true });
+  }
+
+  /* -------------------------------------------------------------------
      Boot
      ------------------------------------------------------------------- */
   function boot() {
@@ -1121,6 +1168,7 @@
     initHeroInteractions();
     initRouter();
     initWarpIntro();
+    initSpaceFigures();
     const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

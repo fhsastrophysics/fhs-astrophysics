@@ -104,32 +104,26 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 /* =====================================================================
    AMBIENT LAYERS
    ===================================================================== */
-#stars{ position:fixed; inset:0; z-index:0; width:100%; height:100%; pointer-events:none; }
+/* Warp canvas sits ABOVE the fixed background + content (below the nav) so the
+   light-speed streaks are actually visible during a route jump — with z-index:0 it
+   was painting BEHIND the opaque sky and never showed on desktop. Idle it draws
+   nothing and is pointer-events:none, so it never blocks the page. */
+#stars{ position:fixed; inset:0; z-index:40; width:100%; height:100%; pointer-events:none; }
 /* THE SKY — one bold Pleiades photo, fixed to the viewport, on every route. The
    PHOTO lives on ::before and drifts slowly (so it feels alive across the whole site,
    not a static png), scaled up so the pan never reveals an edge. The scrim lives on
    ::after and stays put, so text-contrast zones don't move. Tablets/desktop get the
    full 2880px file (iPad retina was being wrongly served a small blurry one); only
    phones get the tiny 800px file, since decoded-image RAM is what crashes them. */
-.bg-nebula{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.bg-nebula{ position:fixed; inset:0; z-index:0; pointer-events:none; }
 .bg-nebula::before{ content:""; position:absolute; inset:0;
-  background:url("assets/bg/pleiades-bg.jpg") center center / cover no-repeat;
-  transform:scale(1.08); will-change:transform;
-  animation: skyDrift 84s ease-in-out infinite alternate; }
-@keyframes skyDrift{
-  0%{   transform:scale(1.08) translate3d(-1.5%,-1.1%,0); }
-  100%{ transform:scale(1.08) translate3d(1.5%,1.3%,0); }
-}
-/* Scrim over the photo (not the whole page): darkens edges + the top nav band + the
-   lower hero/footer band where copy sits, leaving the bold blue centre untouched. */
+  background:url("assets/bg/jwst-bg.jpg") center center / cover no-repeat; }
+/* ONE subtle scrim, identical on every route (no per-route glow, no radial vignette,
+   no drift) so the sky is perfectly consistent and never "shifts" between routes —
+   just a little darkening under the nav band + footer to keep nav/text legible. */
 .bg-nebula::after{ content:""; position:absolute; inset:0; pointer-events:none;
-  background:
-    radial-gradient(ellipse 132% 92% at 50% 40%, transparent 40%, rgba(3,5,12,.5) 100%),
-    linear-gradient(180deg, rgba(3,5,12,.42) 0%, transparent 20%, transparent 50%, rgba(3,5,12,.62) 100%); }
-/* Phones: tiny file + no drift (keep the crash-prone tab as light as possible). */
-@media (max-width:640px){
-  .bg-nebula::before{ background-image:url("assets/bg/pleiades-bg-xs.jpg"); transform:none; animation:none; }
-}
+  background:linear-gradient(180deg, rgba(3,5,12,.55) 0%, transparent 16%, transparent 62%, rgba(3,5,12,.5) 100%); }
+@media (max-width:640px){ .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-xs.jpg"); } }
 .bg-planet{ display:none; }
 
 /* Grain — visible filmic texture over the dark background */
@@ -250,8 +244,20 @@ main, .nav, .footer{ position:relative; z-index:3; }
    ROUTER + transitions
    ===================================================================== */
 .router{ position:relative; }
-.route{ display:none; min-height:100vh; padding-bottom:8rem; }
+.route{ display:none; min-height:100vh; padding-bottom:8rem; position:relative; }
 .route.active{ display:block; }
+
+/* SPACE FIGURES — feathered nebula/galaxy orbs that scroll WITH the page (parallax
+   via JS), sitting between the fixed sky and the content. Same treatment as the K4-55
+   hero orb: the source JPG is on black, mix-blend:screen drops the black so only the
+   light adds, and a radial mask dissolves the square edges into the sky. Injected per
+   route by initSpaceFigures(); hidden on phones (extra decoded layers crash them). */
+.space-fig{ position:absolute; z-index:0; pointer-events:none; aspect-ratio:1;
+  background-position:center; background-size:cover; background-repeat:no-repeat;
+  mix-blend-mode:screen; opacity:.55; will-change:transform;
+  -webkit-mask:radial-gradient(circle at 50% 50%, #000 33%, transparent 70%);
+          mask:radial-gradient(circle at 50% 50%, #000 33%, transparent 70%); }
+@media (max-width:640px){ .space-fig{ display:none; } }
 /* Incoming page materializes as the streaks decelerate (fade in during warp-down) */
 .route.warp-in{ animation: warpIn .8s var(--ease-out) both; }
 @keyframes warpIn{ 0%{ opacity:0; filter:blur(14px); transform:scale(.955); } 45%{ opacity:.55; filter:blur(5px); } 100%{ opacity:1; filter:blur(0); transform:none; } }
@@ -513,12 +519,9 @@ main, .nav, .footer{ position:relative; z-index:3; }
    blue glow + section vignette + card spotlights + drifting specks.
    ===================================================================== */
 .route:not(.route--home){ position:relative; overflow:hidden; }
-/* Reading scrim on inner routes (viewport-anchored so it never bands as the tall
-   route scrolls). Content routes are meant to be READ, so they get a stronger, full
-   dark wash — heaviest under the nav where titles land, easing to a steady ~46% below
-   — while the bold sky still shows through. The home hero keeps the boldest sky. */
-.route:not(.route--home)::before{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background: linear-gradient(180deg, rgba(3,5,12,.66) 0%, rgba(3,5,12,.4) 34%, rgba(3,5,12,.34) 100%); }
+/* No per-route reading scrim any more — the deep-field sky is dark enough to read
+   over, and a per-route wash made inner routes visibly darker than home (a "lighting
+   shift" on transition). The header keeps a small localised backing (below). */
 .route:not(.route--home) > *{ position:relative; z-index:1; }
 
 /* Localised reading backing behind each chapter header (title + lede), left-anchored
