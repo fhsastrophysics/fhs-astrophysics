@@ -101,7 +101,35 @@
       bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
   ];
 
-  const ROUTES = ["/", "/about", "/meetings", "/notes", "/team", "/join"];
+  const ROUTES = ["/", "/about", "/meetings", "/notes", "/atlas", "/team", "/join"];
+
+  /* -------------------------------------------------------------------
+     DEEP-SKY ATLAS — real Hubble/Webb-archive objects (images already in
+     assets/bg/fig-*.jpg). Facts are the well-established textbook values.
+     ------------------------------------------------------------------- */
+  const ATLAS = [
+    { img: "pleiades",  name: "The Pleiades",         cat: "Messier 45",   type: "Open star cluster",    dist: "444 ly",     con: "Taurus",
+      desc: "A young cluster of hot blue stars drifting through a chance cloud of dust that scatters their light into wisps.", big: true },
+    { img: "orion",     name: "Orion Nebula",         cat: "Messier 42",   type: "Emission nebula",      dist: "1,344 ly",   con: "Orion",
+      desc: "The nearest massive star-forming region to Earth. A stellar nursery bright enough to see with the naked eye." },
+    { img: "pillars",   name: "Pillars of Creation",  cat: "Messier 16",   type: "Star-forming pillars", dist: "6,500 ly",   con: "Serpens",
+      desc: "Towering columns of cold gas, sculpted and slowly worn away by ultraviolet light from the newborn stars above them." },
+    { img: "cliffs",    name: "Cosmic Cliffs",        cat: "NGC 3324",     type: "Star-forming region",  dist: "7,600 ly",   con: "Carina",
+      desc: "The rim of a gigantic cavity carved into the Carina complex by radiation from young, violent stars.", big: true },
+    { img: "andromeda", name: "Andromeda Galaxy",     cat: "Messier 31",   type: "Spiral galaxy",        dist: "2.5 Mly",    con: "Andromeda",
+      desc: "Our nearest large galactic neighbor. A trillion stars on a slow collision course with the Milky Way." },
+    { img: "whirlpool", name: "Whirlpool Galaxy",     cat: "Messier 51",   type: "Grand-design spiral",  dist: "31 Mly",     con: "Canes Venatici",
+      desc: "The textbook spiral, its arms wound tight by a close encounter with the companion galaxy tugging at its edge." },
+    { img: "ring",      name: "Ring Nebula",          cat: "Messier 57",   type: "Planetary nebula",     dist: "2,300 ly",   con: "Lyra",
+      desc: "A sun-like star's cast-off outer layers, glowing as a nearly perfect torus around the white dwarf left behind." },
+    { img: "helix",     name: "Helix Nebula",         cat: "NGC 7293",     type: "Planetary nebula",     dist: "655 ly",     con: "Aquarius",
+      desc: "One of the closest planetary nebulae to Earth. A preview of our own Sun's fate, six billion years early.", big: true },
+    { img: "tarantula", name: "Tarantula Nebula",     cat: "30 Doradus",   type: "Starburst region",     dist: "161,000 ly", con: "Dorado",
+      desc: "The most violent star-forming region in the Local Group, home to the most massive stars known." },
+    { img: "k455",      name: "Kohoutek 4-55",        cat: "K 4-55",       type: "Planetary nebula",     dist: "4,600 ly",   con: "Cygnus",
+      desc: "A dying star's final exhale. This was the last image ever taken by Hubble's storied WFPC2 camera." },
+  ];
+  const atlasImg = (m) => m.img === "k455" ? "assets/bg/k455-accent.jpg" : `assets/bg/fig-${m.img}.jpg`;
 
   /* -------------------------------------------------------------------
      Helpers
@@ -167,32 +195,103 @@
   function initCursor() {
     if (!FINE || REDUCED) return;
     const c = $("#cursor");
-    const label = $(".cursor__label", c);
     if (!c) return;
+    const dot = $(".cursor__dot", c);
+    const ring = $(".cursor__ring", c);
+    const label = $(".cursor__label", c);
     document.body.style.cursor = "none";
-    let x = 0, y = 0, tx = 0, ty = 0, raf = null;
+
+    // px = live pointer (used by the dot, 1:1, zero lag).
+    // rx/ry = eased ring position; the ring is the only thing that "trails".
+    let px = 0, py = 0, rx = 0, ry = 0, prx = 0, pry = 0, raf = null, primed = false;
+
+    // Hover target state. mode: "" | "wrap" (snap a frame around small controls)
+    // | "focus" (grow + follow over big cards). `el` is re-measured each frame so
+    // the frame stays glued while the page scrolls or the layout shifts.
+    let el = null, mode = "";
+    // Current applied ring geometry, so we only touch the DOM when it changes.
+    let rw = 34, rh = 34, rr = 17;
+
+    const setRing = (w, h, radius) => {
+      if (w === rw && h === rh && radius === rr) return;
+      rw = w; rh = h; rr = radius;
+      ring.style.width = w + "px";
+      ring.style.height = h + "px";
+      ring.style.margin = `${-h / 2}px 0 0 ${-w / 2}px`;
+      ring.style.borderRadius = radius + "px";
+    };
+
     function tick() {
-      x += (tx - x) * 0.22; y += (ty - y) * 0.22;
-      c.style.transform = `translate(${x}px, ${y}px)`;
+      // Ring springs toward its target: the pointer normally, the element's
+      // centre when wrapping a small control (that's the magnetic "snap").
+      let tX = px, tY = py;
+      if (mode && el) {
+        const r = el.getBoundingClientRect();
+        if (mode === "wrap") {
+          tX = r.left + r.width / 2;
+          tY = r.top + r.height / 2;
+          const radius = parseFloat(getComputedStyle(el).borderRadius) || 8;
+          setRing(r.width + 14, r.height + 14, radius + 7);
+        } else { // focus — hug the pointer with a bigger lens
+          setRing(64, 64, 32);
+        }
+      } else {
+        setRing(34, 34, 17);
+      }
+
+      rx += (tX - rx) * 0.2;
+      ry += (tY - ry) * 0.2;
+
+      // Velocity → squash & stretch, but only when free-floating (idle).
+      // The ring leans and elongates in the direction it's flying, like a comet.
+      let extra = "";
+      if (!mode) {
+        const vx = rx - prx, vy = ry - pry;
+        const speed = Math.hypot(vx, vy);
+        if (speed > 0.5) {
+          const k = Math.min(speed * 0.012, 0.55);
+          const ang = Math.atan2(vy, vx) * 180 / Math.PI;
+          extra = ` rotate(${ang}deg) scale(${(1 + k).toFixed(3)}, ${(1 - k * 0.6).toFixed(3)})`;
+        }
+      }
+      prx = rx; pry = ry;
+
+      dot.style.transform = `translate(${px}px, ${py}px)`;
+      label.style.transform = `translate(${px}px, ${py}px)`;
+      ring.style.transform = `translate(${rx}px, ${ry}px)${extra}`;
       raf = requestAnimationFrame(tick);
     }
+
     document.addEventListener("pointermove", (e) => {
-      tx = e.clientX; ty = e.clientY;
+      px = e.clientX; py = e.clientY;
+      if (!primed) { rx = px; ry = py; prx = px; pry = py; primed = true; } // no launch-from-corner streak
       c.classList.add("on");
       if (!raf) tick();
-    });
-    document.addEventListener("pointerleave", () => c.classList.remove("on"));
+    }, { passive: true });
+    document.addEventListener("pointerdown", () => c.classList.add("down"));
+    document.addEventListener("pointerup", () => c.classList.remove("down"));
+    window.addEventListener("blur", () => c.classList.remove("on", "down"));
+
     const HOT_SELECTOR = "a, button, .mcard, .ncard, .tcard, .arc-node, .mi-item";
     document.addEventListener("pointerover", (e) => {
-      const t = e.target.closest(HOT_SELECTOR);
-      if (t) {
-        c.classList.add("hot");
-        const l = t.dataset.cursor || (t.closest(".mcard") ? "PREVIEW" : t.closest(".ncard") ? "OPEN" : t.tagName === "A" || t.tagName === "BUTTON" ? "→" : "");
-        label.textContent = l;
-      }
+      const t = e.target.closest && e.target.closest(HOT_SELECTOR);
+      if (!t || t === el) return;
+      el = t;
+      const r = t.getBoundingClientRect();
+      // Small controls get a magnetic frame; large cards get a following lens.
+      mode = (r.width <= 300 && r.height <= 150) ? "wrap" : "focus";
+      c.classList.add("hot");
+      c.classList.toggle("wrap", mode === "wrap");
+      label.textContent = t.dataset.cursor ||
+        (t.closest(".mcard") ? "PREVIEW" : t.closest(".ncard") ? "OPEN" :
+         t.tagName === "A" || t.tagName === "BUTTON" ? "→" : "");
     });
     document.addEventListener("pointerout", (e) => {
-      if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest(HOT_SELECTOR)) c.classList.remove("hot");
+      const to = e.relatedTarget;
+      if (!to || !to.closest || !to.closest(HOT_SELECTOR)) {
+        el = null; mode = "";
+        c.classList.remove("hot", "wrap");
+      }
     });
   }
 
@@ -473,19 +572,23 @@
           <span class="mcard__no">${pad(m.n)}</span>
           <span class="mcard__kind">${m.kind}</span>
         </div>
-        <div class="mcard__thumb"><img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.n}: ${m.title}" loading="lazy" width="640" height="400"></div>
+        <div class="mcard__thumb">
+          <img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.n}: ${m.title}" loading="lazy" width="640" height="400">
+          <span class="mcard__scan" aria-hidden="true"></span>
+          <span class="mcard__reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="mcard__coord" aria-hidden="true">Meeting ${m.n} · ${m.kind || "Deck"}</span>
+        </div>
         <div class="mcard__body">
           <h3 class="mcard__title">${m.title}</h3>
           <p class="mcard__sum">${m.summary}</p>
           <div class="mcard__topics">${m.topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
           <div class="mcard__cta">
             <span>Preview deck</span>
-            <span class="mcard__cta-arw" aria-hidden="true">↗</span>
+            <span class="mcard__cta-lock" aria-hidden="true"><b></b>ACQUIRE</span>
           </div>
         </div>`;
       grid.appendChild(card);
     });
-    initSpotlight($$(".mcard", grid));
     // Click / keyboard opens modal
     grid.addEventListener("click", (e) => {
       const card = e.target.closest(".mcard"); if (!card) return;
@@ -606,7 +709,7 @@
         </div>
         <div class="ncard__body">
           <h3 class="ncard__title">${nd.title}</h3>
-          <p class="ncard__meta"><span>${nd.pages}p · LaTeX</span><span class="ncard__open">Open ${IC_OPEN}</span></p>
+          <p class="ncard__meta"><span>${nd.pages} pg · LaTeX</span><span class="ncard__open">Open ${IC_OPEN}</span></p>
         </div>`;
       grid.appendChild(a);
     });
@@ -651,6 +754,106 @@
         grid.appendChild(li);
       });
     }
+  }
+
+  /* -------------------------------------------------------------------
+     Render - Deep-Sky Atlas (interactive plates + lightbox)
+     ------------------------------------------------------------------- */
+  function renderAtlas() {
+    const grid = $("#atlasGrid");
+    if (!grid) return;
+    // Column spans tile the 6-col grid with zero holes: 3+3 / 2+2+2 / 3+3 / 2+2+2
+    const SPANS = [3, 3, 2, 2, 2, 3, 3, 2, 2, 2];
+    ATLAS.forEach((m, i) => {
+      const card = el("button", "acard reveal");
+      card.type = "button";
+      card.style.setProperty("--i", Math.min(i, 5));
+      card.style.setProperty("--sp", SPANS[i] || 2);
+      card.dataset.idx = String(i);
+      card.setAttribute("data-cursor", "INSPECT");
+      card.setAttribute("aria-label", `Inspect ${m.name}, ${m.type}, ${m.dist} away in ${m.con}`);
+      card.innerHTML = `
+        <span class="acard__media"><img src="${atlasImg(m)}" alt="" loading="lazy" decoding="async"></span>
+        <span class="acard__scan" aria-hidden="true"></span>
+        <span class="acard__top" aria-hidden="true">
+          <span class="acard__idx">${pad(i + 1)}</span>
+          <span class="acard__cat">${m.cat}</span>
+        </span>
+        <span class="acard__info">
+          <span class="acard__name">${m.name}</span>
+          <span class="acard__meta">${m.type}</span>
+          <span class="acard__stats" aria-hidden="true">
+            <span><i>Distance</i><b>${m.dist}</b></span>
+            <span><i>Constellation</i><b>${m.con}</b></span>
+          </span>
+        </span>`;
+      grid.appendChild(card);
+    });
+    initSpotlight($$(".acard", grid));
+    initAtlasTilt($$(".acard", grid));
+    grid.addEventListener("click", (e) => {
+      const card = e.target.closest(".acard");
+      if (card) openAtlasLightbox(parseInt(card.dataset.idx, 10));
+    });
+  }
+
+  /* Subtle 3D tilt toward the cursor — desktop only, transform-only. */
+  function initAtlasTilt(cards) {
+    if (!FINE || REDUCED) return;
+    cards.forEach((c) => {
+      let raf = null;
+      c.addEventListener("pointermove", (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          const r = c.getBoundingClientRect();
+          const dx = (e.clientX - r.left) / r.width - 0.5;
+          const dy = (e.clientY - r.top) / r.height - 0.5;
+          c.style.transform = `perspective(700px) rotateX(${(-dy * 4).toFixed(2)}deg) rotateY(${(dx * 5).toFixed(2)}deg) translateY(-3px)`;
+          raf = null;
+        });
+      });
+      c.addEventListener("pointerleave", () => {
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+        c.style.transform = "";
+      });
+    });
+  }
+
+  let lbLastFocus = null;
+  function openAtlasLightbox(i) {
+    const m = ATLAS[i]; if (!m) return;
+    const lb = $("#atlasLightbox"); if (!lb) return;
+    lbLastFocus = document.activeElement;
+    $("#lbImg").src = atlasImg(m);
+    $("#lbImg").alt = m.name;
+    $("#lbEyebrow").textContent = `Object ${pad(i + 1)} · ${m.type}`;
+    $("#lbTitle").textContent = m.name;
+    $("#lbSum").textContent = m.desc;
+    $("#lbData").innerHTML = [
+      ["Catalog", m.cat], ["Type", m.type], ["Distance", m.dist], ["Constellation", m.con],
+    ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+    $("#lbCredit").textContent = "Imagery · NASA / ESA mission archives";
+    lb.classList.add("open");
+    lb.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const closeBtn = lb.querySelector(".modal__close");
+    if (closeBtn) closeBtn.focus();
+  }
+  function closeAtlasLightbox() {
+    const lb = $("#atlasLightbox"); if (!lb) return;
+    lb.classList.remove("open");
+    lb.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (lbLastFocus && lbLastFocus.focus) lbLastFocus.focus();
+  }
+  function initAtlasLightbox() {
+    const lb = $("#atlasLightbox"); if (!lb) return;
+    lb.addEventListener("click", (e) => {
+      if (e.target.matches("[data-close]") || e.target.closest("[data-close]")) closeAtlasLightbox();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lb.classList.contains("open")) closeAtlasLightbox();
+    });
   }
 
   /* -------------------------------------------------------------------
@@ -1097,8 +1300,10 @@
   function initSpaceFigures() {
     if (REDUCED) return;
     // [image, top%, side, offset%, max-vw size, parallax speed]
+    // Home is deliberately left clean — just the JWST field + wordmark. The
+    // decorative orbs (Pleiades, Kohoutek, etc.) live on the inner routes and the
+    // Atlas instead, so the title page reads uncluttered.
     const PLACEMENT = {
-      "/":         [["pleiades", 12, "left", 3, 30, 0.10]],
       "/about":    [["andromeda", 15, "left", 3, 27, 0.15], ["whirlpool", 62, "right", 4, 24, 0.09]],
       "/meetings": [["pillars", 13, "right", 3, 25, 0.13], ["orion", 60, "left", 4, 27, 0.08]],
       "/notes":    [["cliffs", 15, "left", 3, 26, 0.14], ["ring", 64, "right", 5, 22, 0.10]],
@@ -1148,6 +1353,8 @@
     renderMeetings();
     renderNotes();
     renderTeam();
+    renderAtlas();
+    initAtlasLightbox();
     renderTicker();
     initHeroEquations();
     initAmbientParticles();

@@ -32,7 +32,6 @@
      .bg-nebula in CSS (responsive files step down in size for low-memory phones). -->
 <div class="bg-nebula" aria-hidden="true"></div>
 
-<div class="grain" aria-hidden="true"></div>
 <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span><span class="cursor__label"></span></div>
 
 <!-- Warp bloom (light-speed transition center flash) -->
@@ -58,6 +57,7 @@
       <a href="#/about"    data-route="/about">About</a>
       <a href="#/meetings" data-route="/meetings">Meetings</a>
       <a href="#/notes"    data-route="/notes">Notes</a>
+      <a href="#/atlas"    data-route="/atlas">Atlas</a>
       <a href="#/team"     data-route="/team">Team</a>
       <a href="#/join"     data-route="/join" class="nav__cta">Join</a>
     </nav>
@@ -106,83 +106,14 @@
 
     <div class="home__glow" aria-hidden="true"></div>
 
-    <!-- Featured Hubble nebula (Kohoutek 4-55). A real photo screen-blended + radially
-         masked into a glowing orb; its black background drops out. Desktop/tablet only
-         (hidden on phones to save a compositor layer). See .hero-neb in CSS. -->
-    <div class="hero-neb" aria-hidden="true"></div>
-
     <!-- Animated cosmic backdrop: a black hole with a spinning accretion disk, a
-         star being born (pulsing nebula), a dying star (periodic supernova flash),
-         a drifting spaceship, and pulsar points. Subtle + slow so it's alive
-         without being busy. Parallaxes with the cursor (see initHeroInteractions). -->
+         dying star (periodic supernova flash), and pulsar points. Subtle and slow
+         so it stays alive without being busy. Parallaxes with the cursor. -->
     <div class="home__cosmos" aria-hidden="true">
       <span class="cosmo cosmo--blackhole"></span>
-      <span class="cosmo cosmo--nebula"></span>
       <span class="cosmo cosmo--supernova"></span>
       <span class="cosmo cosmo--pulsar cosmo--pulsar-a"></span>
       <span class="cosmo cosmo--pulsar cosmo--pulsar-b"></span>
-      <span class="cosmo cosmo--ship">
-        <svg viewBox="0 0 210 76" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="sh-hull" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#F4F8FF"/><stop offset=".5" stop-color="#C6D0E0"/><stop offset="1" stop-color="#79839B"/>
-            </linearGradient>
-            <linearGradient id="sh-wing" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#B4BFD2"/><stop offset="1" stop-color="#525B70"/>
-            </linearGradient>
-            <linearGradient id="sh-fin" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#CBD4E4"/><stop offset="1" stop-color="#6A7488"/>
-            </linearGradient>
-            <radialGradient id="sh-glass" cx="38%" cy="30%" r="82%">
-              <stop offset="0" stop-color="#EAF4FF"/><stop offset=".45" stop-color="#5F98EC"/><stop offset="1" stop-color="#0E2E5E"/>
-            </radialGradient>
-            <radialGradient id="sh-core" cx="84%" cy="50%" r="62%">
-              <stop offset="0" stop-color="#FFFFFF"/><stop offset=".3" stop-color="#FFEBA6"/><stop offset=".66" stop-color="#FF9A3C"/><stop offset="1" stop-color="rgba(255,120,40,0)"/>
-            </radialGradient>
-            <radialGradient id="sh-halo" cx="86%" cy="50%" r="60%">
-              <stop offset="0" stop-color="rgba(150,190,255,.9)"/><stop offset="1" stop-color="rgba(120,170,255,0)"/>
-            </radialGradient>
-          </defs>
-
-          <!-- thruster flares (twin engines, behind the hull) -->
-          <g class="cosmo__thrust">
-            <ellipse cx="42" cy="29" rx="40" ry="8.5" fill="url(#sh-halo)"/>
-            <ellipse cx="38" cy="29" rx="27" ry="4.6" fill="url(#sh-core)"/>
-            <ellipse cx="42" cy="47" rx="40" ry="8.5" fill="url(#sh-halo)"/>
-            <ellipse cx="38" cy="47" rx="27" ry="4.6" fill="url(#sh-core)"/>
-          </g>
-
-          <!-- swept rear fins -->
-          <path d="M86,30 L112,9 L132,28 Z"  fill="url(#sh-fin)"/>
-          <path d="M86,46 L112,67 L132,48 Z" fill="url(#sh-fin)"/>
-          <!-- delta wing sweeping back from mid-hull -->
-          <path d="M150,44 L104,44 L92,60 L138,56 Z" fill="url(#sh-wing)"/>
-
-          <!-- engine block -->
-          <rect x="52" y="24" width="26" height="28" rx="9" fill="url(#sh-wing)"/>
-          <circle cx="60" cy="31" r="2.4" fill="#3f4859"/>
-          <circle cx="60" cy="45" r="2.4" fill="#3f4859"/>
-
-          <!-- fuselage -->
-          <path d="M64,24 C108,15 156,17 194,38 C156,59 108,61 64,52 C56,45 56,31 64,24 Z"
-                fill="url(#sh-hull)" stroke="#8893A9" stroke-width="1"/>
-          <!-- hull panel seams -->
-          <path d="M76,28 q60,-5 112,10 M76,48 q60,5 112,-10" fill="none" stroke="rgba(88,98,120,.4)" stroke-width="1"/>
-          <path d="M120,22 L120,54" stroke="rgba(88,98,120,.28)" stroke-width="1"/>
-
-          <!-- cockpit canopy -->
-          <ellipse cx="156" cy="38" rx="21" ry="10" fill="url(#sh-glass)" stroke="#3A6AB0" stroke-width="1"/>
-          <ellipse cx="149" cy="34" rx="7" ry="3.2" fill="rgba(255,255,255,.6)"/>
-          <!-- nose sheen -->
-          <path d="M168,31 C182,33 190,36 194,38 C190,40 182,43 168,45" fill="rgba(255,255,255,.3)"/>
-
-          <!-- running lights + antenna -->
-          <circle class="cosmo__navlight cosmo__navlight--r" cx="120" cy="20" r="2.3" fill="#ff5a5a"/>
-          <circle class="cosmo__navlight cosmo__navlight--g" cx="120" cy="56" r="2.3" fill="#5affa0"/>
-          <path d="M128,18 L133,7" stroke="#9aa4b3" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="133" cy="6" r="1.8" fill="#BCD7FF"/>
-        </svg>
-      </span>
     </div>
 
     <!-- Drifting astrophysics equations that fade in and out behind the wordmark.
@@ -190,7 +121,7 @@
          `data-tex` is the source; the fallback text inside is what shows if KaTeX
          hasn't loaded yet, and gets overwritten the moment it does. Positions +
          durations + negative delays are deliberately spread so the whole grid is
-         always mid-fade — one continuous seamless loop, no visible "reset". -->
+         always mid-fade, one continuous seamless loop, no visible "reset". -->
     <div class="home__equations" aria-hidden="true">
       <span class="eqn" data-tex="E = mc^2"                                                                                     style="--x:6%;  --y:14%; --dur:15s; --delay:-1s;"></span>
       <span class="eqn" data-tex="R_s = \tfrac{2GM}{c^2}"                                                                        style="--x:78%; --y:11%; --dur:19s; --delay:-4s;"></span>
@@ -201,13 +132,11 @@
       <span class="eqn" data-tex="L = 4\pi R^2 \sigma T^4"                                                                       style="--x:63%; --y:38%; --dur:20s; --delay:-14s;"></span>
       <span class="eqn" data-tex="\rho_c = \tfrac{3H^2}{8\pi G}"                                                                 style="--x:4%;  --y:44%; --dur:22s; --delay:-9s;"></span>
       <span class="eqn" data-tex="G_{\mu\nu} = 8\pi G\, T_{\mu\nu}"                                                              style="--x:90%; --y:82%; --dur:19s; --delay:-16s;"></span>
-      <span class="eqn" data-tex="c \approx 3 \times 10^{8}\ \text{m/s}"                                                         style="--x:44%; --y:8%;  --dur:24s; --delay:-13s;"></span>
       <span class="eqn" data-tex="E^2 = (pc)^2 + (mc^2)^2"                                                                       style="--x:22%; --y:22%; --dur:16s; --delay:-3s;"></span>
       <span class="eqn" data-tex="H^2 = \tfrac{8\pi G}{3}\rho"                                                                   style="--x:70%; --y:26%; --dur:20s; --delay:-7s;"></span>
       <span class="eqn" data-tex="\tfrac{1}{\lambda} = R\!\left(\tfrac{1}{n_1^2} - \tfrac{1}{n_2^2}\right)"                       style="--x:11%; --y:82%; --dur:22s; --delay:-5s;"></span>
       <span class="eqn" data-tex="v_{\text{esc}} = \sqrt{\tfrac{2GM}{R}}"                                                        style="--x:38%; --y:52%; --dur:17s; --delay:-10s;"></span>
       <span class="eqn" data-tex="T_H = \tfrac{\hbar c^3}{8\pi G M k_B}"                                                         style="--x:82%; --y:38%; --dur:21s; --delay:-15s;"></span>
-      <span class="eqn" data-tex="1 + z = \tfrac{a_0}{a}"                                                                        style="--x:56%; --y:20%; --dur:15s; --delay:-2s;"></span>
       <span class="eqn" data-tex="N(t) = N_0\, e^{-\lambda t}"                                                                   style="--x:5%;  --y:70%; --dur:19s; --delay:-12s;"></span>
       <span class="eqn" data-tex="\lambda_{\max} T = 2.898 \times 10^{-3}\ \text{m·K}"                                            style="--x:64%; --y:66%; --dur:23s; --delay:-8s;"></span>
       <span class="eqn" data-tex="v_{\text{orb}} = \sqrt{\tfrac{GM}{r}}"                                                         style="--x:28%; --y:88%; --dur:18s; --delay:-17s;"></span>
@@ -218,17 +147,13 @@
       <span class="eqn" data-tex="\tfrac{L}{L_\odot} = \left(\tfrac{M}{M_\odot}\right)^{3.5}"                                     style="--x:88%; --y:64%; --dur:19s; --delay:-3s;"></span>
       <span class="eqn" data-tex="\nabla^2 \phi = 4\pi G \rho"                                                                   style="--x:34%; --y:70%; --dur:17s; --delay:-14s;"></span>
       <span class="eqn" data-tex="p = \tfrac{mv}{\sqrt{1 - v^2/c^2}}"                                                            style="--x:66%; --y:88%; --dur:21s; --delay:-9s;"></span>
-      <span class="eqn" data-tex="\tfrac{\Delta\nu}{\nu} = \tfrac{v}{c}"                                                         style="--x:20%; --y:12%; --dur:15s; --delay:-16s;"></span>
-      <span class="eqn" data-tex="\Lambda \approx 10^{-52}\ \text{m}^{-2}"                                                       style="--x:96%; --y:44%; --dur:23s; --delay:-5s;"></span>
-      <span class="eqn" data-tex="t_p = \sqrt{\tfrac{\hbar G}{c^5}}"                                                             style="--x:50%; --y:60%; --dur:20s; --delay:-18s;"></span>
       <span class="eqn" data-tex="S = \tfrac{k_B c^3 A}{4 \hbar G}"                                                              style="--x:8%;  --y:26%; --dur:18s; --delay:-7s;"></span>
-      <span class="eqn" data-tex="\rho + 3p/c^2 \gtrless 0"                                                                       style="--x:42%; --y:24%; --dur:16s; --delay:-13s;"></span>
-      <span class="eqn" data-tex="a(t) \propto t^{2/3}"                                                                          style="--x:74%; --y:50%; --dur:22s; --delay:-2s;"></span>
       <span class="eqn" data-tex="\Delta E \Delta t \gtrsim \tfrac{\hbar}{2}"                                                    style="--x:26%; --y:44%; --dur:19s; --delay:-15s;"></span>
-      <span class="eqn" data-tex="T \propto 1/a(t)"                                                                              style="--x:60%; --y:10%; --dur:14s; --delay:-6s;"></span>
       <span class="eqn" data-tex="\Delta \phi = \tfrac{4GM}{c^2 b}"                                                              style="--x:10%; --y:54%; --dur:23s; --delay:-10s;"></span>
-      <span class="eqn" data-tex="M \dot v = -\dot M v_e"                                                                        style="--x:72%; --y:82%; --dur:17s; --delay:-1s;"></span>
     </div>
+
+    <!-- Editorial hairline grid columns over the hero (SPACESIS-style). Desktop only. -->
+    <div class="home__gridlines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
 
     <p class="home__eyebrow">Fremont High School · Sunnyvale, California</p>
 
@@ -282,6 +207,15 @@
 
     <a class="home__scroll" href="#/about" data-route="/about">
       <span class="home__scroll-line"></span>Scroll
+    </a>
+
+    <!-- Circular "Discover" ring (SPACESIS-style), bottom-right -->
+    <a class="home__discover magnetic" href="#/atlas" data-route="/atlas" aria-label="Discover the deep-sky atlas">
+      <svg class="home__discover-ring" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><path id="dcirc" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
+        <text><textPath href="#dcirc">DEEP-SKY ATLAS · TEN OBJECTS · DEEP-SKY ATLAS · </textPath></text>
+      </svg>
+      <span class="home__discover-arw" aria-hidden="true">↓</span>
     </a>
   </div>
 </section>
@@ -394,6 +328,30 @@
     </div>
     <div class="notes-filter reveal" id="notesFilter"></div>
     <div class="notes-grid" id="notesGrid"></div>
+
+    <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/atlas" data-route="/atlas">
+        <span class="mono dim">Continue</span>
+        <span class="route__next-title">Deep-Sky Atlas</span>
+        <span class="route__next-arw" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - ATLAS (interactive deep-sky gallery)
+     ================================================================== -->
+<section class="route route--atlas" data-route="/atlas">
+  <div class="chapter">
+    <h1 class="chapter__title split-chars">Deep-Sky Atlas</h1>
+    <p class="chapter__lede">Ten objects we keep coming back to. <br/><span class="dim">Real Hubble &amp; Webb imagery. Hover a plate for the data; click to inspect.</span></p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="atlas-grid" id="atlasGrid"></div>
+    <noscript><p class="dim">Enable JavaScript to browse the atlas.</p></noscript>
 
     <div class="route__next reveal">
       <a class="route__next-link magnetic" href="#/team" data-route="/team">
@@ -543,6 +501,22 @@
 
 </main>
 
+<!-- Atlas lightbox (populated dynamically) -->
+<div class="modal lightbox" id="atlasLightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__panel lightbox__panel" role="document">
+    <button class="modal__close" data-close aria-label="Close viewer">✕</button>
+    <div class="lightbox__media"><img id="lbImg" src="" alt="" /></div>
+    <div class="lightbox__body">
+      <div class="modal__eyebrow" id="lbEyebrow">Object</div>
+      <h2 class="modal__title" id="lbTitle">Title</h2>
+      <p class="modal__sum" id="lbSum">Summary</p>
+      <dl class="lightbox__data" id="lbData"></dl>
+      <p class="lightbox__credit" id="lbCredit"></p>
+    </div>
+  </div>
+</div>
+
 <!-- Meeting modal (populated dynamically) -->
 <div class="modal" id="meetingModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
   <div class="modal__scrim" data-close></div>
@@ -591,6 +565,7 @@
       <a href="#/about"    data-route="/about">About</a>
       <a href="#/meetings" data-route="/meetings">Meetings</a>
       <a href="#/notes"    data-route="/notes">Notes</a>
+      <a href="#/atlas"    data-route="/atlas">Atlas</a>
       <a href="#/team"     data-route="/team">Team</a>
       <a href="#/join"     data-route="/join">Join</a>
       <a href="https://www.instagram.com/fhs.astrophysicsclub/" target="_blank" rel="noopener" aria-label="Follow on Instagram">Instagram</a>

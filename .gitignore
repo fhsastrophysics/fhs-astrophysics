@@ -1,6 +1,7 @@
 .DS_Store
 **/.DS_Store
 .claude/
+.vscode/
 # raw background source images (large); only the processed web assets are committed
 assets/bg/*-src.*
 assets/bg/cand-*.jpg
