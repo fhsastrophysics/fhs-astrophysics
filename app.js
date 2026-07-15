@@ -395,6 +395,22 @@
     // Last-written parallax cursor position; only rewrite background layers when it
     // actually moves (transforms only, translate3d for GPU compositing — no reflow).
     let lpx = 999, lpy = 999;
+
+    // Re-entering home must not SNAP the parallax. While home is inactive the loop
+    // stops writing the background layers, so they stay frozen at whatever offset
+    // the cursor last produced — then the first active frame jumps them to the live
+    // offset. That jump, landing mid-warp (~the swap point), was the "shortcut".
+    // Reset the eased cursor + astronaut spring to neutral and clear the inline
+    // transforms (revert to CSS-centred) so the layers ease out from centre instead.
+    // Exposed for activateRoute() to call whenever the home route becomes active.
+    function resetParallax() {
+      mx = my = tmx = tmy = 0;
+      ax = ay = ar = vx = vy = 0;
+      lpx = lpy = 999;
+      [earth, rings, beam, glow, cosmos, eqns].forEach((l) => { if (l) l.style.transform = ""; });
+    }
+    window.__resetHeroParallax = resetParallax;
+
     function loop(now) {
       const el = (now - t0) / 1000;
       const active = !homeRoute || homeRoute.classList.contains("active");
@@ -944,6 +960,7 @@
   function activateRoute(route, opts = {}) {
     const target = document.querySelector(`.route[data-route="${route}"]`);
     if (!target) return;
+    target.classList.remove("prewarm");   // was pre-rendered during the jump build-up; now show it for real
     // Drive the per-route ambient colour zone + nebula texture (see CSS
     // body[data-route="…"] rules). Set on <body> so the fixed backdrop layers,
     // which live outside the route sections, can react to the active route.
@@ -956,6 +973,9 @@
     target.classList.add("enter");
     window.scrollTo({ top: 0, behavior: opts.instant ? "auto" : "auto" });
     currentRoute = route;
+    // Re-entering home: neutralize the hero parallax so its background layers ease
+    // out from centre instead of snapping to the live cursor offset mid-warp.
+    if (route === "/" && window.__resetHeroParallax) window.__resetHeroParallax();
     playChapter(target);
     const raw = (location.hash || "").replace(/^#/, "");
     if (raw.startsWith("meeting-")) {
@@ -1002,12 +1022,24 @@
     if (route === currentRoute) return;
     if (REDUCED) { activateRoute(route, { instant: true }); location.hash = route === "/" ? "/" : route; return; }
 
+    // Pre-warm the incoming HOME route (the only heavy one) NOW, at the very start of
+    // the jump, so the browser rasterises its big first paint during the warp build-up
+    // — behind the streaks — instead of stalling the swap frame. See .route--home.prewarm
+    // in CSS. activateRoute() clears the class when it actually swaps in. Desktop only:
+    // touch navigation must add ZERO extra layers (the low-memory-iPhone crash guard),
+    // and phones already render a heavily trimmed home, so they don't need it.
+    const incoming = document.querySelector(`.route[data-route="${route}"]`);
+    if (route === "/" && !COARSE && incoming && !incoming.classList.contains("active")) {
+      incoming.classList.add("prewarm");
+    }
+
     // Touch devices. Tablets (iPad) get the light-speed streak overlay; phones get a
     // clean, overlay-free cross-fade (navigation is where a low-memory iPhone crashes,
     // so we add ZERO extra layers there). No bloom on either — that flash, plus the
     // old vignette, was the "weird lighting change". Routes just cross-fade underneath.
     if (COARSE) {
       transitioning = true;
+      document.body.classList.add("warping");   // pause home hero anims during the jump
       const current = $(".route.active");
       const phone = window.innerWidth <= 640;
       const swap = phone ? WARP_PHONE_SWAP : WARP_TOUCH_SWAP;
@@ -1027,12 +1059,13 @@
         }
         location.hash = route === "/" ? "/" : route;
       }, swap);
-      setTimeout(() => { transitioning = false; }, total);
+      setTimeout(() => { transitioning = false; document.body.classList.remove("warping"); }, total);
       return;
     }
 
     // Desktop (fine pointer) keeps the full light-speed canvas warp.
     transitioning = true;
+    document.body.classList.add("warping");   // pause home hero anims during the jump
     const current = $(".route.active");
     const bloom = $("#warpBloom");
     // Kick off the canvas warp for the full duration and start the exit fade together.
@@ -1054,7 +1087,7 @@
       }
       location.hash = route === "/" ? "/" : route;
     }, WARP_SWAP);
-    setTimeout(() => { transitioning = false; }, WARP_TOTAL);
+    setTimeout(() => { transitioning = false; document.body.classList.remove("warping"); }, WARP_TOTAL);
   }
 
   function initRouter() {
@@ -1236,11 +1269,44 @@
      directions on one seamless loop (fade in → drift → fade out forever).
      KaTeX is deferred in <head>; if it isn't ready yet we retry on load.
      ------------------------------------------------------------------- */
+  // Lazy-load KaTeX from the CDN exactly once, on demand. Returns a promise that
+  // resolves when window.katex is ready (or on error — we just skip rendering).
+  let katexPromise = null;
+  function loadKatex() {
+    if (window.katex) return Promise.resolve();
+    if (katexPromise) return katexPromise;
+    katexPromise = new Promise((resolve) => {
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
+      css.integrity = "sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+";
+      css.crossOrigin = "anonymous";
+      document.head.appendChild(css);
+      const s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js";
+      s.integrity = "sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg";
+      s.crossOrigin = "anonymous";
+      s.onload = () => resolve();
+      s.onerror = () => resolve();
+      document.head.appendChild(s);
+    });
+    return katexPromise;
+  }
+
   function initHeroEquations() {
+    const container = $(".home__equations");
     const nodes = $$(".home__equations .eqn");
     if (!nodes.length) return;
+
+    // The equations are a decorative background layer. Typesetting them means
+    // shipping ~280KB of KaTeX + parsing 27 formulas — a bad trade on a phone,
+    // where they're tiny and barely visible. Drop the whole layer on coarse /
+    // touch devices and never load KaTeX there. The nebula + wordmark carry the
+    // hero. Desktop (fine pointer) keeps the full drifting-math field.
+    if (!FINE || REDUCED) { if (container) container.remove(); return; }
+
     // Randomize drift/scale up front (independent of KaTeX being ready) so the
-    // float animation is varied even before/without the math rendering.
+    // float animation is varied even before the math renders.
     nodes.forEach((n) => {
       if (n.dataset.floated) return;
       n.dataset.floated = "1";
@@ -1253,10 +1319,14 @@
       n.style.setProperty("--sc", sc);
       n.style.setProperty("--op", op);
     });
+
     const render = () => {
-      if (!window.katex) return false;
+      if (!window.katex) return;
       nodes.forEach((n) => {
         if (n.dataset.rendered) return;
+        // Skip any equation the responsive CSS has hidden (display:none) — no need
+        // to typeset math that's off-screen. getClientRects() is empty for those.
+        if (!n.getClientRects().length) return;
         const tex = n.getAttribute("data-tex");
         if (!tex) return;
         try {
@@ -1264,9 +1334,11 @@
           n.dataset.rendered = "1";
         } catch (e) { /* leave the span empty on parse failure */ }
       });
-      return true;
     };
-    if (!render()) window.addEventListener("load", render, { once: true });
+    // Kick off KaTeX during idle time so it never competes with first paint.
+    const start = () => loadKatex().then(render);
+    if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 2000 });
+    else start();
   }
 
   /* -------------------------------------------------------------------

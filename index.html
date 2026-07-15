@@ -18,10 +18,10 @@
 <!-- Instrument Serif (display) from Google Fonts. Söhne (body) + Söhne Mono (labels)
      load from local assets/fonts/*.woff2 via @font-face in styles.css. -->
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-<!-- KaTeX renders the drifting hero equations as real LaTeX. Loaded from CDN so
-     it's cached across sessions; equations render once on load then just animate. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous" />
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<!-- KaTeX (which typesets the drifting hero equations) is NOT loaded here. It's a
+     ~280KB library used only for decorative background math, so app.js loads it
+     lazily and ONLY on fine-pointer (desktop) devices — see initHeroEquations.
+     Phones skip the download and the equation layer entirely. -->
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
