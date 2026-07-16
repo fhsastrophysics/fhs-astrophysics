@@ -94,7 +94,7 @@
 
   const OFFICERS = [
     { name: "Abir Mehta",   role: "Co-Founder & President",       photo: null, email: "amehta251@student.fuhsd.org",
-      bio: "Founded the Astrophysics Club with Dhruv in October of 2025 and develops the core curriculum, including general ideas for club success. Develops the typeset notes and handouts for biweekly meetings and handles communication and outreach to gain members. Outside the club, Abir is a huge physics enthusiast who spends a large majority of his time doing physics, with a wide variety of physics and math courses taken and a plethora of projects in the works. Message him for any inquiries about physics." },
+      bio: "Founded the Astrophysics Club with Dhruv in October 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
     { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: null, email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
     { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: null, email: "sdoshi468@student.fuhsd.org",
@@ -366,6 +366,11 @@
     let grabbed = false;                    // true while the astronaut is being click-dragged
     let raf = null;
     const t0 = performance.now();
+    // Moment the background parallax starts ramping in (weight 0→1 over 0.7s). On first
+    // load it's held ~1.6s so the CSS Earth-rise intro plays clean; on every re-entry to
+    // home it's reset to "now" (see resetParallax) so the layers ease out from centre
+    // instead of snapping to the live cursor offset — the old warp-in glitch.
+    let pStart = t0 + 1600;
 
     // Click-drag: grabbing stiffens the spring so the astronaut chases the cursor
     // harder, then flings + settles on release (see the loop below).
@@ -407,6 +412,7 @@
       mx = my = tmx = tmy = 0;
       ax = ay = ar = vx = vy = 0;
       lpx = lpy = 999;
+      pStart = performance.now();   // restart the parallax ramp so it eases in from centre
       [earth, rings, beam, glow, cosmos, eqns].forEach((l) => { if (l) l.style.transform = ""; });
     }
     window.__resetHeroParallax = resetParallax;
@@ -440,18 +446,24 @@
         const glowScale = 1 + (1 - Math.min(dist, 1)) * 0.15;
         astro.style.setProperty("--aura-boost", glowScale.toFixed(3));
 
-        // Background parallax — only when the eased cursor moved enough to matter,
-        // so idle frames cost nothing. Opposite direction, depth-scaled. Held off for
-        // the first ~1.6s so the CSS load-intro (Earth rise) can play uninterrupted.
-        if (el > 1.6 && (Math.abs(mx - lpx) > 0.002 || Math.abs(my - lpy) > 0.002)) {
+        // Background parallax — opposite direction, depth-scaled. Held off for the
+        // first ~1.6s so the CSS load-intro (Earth rise) plays uninterrupted, then
+        // RAMPED in over ~0.7s (weight 0→1) so the layers ease out from centre rather
+        // than snapping to the live cursor offset in a single frame (the old jump the
+        // equations + rings made right as the intro finished). While ramping we write
+        // every frame so the ease-in animates even with a still cursor; once at full
+        // weight we fall back to move-gated writes so idle frames cost nothing.
+        const ramp = now >= pStart ? Math.min(1, (now - pStart) / 700) : 0;
+        if (ramp > 0 && (ramp < 1 || Math.abs(mx - lpx) > 0.002 || Math.abs(my - lpy) > 0.002)) {
           lpx = mx; lpy = my;
-          if (earth) earth.style.transform = `translate3d(calc(-50% + ${(-mx * 9).toFixed(1)}px), ${(-my * 6).toFixed(1)}px, 0)`;
-          if (rings) rings.style.transform = `translate3d(${(-mx * 15).toFixed(1)}px, ${(-my * 10).toFixed(1)}px, 0)`;
-          if (beam)  beam.style.transform  = `translate3d(calc(-50% + ${(-mx * 7).toFixed(1)}px), ${(-my * 5).toFixed(1)}px, 0)`;
-          if (glow)  glow.style.transform  = `translate3d(${(-mx * 5).toFixed(1)}px, ${(-my * 4).toFixed(1)}px, 0)`;
+          const px = mx * ramp, py = my * ramp;   // ramp-weighted cursor offset
+          if (earth) earth.style.transform = `translate3d(calc(-50% + ${(-px * 9).toFixed(1)}px), ${(-py * 6).toFixed(1)}px, 0)`;
+          if (rings) rings.style.transform = `translate3d(${(-px * 15).toFixed(1)}px, ${(-py * 10).toFixed(1)}px, 0)`;
+          if (beam)  beam.style.transform  = `translate3d(calc(-50% + ${(-px * 7).toFixed(1)}px), ${(-py * 5).toFixed(1)}px, 0)`;
+          if (glow)  glow.style.transform  = `translate3d(${(-px * 5).toFixed(1)}px, ${(-py * 4).toFixed(1)}px, 0)`;
           // Cosmos drifts against the cursor (deep parallax); equations drift with it.
-          if (cosmos) cosmos.style.transform = `translate3d(${(-mx * 22).toFixed(1)}px, ${(-my * 15).toFixed(1)}px, 0)`;
-          if (eqns)   eqns.style.transform   = `translate3d(${(mx * 12).toFixed(1)}px, ${(my * 9).toFixed(1)}px, 0)`;
+          if (cosmos) cosmos.style.transform = `translate3d(${(-px * 22).toFixed(1)}px, ${(-py * 15).toFixed(1)}px, 0)`;
+          if (eqns)   eqns.style.transform   = `translate3d(${(px * 12).toFixed(1)}px, ${(py * 9).toFixed(1)}px, 0)`;
         }
       }
       raf = requestAnimationFrame(loop);
@@ -1193,7 +1205,12 @@
 
       ctx.lineCap = "round";
       for (const s of stars) {
-        const yy = (((s.y - scrollY * s.depth * 0.28) % h) + h) % h;
+        // Streaks radiate from screen centre — do NOT fold in scroll parallax here.
+        // activateRoute() fires scrollTo(0) mid-jump; if yy tracked scrollY the whole
+        // streak field would snap at the swap (and wrap into a seam near the top when
+        // starting from a scrolled section) — the "glitched part at the top". Use the
+        // raw seeded y so the warp looks identical regardless of scroll position.
+        const yy = s.y;
         const dx = s.x - cx, dy = yy - cy;
         const dist = Math.hypot(dx, dy) || 1;
         const ux = dx / dist, uy = dy / dist;

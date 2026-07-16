@@ -39,6 +39,22 @@
 <!-- Light-speed intro (CSS lines radiating from center; generated on load) -->
 <div class="warp-intro" id="warpIntro" aria-hidden="true"></div>
 
+<!-- Shared Instagram brand gradient — the recognizable corner gradient (warm yellow
+     bottom-left → magenta → violet-blue top-right). Referenced as stroke/fill via
+     url(#igGrad) by every Instagram glyph so they all carry the real brand colours. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <radialGradient id="igGrad" cx="30%" cy="107%" r="150%">
+      <stop offset="0%"  stop-color="#FDD35C"/>
+      <stop offset="10%" stop-color="#FDD35C"/>
+      <stop offset="28%" stop-color="#F8823C"/>
+      <stop offset="50%" stop-color="#E1306C"/>
+      <stop offset="72%" stop-color="#C13584"/>
+      <stop offset="100%" stop-color="#5B51D8"/>
+    </radialGradient>
+  </defs>
+</svg>
+
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
@@ -398,7 +414,7 @@
 
   <div class="wrap">
     <div class="join">
-      <div class="join__col reveal">
+      <div class="join__col join__col--info reveal">
         <ul class="join__benefits">
           <li><span><b>Real astrophysics.</b> Lectures, data labs, and problem sets from first principles.</span></li>
           <li><span><b>Typeset notes.</b> Every meeting comes with a LaTeX handout you get to keep.</span></li>
@@ -406,14 +422,22 @@
           <li><span><b>Snacks provided at every meeting.</b> Come hungry.</span></li>
         </ul>
 
-        <div class="join__pair">
-        <div class="join__pair-a">
-        <div class="field">
+        <div class="meet">
           <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">When &amp; Where</h2></div>
-          <p class="field__v">Every other Wednesday, during lunch.</p>
-          <p class="field__sub">Room 153. Mr. Bob's room, engineering building.</p>
+          <dl class="meet__list">
+            <div class="meet__row">
+              <dt class="meet__key">When</dt>
+              <dd class="meet__val">Every other Wednesday, during lunch</dd>
+            </div>
+            <div class="meet__row">
+              <dt class="meet__key">Where</dt>
+              <dd class="meet__val">Room 153<span class="meet__sub">Mr. Bob's room · engineering building</span></dd>
+            </div>
+          </dl>
         </div>
 
+        <!-- Pushed to the bottom of this column (margin-top:auto) so its bottom edge
+             lines up with the Contact/Elsewhere block's bottom in the other column. -->
         <div class="nextmeet" id="nextMeeting">
           <span class="nextmeet__k">§ Next meeting</span>
           <ul class="nextmeet__grid">
@@ -422,37 +446,65 @@
             <li><span class="nextmeet__label">Topic</span><span class="nextmeet__val">TBA</span></li>
           </ul>
         </div>
-        </div>
+      </div>
 
-        <div class="join__pair-b">
-        <div class="field">
+      <div class="join__col join__col--form reveal">
+        <form class="signup" id="emailSignup" method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSdN1lY5leFFF1xiokBPWNjmFCU14EdVnXaPRvGqAHnIF_3uSw/viewform" target="_blank" rel="noopener">
+          <span class="signup__eyebrow">↗ Get on the meeting list</span>
+          <h3 class="signup__title">A nudge before every session.</h3>
+          <p class="signup__desc">We'll email you in the days leading up to each meeting. Location, activity, and food details.</p>
+          <div class="signup__row">
+            <input class="signup__input" type="email" name="entry.624766096" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
+            <button class="signup__btn" type="submit">
+              <span>Sign up</span>
+              <span class="signup__btn-arw" aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Pushed to the bottom of the form column (margin-top:auto) so Saanvi's row
+             lands level with the bottom of the Next-meeting card on the left. -->
+        <div class="join__foot">
+        <div class="field join__foot-cell">
           <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Contact</h2></div>
-          <p class="field__v">
-            <a class="ulink field__mail js-copy" href="mailto:fhsastrophysics@gmail.com" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
-            <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-            </button>
-          </p>
-          <p class="field__v">
-            <a class="ulink field__mail js-copy" href="mailto:amehta251@student.fuhsd.org" data-copy="amehta251@student.fuhsd.org">amehta251@student.fuhsd.org</a>
-            <button class="field__copy js-copy-btn" data-copy="amehta251@student.fuhsd.org" aria-label="Copy Abir's email address" title="Copy email">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-            </button>
-          </p>
-          <p class="field__v">
-            <a class="ulink field__mail js-copy" href="mailto:dlagu234@student.fuhsd.org" data-copy="dlagu234@student.fuhsd.org">dlagu234@student.fuhsd.org</a>
-            <button class="field__copy js-copy-btn" data-copy="dlagu234@student.fuhsd.org" aria-label="Copy Dhruv's email address" title="Copy email">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-            </button>
-          </p>
+          <ul class="contacts">
+            <li class="contact">
+              <span class="contact__role">Club</span>
+              <a class="ulink field__mail js-copy" href="mailto:fhsastrophysics@gmail.com" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+              <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+              </button>
+            </li>
+            <li class="contact">
+              <span class="contact__role">Abir</span>
+              <a class="ulink field__mail js-copy" href="mailto:amehta251@student.fuhsd.org" data-copy="amehta251@student.fuhsd.org">amehta251@student.fuhsd.org</a>
+              <button class="field__copy js-copy-btn" data-copy="amehta251@student.fuhsd.org" aria-label="Copy Abir's email address" title="Copy email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+              </button>
+            </li>
+            <li class="contact">
+              <span class="contact__role">Dhruv</span>
+              <a class="ulink field__mail js-copy" href="mailto:dlagu234@student.fuhsd.org" data-copy="dlagu234@student.fuhsd.org">dlagu234@student.fuhsd.org</a>
+              <button class="field__copy js-copy-btn" data-copy="dlagu234@student.fuhsd.org" aria-label="Copy Dhruv's email address" title="Copy email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+              </button>
+            </li>
+            <li class="contact">
+              <span class="contact__role">Saanvi</span>
+              <a class="ulink field__mail js-copy" href="mailto:sdoshi468@student.fuhsd.org" data-copy="sdoshi468@student.fuhsd.org">sdoshi468@student.fuhsd.org</a>
+              <button class="field__copy js-copy-btn" data-copy="sdoshi468@student.fuhsd.org" aria-label="Copy Saanvi's email address" title="Copy email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+              </button>
+            </li>
+          </ul>
         </div>
 
-        <div class="field">
+        <div class="field join__foot-cell">
           <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Elsewhere</h2></div>
           <div class="socials">
             <a class="slink slink--ig" href="https://www.instagram.com/fhs.astrophysicsclub/" target="_blank" rel="noopener" aria-label="Follow the club on Instagram at fhs.astrophysicsclub">
               <span class="slink__ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>
+                <svg class="ig-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>
               </span>
               <span class="slink__name">Instagram</span>
               <span class="slink__arw" aria-hidden="true">↗</span>
@@ -467,25 +519,6 @@
           </div>
         </div>
         </div>
-        </div>
-
-      </div>
-
-      <div class="join__col reveal">
-        <form class="signup" id="emailSignup" method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSdN1lY5leFFF1xiokBPWNjmFCU14EdVnXaPRvGqAHnIF_3uSw/viewform" target="_blank" rel="noopener">
-          <span class="signup__eyebrow">↗ Get on the meeting list</span>
-          <h3 class="signup__title">A nudge before every session.</h3>
-          <p class="signup__desc">We'll email you the day before each meeting. Location, topic, whether there's food.</p>
-          <div class="signup__row">
-            <input class="signup__input" type="email" name="entry.624766096" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
-            <button class="signup__btn" type="submit">
-              <span>Sign up</span>
-              <span class="signup__btn-arw" aria-hidden="true">→</span>
-            </button>
-          </div>
-          <span class="signup__meta">Google Form · opens in a new tab</span>
-          <p class="signup__fine">We only email about club meetings. No spam. Unsubscribe anytime.</p>
-        </form>
       </div>
     </div>
 
