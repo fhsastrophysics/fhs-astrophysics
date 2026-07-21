@@ -94,7 +94,7 @@
 
   const OFFICERS = [
     { name: "Abir Mehta",   role: "Co-Founder & President",       photo: null, email: "amehta251@student.fuhsd.org",
-      bio: "Founded the Astrophysics Club with Dhruv in October 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
+      bio: "Founded the Astrophysics Club with Dhruv in September 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
     { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: null, email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
     { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: null, email: "sdoshi468@student.fuhsd.org",
@@ -190,119 +190,13 @@
   }
 
   /* -------------------------------------------------------------------
-     Custom cursor
-     ------------------------------------------------------------------- */
-  function initCursor() {
-    if (!FINE || REDUCED) return;
-    const c = $("#cursor");
-    if (!c) return;
-    const dot = $(".cursor__dot", c);
-    const ring = $(".cursor__ring", c);
-    const label = $(".cursor__label", c);
-    document.body.style.cursor = "none";
-
-    // px = live pointer (used by the dot, 1:1, zero lag).
-    // rx/ry = eased ring position; the ring is the only thing that "trails".
-    let px = 0, py = 0, rx = 0, ry = 0, prx = 0, pry = 0, raf = null, primed = false;
-
-    // Hover target state. mode: "" | "wrap" (snap a frame around small controls)
-    // | "focus" (grow + follow over big cards). `el` is re-measured each frame so
-    // the frame stays glued while the page scrolls or the layout shifts.
-    let el = null, mode = "";
-    // Current applied ring geometry, so we only touch the DOM when it changes.
-    let rw = 34, rh = 34, rr = 17;
-
-    const setRing = (w, h, radius) => {
-      if (w === rw && h === rh && radius === rr) return;
-      rw = w; rh = h; rr = radius;
-      ring.style.width = w + "px";
-      ring.style.height = h + "px";
-      ring.style.margin = `${-h / 2}px 0 0 ${-w / 2}px`;
-      ring.style.borderRadius = radius + "px";
-    };
-
-    function tick() {
-      // Ring springs toward its target: the pointer normally, the element's
-      // centre when wrapping a small control (that's the magnetic "snap").
-      let tX = px, tY = py;
-      if (mode && el) {
-        const r = el.getBoundingClientRect();
-        if (mode === "wrap") {
-          tX = r.left + r.width / 2;
-          tY = r.top + r.height / 2;
-          const radius = parseFloat(getComputedStyle(el).borderRadius) || 8;
-          setRing(r.width + 14, r.height + 14, radius + 7);
-        } else { // focus — hug the pointer with a bigger lens
-          setRing(64, 64, 32);
-        }
-      } else {
-        setRing(34, 34, 17);
-      }
-
-      rx += (tX - rx) * 0.2;
-      ry += (tY - ry) * 0.2;
-
-      // Velocity → squash & stretch, but only when free-floating (idle).
-      // The ring leans and elongates in the direction it's flying, like a comet.
-      let extra = "";
-      if (!mode) {
-        const vx = rx - prx, vy = ry - pry;
-        const speed = Math.hypot(vx, vy);
-        if (speed > 0.5) {
-          const k = Math.min(speed * 0.012, 0.55);
-          const ang = Math.atan2(vy, vx) * 180 / Math.PI;
-          extra = ` rotate(${ang}deg) scale(${(1 + k).toFixed(3)}, ${(1 - k * 0.6).toFixed(3)})`;
-        }
-      }
-      prx = rx; pry = ry;
-
-      dot.style.transform = `translate(${px}px, ${py}px)`;
-      label.style.transform = `translate(${px}px, ${py}px)`;
-      ring.style.transform = `translate(${rx}px, ${ry}px)${extra}`;
-      raf = requestAnimationFrame(tick);
-    }
-
-    document.addEventListener("pointermove", (e) => {
-      px = e.clientX; py = e.clientY;
-      if (!primed) { rx = px; ry = py; prx = px; pry = py; primed = true; } // no launch-from-corner streak
-      c.classList.add("on");
-      if (!raf) tick();
-    }, { passive: true });
-    document.addEventListener("pointerdown", () => c.classList.add("down"));
-    document.addEventListener("pointerup", () => c.classList.remove("down"));
-    window.addEventListener("blur", () => c.classList.remove("on", "down"));
-
-    const HOT_SELECTOR = "a, button, .mcard, .ncard, .tcard, .arc-node, .mi-item";
-    document.addEventListener("pointerover", (e) => {
-      const t = e.target.closest && e.target.closest(HOT_SELECTOR);
-      if (!t || t === el) return;
-      el = t;
-      const r = t.getBoundingClientRect();
-      // Small controls get a magnetic frame; large cards get a following lens.
-      mode = (r.width <= 300 && r.height <= 150) ? "wrap" : "focus";
-      c.classList.add("hot");
-      c.classList.toggle("wrap", mode === "wrap");
-      label.textContent = t.dataset.cursor ||
-        (t.closest(".mcard") ? "PREVIEW" : t.closest(".ncard") ? "OPEN" :
-         t.tagName === "A" || t.tagName === "BUTTON" ? "→" : "");
-    });
-    document.addEventListener("pointerout", (e) => {
-      const to = e.relatedTarget;
-      if (!to || !to.closest || !to.closest(HOT_SELECTOR)) {
-        el = null; mode = "";
-        c.classList.remove("hot", "wrap");
-      }
-    });
-  }
-
-  /* -------------------------------------------------------------------
      Magnetic buttons
      ------------------------------------------------------------------- */
   function initMagnetic() {
     if (!FINE || REDUCED) return;
     $$(".magnetic").forEach((btn) => {
       let raf = null;
-      const strength = 0.3;
+      const strength = 0.15;
       btn.addEventListener("pointerenter", () => btn.classList.add("is-magnet-active"));
       btn.addEventListener("pointermove", (e) => {
         const r = btn.getBoundingClientRect();
@@ -723,7 +617,6 @@
       const a = el("a", "ncard reveal");
       a.href = notePath(id); a.setAttribute("download", dlName(id));
       a.dataset.cat = nd.cat; a.style.setProperty("--i", Math.min(i, 5));
-      a.setAttribute("data-cursor", "DOWNLOAD");
       a.setAttribute("aria-label", `${nd.title}, ${nd.type}, Meeting ${nd.meeting}, ${nd.pages} page${nd.pages > 1 ? "s" : ""} (PDF)`);
       a.innerHTML = `
         <div class="ncard__thumb">
@@ -798,7 +691,6 @@
       card.style.setProperty("--i", Math.min(i, 5));
       card.style.setProperty("--sp", SPANS[i] || 2);
       card.dataset.idx = String(i);
-      card.setAttribute("data-cursor", "INSPECT");
       card.setAttribute("aria-label", `Inspect ${m.name}, ${m.type}, ${m.dist} away in ${m.con}`);
       card.innerHTML = `
         <span class="acard__media"><img src="${atlasImg(m)}" alt="" loading="lazy" decoding="async"></span>
@@ -1454,7 +1346,6 @@
     initNav();
     initStars();
     initReveal();
-    initCursor();
     initMagnetic();
     initModal();
     initCopy();

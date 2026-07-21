@@ -124,36 +124,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 @media (min-width:641px) and (max-width:1280px){ .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-md.jpg"); } }
 .bg-planet{ display:none; }
 
-/* Custom cursor — dot tracks the pointer 1:1 (no lag); ring trails + wraps targets.
-   dot & ring are independently JS-transformed, so no easing/blend on the container. */
-.cursor{ position:fixed; z-index:1000; top:0; left:0; width:0; height:0; pointer-events:none; opacity:0; transition:opacity .25s var(--ease); }
-.cursor.on{ opacity:1; }
-
-/* The precise point — sits exactly under the physical mouse, always. */
-.cursor__dot{ position:absolute; left:0; top:0; width:6px; height:6px; margin:-3px 0 0 -3px; border-radius:50%;
-  background:var(--accent); box-shadow:0 0 8px 1px rgba(127,176,255,.9);
-  transition:width .22s var(--ease-out), height .22s var(--ease-out), opacity .2s var(--ease), background .2s var(--ease); will-change:transform; }
-
-/* The trailing ring — springs behind the dot, squash-stretches with speed,
-   and morphs into a rounded frame around whatever you hover. */
-.cursor__ring{ position:absolute; left:0; top:0; width:34px; height:34px; margin:-17px 0 0 -17px; border-radius:50%;
-  border:1.5px solid rgba(188,215,255,.55); will-change:transform;
-  transition:width .28s var(--ease-out), height .28s var(--ease-out), margin .28s var(--ease-out),
-             border-radius .28s var(--ease-out), border-color .25s var(--ease), background .25s var(--ease); }
-
-.cursor__label{ position:absolute; left:0; top:0; margin:-9px 0 0 16px; font-family:var(--font-mono);
-  font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); white-space:nowrap;
-  opacity:0; transition:opacity .2s var(--ease); will-change:transform; }
-
-/* Hovering an interactive element: ring becomes a soft frame that snaps onto it,
-   dot fades to a faint center pip so the frame reads clean. */
-.cursor.hot .cursor__ring{ border-color:var(--accent); background:rgba(127,176,255,.08); }
-.cursor.hot .cursor__dot{ width:0; height:0; opacity:.35; }
-.cursor.hot .cursor__label{ opacity:1; }
-
-/* Pressing down: quick contract for tactile click feedback. */
-.cursor.down .cursor__dot{ transform-origin:center; background:#fff; box-shadow:0 0 14px 3px rgba(188,215,255,1); }
-.cursor.down .cursor__ring{ border-color:#fff; }
 
 main, .nav, .footer{ position:relative; z-index:3; }
 .wrap{ max-width:var(--wrap); margin-inline:auto; padding-inline:var(--gutter); }
@@ -1184,7 +1154,6 @@ body[data-route="/"] .footer{ margin-top:0; }
   .team-grid{ grid-template-columns:repeat(2, 1fr); }
 }
 @media (max-width:980px){
-  .cursor{ display:none; }
   .about{ grid-template-columns:1fr; }
   .readout{ max-width:480px; }
   .goal-grid{ grid-template-columns:1fr; }
@@ -1291,7 +1260,7 @@ body[data-route="/"] .footer{ margin-top:0; }
   .home__astro-wrap, .home__astro-wrap::before{ animation:none !important; }
   .home__equations .eqn{ opacity:.1 !important; animation:none !important; }
   .cosmo--supernova, .cosmo--supernova::before, .cosmo--blackhole, .cosmo--pulsar{ animation:none !important; }
-  .cursor, .warp-bloom, .warp-intro{ display:none !important; }
+  .warp-bloom, .warp-intro{ display:none !important; }
   .route.warp-in, .route.warp-out{ animation:none !important; }
 }
 
