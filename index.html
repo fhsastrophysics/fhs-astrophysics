@@ -19,17 +19,19 @@
      load from local assets/fonts/*.woff2 via @font-face in styles.css. -->
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 <!-- KaTeX (which typesets the drifting hero equations) is NOT loaded here. It's a
-     ~280KB library used only for decorative background math, so app.js loads it
-     lazily and ONLY on fine-pointer (desktop) devices — see initHeroEquations.
-     Phones skip the download and the equation layer entirely. -->
+     ~280KB library used only for decorative background math, so app.js fetches it
+     lazily during idle time — see initHeroEquations. Every pointer type gets the
+     equations; the responsive CSS thins the field to 7–10 on phones and tablets.
+     Reduced-motion is the only case that skips the download entirely. -->
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 <a class="skip-link" href="#/">Skip to content</a>
 
 <canvas id="stars" aria-hidden="true"></canvas>
-<!-- One continuous sky: bold Pleiades (M45) photo, fixed, on every route. See
-     .bg-nebula in CSS (responsive files step down in size for low-memory phones). -->
+<!-- One continuous sky: the JWST PEARLS deep field, fixed, on every route. See
+     .bg-nebula in CSS — each tier is cropped to the SHAPE of the viewport it
+     serves, so `cover` never has to stretch a landscape plate up a phone. -->
 <div class="bg-nebula" aria-hidden="true"></div>
 
 
@@ -220,10 +222,6 @@
       </div>
     </div>
 
-    <a class="home__scroll" href="#/about" data-route="/about">
-      <span class="home__scroll-line"></span>Scroll
-    </a>
-
     <!-- Circular "Discover" ring (SPACESIS-style), bottom-right -->
     <a class="home__discover magnetic" href="#/atlas" data-route="/atlas" aria-label="Discover the deep-sky atlas">
       <svg class="home__discover-ring" viewBox="0 0 100 100" aria-hidden="true">
@@ -261,9 +259,7 @@
 
       <ul class="readout reveal" aria-label="Club at a glance">
         <li><span class="readout__k">Meetings held</span><span class="readout__v odom" data-count="13">00</span></li>
-        <li><span class="readout__k">Lecture handouts</span><span class="readout__v odom" data-count="16">00</span></li>
         <li><span class="readout__k">Officers</span><span class="readout__v odom" data-count="3">00</span></li>
-        <li><span class="readout__k">Questions asked</span><span class="readout__v">∞</span></li>
       </ul>
     </div>
 

@@ -39,6 +39,12 @@
   --earth-hi:  #A6D2FF;
 
   --glass:     rgba(13,19,38,0.52);   /* dark frosted glass — reads over the bold sky photo (was a 5% white wash, invisible over bright nebula) */
+  /* Same surface WITHOUT a backdrop-filter, for anything that repeats. Each
+     backdrop-filter needs its own offscreen buffer re-sampled from whatever is
+     behind it — fine for one nav bar, ruinous for sixteen cards in a grid over a
+     fixed photo: the compositor falls behind and you scroll past half-painted
+     cards. This is tuned so a solid fill reads the same over the dark sky. */
+  --glass-flat: rgba(15,22,42,0.80);
   --glass-2:   rgba(255,255,255,0.075);
   --glass-brd: rgba(255,255,255,0.10);
   --glass-brd-hover: rgba(188,215,255,0.42);
@@ -109,10 +115,22 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    was painting BEHIND the opaque sky and never showed on desktop. Idle it draws
    nothing and is pointer-events:none, so it never blocks the page. */
 #stars{ position:fixed; inset:0; z-index:40; width:100%; height:100%; pointer-events:none; }
-/* THE SKY — one JWST PEARLS deep field (native-res crop, 5120px), fixed to the
-   viewport on every route. Crystal clear: no drift, no blur, no grain — the photo
-   is served at >=2x device pixels so it never upscales soft. Three size tiers keep
-   decoded-image RAM sane: phones get 1400px, tablets 3200px, desktops the full 5120. */
+/* THE SKY — one JWST PEARLS deep field, fixed to the viewport on every route.
+   Crystal clear: no drift, no blur, no grain.
+
+   The master is 5120x1932 — a 2.65:1 LANDSCAPE plate. `cover` in a portrait phone
+   viewport binds on HEIGHT, so the only pixels that matter are the image's 1932
+   rows: everything else is cropped away. The old tiers ignored that and sized by
+   width (phones got a 1400x528 file), which meant a 393x852@3x phone stretched
+   528 source rows over 2556 device rows — a 4.8x upscale, i.e. the mush. Tablets
+   were served a 9.9-megapixel plate that iOS could decline to decode outright,
+   leaving the sky blank.
+
+   So each tier is now cropped to the SHAPE of the viewport it serves, taken from
+   the master at NATIVE resolution — never upscaled on the way out. Worst-case
+   upscale in the browser drops from 4.8x to ~1.3x, and no tier exceeds ~3.6 MP
+   of decoded image. The centre of the crop is the master's centre, so every tier
+   frames the same patch of sky the desktop does. */
 .bg-nebula{ position:fixed; inset:0; z-index:0; pointer-events:none; }
 .bg-nebula::before{ content:""; position:absolute; inset:0;
   background:url("assets/bg/jwst-bg.jpg") center center / cover no-repeat; }
@@ -120,8 +138,23 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    band + footer to keep text legible, never enough to haze the sky. */
 .bg-nebula::after{ content:""; position:absolute; inset:0; pointer-events:none;
   background:linear-gradient(180deg, rgba(3,5,12,.45) 0%, transparent 15%, transparent 64%, rgba(3,5,12,.4) 100%); }
-@media (max-width:640px){ .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-xs.jpg"); } }
-@media (min-width:641px) and (max-width:1280px){ .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-md.jpg"); } }
+/* Phone, portrait — 1000x1932. 393x852@3x needs 2556 rows from 1932: 1.32x. */
+@media (orientation:portrait) and (max-width:640px){
+  .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-p-sm.jpg"); } }
+/* Tablet, portrait — 1400x1932. 820x1180@2x needs 2360 rows from 1932: 1.22x. */
+@media (orientation:portrait) and (min-width:641px) and (max-width:1400px){
+  .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-p-md.jpg"); } }
+/* Landscape on a TOUCH device — 2400x1500, 1.6:1 — at any width it reports, so
+   an iPad Pro (or Stage Manager, or a desktop-mode UA) can never be handed the
+   9.9 MP master. That plate is the size iOS can decline to decode outright,
+   which is how the sky went missing on iPad in the first place. Deliberately not
+   width-gated: a pointer device in a narrow window still gets the master, so
+   nothing about the desktop rendering changes. */
+@media (orientation:landscape) and (any-pointer:coarse){
+  .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-l-md.jpg"); } }
+/* Same guard for the portrait half of that case. */
+@media (orientation:portrait) and (any-pointer:coarse) and (min-width:1401px){
+  .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-p-md.jpg"); } }
 .bg-planet{ display:none; }
 
 
@@ -155,7 +188,10 @@ main, .nav, .footer{ position:relative; z-index:3; }
    NAV
    ===================================================================== */
 .nav{ position:fixed; inset:0 0 auto 0; z-index:100; border-bottom:1px solid rgba(255,255,255,0.03); transition:background .4s var(--ease), border-color .4s var(--ease), backdrop-filter .4s var(--ease); }
-.nav.scrolled{ background:rgba(4,7,15,.72); backdrop-filter:blur(18px) saturate(130%); border-bottom-color:var(--line); }
+/* Opaque enough that bright content behind it can't wash it out. At .72 the blur
+   sampled the white lecture-note thumbnails on /notes and smeared the whole bar
+   to near-white; the smaller radius is also markedly cheaper to re-sample. */
+.nav.scrolled{ background:rgba(4,7,15,.88); backdrop-filter:blur(14px) saturate(130%); border-bottom-color:var(--line); }
 /* 3-column grid: brand flush-left, links centered, socials flush-right */
 .nav__inner{ max-width:1780px; margin-inline:auto; padding:1.05rem clamp(1.5rem, 3.5vw, 3.25rem); display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:1rem; }
 .brand{ justify-self:start; }
@@ -240,17 +276,6 @@ main, .nav, .footer{ position:relative; z-index:3; }
    viewport edge, so the clip line is never revealed). */
 .route--home{ min-height:100svh; padding-bottom:0; }
 
-/* SPACE FIGURES — feathered nebula/galaxy orbs that scroll WITH the page (parallax
-   via JS), sitting between the fixed sky and the content. Same treatment as the K4-55
-   hero orb: the source JPG is on black, mix-blend:screen drops the black so only the
-   light adds, and a radial mask dissolves the square edges into the sky. Injected per
-   route by initSpaceFigures(); hidden on phones (extra decoded layers crash them). */
-.space-fig{ position:absolute; z-index:0; pointer-events:none; aspect-ratio:1;
-  background-position:center; background-size:cover; background-repeat:no-repeat;
-  mix-blend-mode:screen; opacity:.55; will-change:transform;
-  -webkit-mask:radial-gradient(circle at 50% 50%, #000 33%, transparent 70%);
-          mask:radial-gradient(circle at 50% 50%, #000 33%, transparent 70%); }
-@media (max-width:640px){ .space-fig{ display:none; } }
 /* Route jump — COMPOSITOR ONLY (opacity + a hair of scale), on EVERY device.
    The transition used to animate filter:blur() across the whole outgoing/incoming
    route. On the home route that subtree is the giant Earth, the filtered spinning
@@ -635,10 +660,6 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .home__tag{ margin:0; font-family:var(--font-sans); font-size:clamp(.95rem,1.6vw,1.15rem); color:var(--ink-soft); font-weight:400; letter-spacing:.01em; text-align:center; }
 .home__actions{ display:flex; gap:.7rem; flex-wrap:wrap; justify-content:center; }
 
-.home__scroll{ position:absolute; left:var(--gutter); bottom:1.4rem; z-index:5; display:inline-flex; align-items:center; gap:.6rem; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.22em; color:var(--ink-soft); text-transform:uppercase; }
-.home__scroll-line{ width:38px; height:1.5px; background:var(--line-2); position:relative; overflow:hidden; }
-.home__scroll-line::after{ content:""; position:absolute; inset:0; width:14px; background:var(--accent); animation:scan 2.2s var(--ease) infinite; }
-@keyframes scan{ 0%{ transform:translateX(-14px); } 100%{ transform:translateX(38px); } }
 
 /* =====================================================================
    ABOUT
@@ -664,7 +685,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .arc__track{ display:flex; gap:1rem; overflow-x:auto; padding-bottom:1rem; scroll-snap-type:x proximity; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; }
 .arc__track::-webkit-scrollbar{ height:5px; }
 .arc__track::-webkit-scrollbar-thumb{ background:var(--line-2); border-radius:3px; }
-.arc-node{ scroll-snap-align:start; flex:0 0 auto; width:190px; min-height:118px; padding:1.3rem 1.4rem 1.5rem; border:1px solid var(--glass-brd); background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); border-radius:14px; transition:transform .35s var(--ease-out), border-color .35s var(--ease); contain:layout paint; }
+.arc-node{ scroll-snap-align:start; flex:0 0 auto; width:190px; min-height:118px; padding:1.3rem 1.4rem 1.5rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; transition:transform .35s var(--ease-out), border-color .35s var(--ease); contain:layout paint; }
 .arc-node:hover{ transform:translateY(-5px); border-color:var(--glass-brd-hover); }
 .arc-node__n{ font-family:var(--font-display); font-size:1.5rem; color:var(--ink); opacity:.5; line-height:1; transition:opacity .3s var(--ease), color .3s var(--ease); }
 .arc-node:hover .arc-node__n{ opacity:1; color:var(--accent); }
@@ -674,7 +695,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .goals__head{ margin-bottom:1.9rem; }
 .goals__title{ font-family:"Söhne Breit", var(--font-sans); font-weight:700; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.02em; color:var(--ink); line-height:1; }
 .goal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
-.goal{ padding:2rem 1.9rem 2.2rem; border:1px solid var(--glass-brd); background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); border-radius:var(--r); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .35s var(--ease); contain:layout paint; }
+.goal{ padding:2rem 1.9rem 2.2rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .35s var(--ease); contain:layout paint; }
 .goal:hover{ transform:translateY(-6px); border-color:var(--glass-brd-hover); box-shadow:0 12px 40px rgba(63,130,240,.14); }
 .goal__idx{ font-family:var(--font-mono); font-weight:700; font-size:.75rem; letter-spacing:-.01em; color:var(--accent); }
 .goal__t{ font-family:var(--font-display); font-weight:400; font-size:1.75rem; color:var(--ink); margin:.6rem 0 .5rem; letter-spacing:-.01em; }
@@ -704,7 +725,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    MEETINGS — glass cards
    ===================================================================== */
 .meetings-index{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:1rem; margin-bottom:5rem; }
-.mi-item{ display:grid; grid-template-columns:auto 1fr; gap:1rem; align-items:baseline; padding:1.1rem 1.3rem; border:1px solid var(--glass-brd); background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); border-radius:12px; transition:transform .3s var(--ease-out), border-color .3s var(--ease); contain:layout paint; }
+.mi-item{ display:grid; grid-template-columns:auto 1fr; gap:1rem; align-items:baseline; padding:1.1rem 1.3rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:12px; transition:transform .3s var(--ease-out), border-color .3s var(--ease); contain:layout paint; }
 .mi-item:hover{ transform:translateY(-4px); border-color:var(--glass-brd-hover); }
 .mi-item:hover .mi-item__n{ color:var(--accent); }
 .mi-item__n{ font-family:var(--font-display); font-size:1.35rem; color:var(--ink-mute); line-height:1; transition:color .3s var(--ease); }
@@ -717,7 +738,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    a status line draws across the top, a reticle snaps onto the cover, and a
    spectral scan-line sweeps down and develops the grayscale plate into colour.
    Deliberately NOT the lift+scale+follow-glow+zoom+arrow default kit. */
-.mcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); border-radius:var(--r); overflow:hidden; transition:transform .5s var(--ease-out), border-color .45s var(--ease), box-shadow .5s var(--ease); cursor:pointer; contain:layout paint; }
+.mcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); overflow:hidden; transition:transform .5s var(--ease-out), border-color .45s var(--ease), box-shadow .5s var(--ease); cursor:pointer; contain:layout paint; }
 /* Instrument status line that wipes across the top edge on acquire. */
 .mcard::before{ content:""; position:absolute; top:0; left:0; right:0; height:1.5px; z-index:5; transform:scaleX(0); transform-origin:left center; background:linear-gradient(90deg, transparent, var(--accent) 20%, var(--accent-2) 80%, transparent); opacity:0; transition:transform .55s var(--ease-out), opacity .4s var(--ease); pointer-events:none; }
 .mcard:hover{ transform:translateY(-2px); border-color:rgba(188,215,255,0.4); box-shadow:0 14px 46px rgba(63,130,240,.16), inset 0 1px 0 rgba(255,255,255,.07); }
@@ -809,15 +830,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .fbtn.active{ background:transparent; color:var(--ink); border-color:var(--accent); box-shadow:0 0 0 3px rgba(188,215,255,.10), 0 0 24px rgba(188,215,255,.22); }
 
 .notes-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
-.ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
+.ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
 .ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:rgba(188,215,255,0.35); box-shadow:0 12px 40px rgba(63,130,240,.12), inset 0 1px 0 rgba(255,255,255,.08); }
 .ncard__thumb{ aspect-ratio:8.5/11; overflow:hidden; background:#0b0e17; position:relative; border-bottom:1px solid var(--line); }
 .ncard__thumb img{ width:100%; height:100%; object-fit:cover; object-position:top center; filter:grayscale(1) brightness(.86) contrast(1.05); transition:filter .5s var(--ease), transform .7s var(--ease); }
 .ncard:hover .ncard__thumb img{ filter:grayscale(0) brightness(1) contrast(1); transform:scale(1.03); }
-.ncard__mbadge{ position:absolute; top:.7rem; left:.7rem; padding:.5rem .7rem .55rem; background:rgba(4,7,15,.72); backdrop-filter:blur(6px); border:1px solid var(--line-2); border-radius:10px; display:flex; flex-direction:column; gap:.05rem; z-index:3; }
+.ncard__mbadge{ position:absolute; top:.7rem; left:.7rem; padding:.5rem .7rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:10px; display:flex; flex-direction:column; gap:.05rem; z-index:3; }
 .ncard__mbadge-k{ font-family:var(--font-mono); font-size:.55rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
 .ncard__mbadge-v{ font-family:var(--font-mono); font-size:1.4rem; font-weight:500; color:var(--ink); line-height:1; letter-spacing:-.02em; }
-.ncard__type{ position:absolute; top:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.72); backdrop-filter:blur(6px); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
+.ncard__type{ position:absolute; top:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
 .ncard__type[data-type="Lecture Notes"]{ color:var(--accent); }
 .ncard__type[data-type="Answer Key"]{ color:#9BE7A8; }
 .ncard__type[data-type="Worksheet"], .ncard__type[data-type="Activity"]{ color:#FFC97A; }
@@ -829,8 +850,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* Topic cloud — appears on hover */
 .ncard__cloud{
   position:absolute; inset:auto .7rem .7rem .7rem;
-  background:rgba(4,7,15,.86);
-  backdrop-filter:blur(10px);
+  background:rgba(4,7,15,.95);
   border:1px solid var(--line-2);
   border-radius:12px;
   padding:.9rem .95rem;
@@ -849,7 +869,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    TEAM — polished grid
    ===================================================================== */
 .team-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1.6rem; margin-bottom:5rem; }
-.tcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(20,32,60,.32), rgba(6,10,22,.55)); backdrop-filter:blur(10px); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
+/* Gradient carried the card WITH a blur behind it; without one it needs to be
+   opaque enough to hold its own over the starfield. */
+.tcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(20,32,60,.74), rgba(9,14,30,.86)); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
 .tcard::before{ content:""; position:absolute; inset:0; z-index:0;
   background:
     radial-gradient(70% 60% at 30% 20%, rgba(127, 176, 255, .18), transparent 55%),
@@ -1025,6 +1047,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .section-in{ opacity:0; transform:translateY(24px); transition:opacity .9s var(--ease-out), transform .9s var(--ease-out); }
 .section-in.is-visible{ opacity:1; transform:none; }
 
+/* Arrived mid-fling. A card that crosses into view during a fast scroll has no
+   time to play a .9s fade plus up to .3s of stagger — you scroll past it while
+   it's still half-transparent and sliding, which reads as the deck previews
+   failing to render. So when initReveal() clocks the scroll above its threshold
+   it tags the card and we show it outright: the reveal is a nicety for content
+   you're arriving at, not a toll on content you're already looking at. Must sit
+   after the .mcard/.ncard delays above to beat them at equal specificity. */
+.reveal.reveal-now, .section-in.reveal-now{ transition:none; transition-delay:0s; }
+
 /* =====================================================================
    BACK TO TOP + TOAST
    ===================================================================== */
@@ -1119,7 +1150,11 @@ body[data-route="/"] .footer{ margin-top:0; }
      full-screen blurred / filtered / blended layers are what exhausted mobile
      Safari's memory and crashed the tab. */
   .home__beam{ display:none; }
-  .home__equations .eqn:nth-child(n+11){ display:none; }
+  .home__equations .eqn:nth-child(n+11){ display:none; }   /* 10 drifting equations */
+  /* Equations are centred on their --x, so the ones at 4% / 92% hang off the
+     edges of a narrower screen and arrive as fragments. Inset the field's box to
+     remap every --x inward; the phone block below pulls it in further. */
+  .home__equations{ left:5%; right:5%; }
   .home__earth-glow{ filter:blur(14px); }
   :root{ --glass-blur:10px; }
   /* Drop the persistent compositor-layer promotions on touch (cursor parallax is
@@ -1132,21 +1167,36 @@ body[data-route="/"] .footer{ margin-top:0; }
      on touch — the nebula texture + colour zones already carry the depth. */
   .ambient-particles{ display:none; }
 
-  /* Backdrop-filter needs a per-surface offscreen backdrop buffer; dozens of
-     glass cards on the notes/meetings/team routes = the memory blow-out that
-     crashed the tab. Drop it on touch and lean on a legible solid-ish glass. */
-  .nav.scrolled, .nav__links, .btn--solid, .readout, .arc-node, .goal, .mi-item,
-  .mcard, .ncard, .ncard__cloud, .tcard, .nextmeet, .signup, .back-top, .toast,
-  .modal__scrim, .modal__thumbs .mt__n, .ncard__mbadge, .ncard__type{
+  /* The repeating cards lost their backdrop-filters for EVERY device (see
+     --glass-flat), so this block no longer has to undo them — it only clears the
+     handful of one-off surfaces that keep the effect on desktop. Touch gets no
+     backdrop buffers at all, and the cards now render identically to desktop
+     rather than a shade lighter, which is the consistency we were after. */
+  .nav.scrolled, .nav__links, .btn--solid, .readout, .nextmeet, .signup,
+  .back-top, .toast, .modal__scrim, .modal__thumbs .mt__n{
     backdrop-filter:none; -webkit-backdrop-filter:none; }
-  .readout, .arc-node, .goal, .mi-item, .mcard, .ncard, .tcard, .nextmeet, .signup{
-    background:rgba(17,25,48,0.66); }
-  .nav.scrolled{ background:rgba(4,7,15,.9); }
+  .readout, .nextmeet, .signup{ background:var(--glass-flat); }
+  .nav.scrolled{ background:rgba(4,7,15,.94); }
 }
 
 /* =====================================================================
    RESPONSIVE
    ===================================================================== */
+/* TABLET NAV — the desktop row technically "fits" an iPad's 820px, but only by a
+   couple of pixels, and `grid-template-columns:1fr auto 1fr` keeps the links dead
+   centre by squeezing the two 1fr tracks. The brand's track collapses under its
+   own text, which then paints straight over "About". Give the links less to ask
+   for and pin the brand to its natural width, so the row has real air. */
+@media (min-width:641px) and (max-width:1080px){
+  .nav__inner{ padding-inline:1.25rem; gap:.6rem; }
+  .brand{ min-width:max-content; }
+  .brand__mark{ width:26px; height:26px; }
+  .brand__title{ font-size:1.15rem; }
+  .nav__links a{ padding:.5rem .55rem; font-size:.875rem; }
+  .nav__links a:not(.nav__cta)::after{ left:.55rem; right:.55rem; }
+  .nav__cta{ margin-left:.35rem; padding:.55rem 1rem !important; }
+  .nav__social{ gap:.3rem; }
+}
 @media (max-width:1080px){
   .meetings{ grid-template-columns:repeat(2,1fr); gap:1.8rem; }
   .notes-grid{ grid-template-columns:repeat(3,1fr); }
@@ -1196,7 +1246,15 @@ body[data-route="/"] .footer{ margin-top:0; }
      that crashed the tab on return to home (NOT the warp). iPad (>640px) keeps
      the richer scene since it renders fine. */
   .home__beam{ display:none; }
-  .home__equations .eqn:nth-child(n+7){ display:none; }   /* 6 drifting equations, not ~10 */
+  .home__equations .eqn:nth-child(n+10){ display:none; }  /* 9 drifting equations */
+  /* Each equation is centred on its --x, so one sitting at --x:6% hangs half its
+     width off a 393px screen — "E = mc²" arrives as "= mc²", which reads as a bug
+     rather than as decoration. Pulling the field's box in off both edges remaps
+     every --x into a safe band without touching the per-equation coordinates. */
+  .home__equations{ left:9%; right:9%; }
+  /* And nudge the type up: the clamp bottoms out at .68rem, which is sized for a
+     1512px canvas. On a 393px one the same math needs a little more presence. */
+  .eqn{ font-size:.78rem; }
   .cosmo--supernova{ display:none; }                      /* big flashing layer */
   .home__earth-clouds{ display:none; }                    /* a blurred, animating layer over a 148vmin surface */
   .home__glow{ filter:none; }                             /* stop promoting a full-screen filtered layer */
@@ -1213,7 +1271,6 @@ body[data-route="/"] .footer{ margin-top:0; }
   .home__foot{ padding-top:1rem; }
   .home__actions{ width:100%; flex-direction:column; gap:.55rem; }
   .home__actions .btn{ width:100%; justify-content:center; padding:.9rem 1rem; font-size:.95rem; }
-  .home__scroll{ display:none; }
   .meetings{ grid-template-columns:1fr; }
   .notes-grid{ grid-template-columns:repeat(2,1fr); gap:1.2rem; }
   /* Single stacked column — drop the margin-top:auto pushes so blocks flow naturally. */
@@ -1239,8 +1296,11 @@ body[data-route="/"] .footer{ margin-top:0; }
 @media (max-width:420px){
   .notes-grid{ grid-template-columns:1fr; }
   .meetings-index{ grid-template-columns:repeat(2,1fr); }
-  /* Smallest / weakest phones: pare the hero down to the essentials. */
-  .home__equations .eqn:nth-child(n+5){ display:none; }   /* 4 drifting equations */
+  /* Smallest / weakest phones: pare the hero down to the essentials. Note most
+     current phones (390–430px) land here, so this is the count people actually
+     see — 7 spread across the hero matches the desktop field's density once you
+     scale for area, where 4 read as an accident. */
+  .home__equations .eqn:nth-child(n+8){ display:none; }   /* 7 drifting equations */
 }
 
 /* Touch: convert hover-only reveals to always-visible */
@@ -1342,16 +1402,28 @@ body[data-route="/"] .footer{ margin-top:0; }
 .lightbox__credit{ margin:auto 0 0; font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-mute); }
 
 /* =====================================================================
-   ABOUT READOUT → NUBIUS DOSSIER BAND (label over big serif value)
+   ABOUT READOUT → DOSSIER CARD beside the lede (label over big serif value)
    ===================================================================== */
-.about{ grid-template-columns:1fr; }
-.about__lead{ max-width:72ch; }
-.readout{ max-width:none; display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem; padding:1.7rem 1.9rem 1.9rem; }
-.readout li{ display:flex; flex-direction:column-reverse; justify-content:flex-end; gap:.7rem; padding:0 0 0 1.25rem;
-  border-bottom:0; border-left:1px solid var(--line-2); }
-.readout li:first-child{ border-left:0; padding-left:0; }
-.readout__v{ font-size:clamp(2.6rem,3.6vw,3.4rem); }
-@media (max-width:980px){ .readout{ max-width:none; } }
+/* Two figures now, so the readout reads better as a slim card set BESIDE the
+   intro copy than as a wide band under it — the prose keeps a comfortable
+   measure and the numbers get a column of their own. */
+.about{ grid-template-columns:minmax(0,1.45fr) minmax(230px,.72fr); align-items:start; }
+.about__lead{ max-width:62ch; }
+.readout{ max-width:none; display:grid; grid-template-columns:1fr; gap:0; padding:1.7rem 1.9rem; }
+.readout li{ display:flex; flex-direction:column-reverse; justify-content:flex-end; gap:.55rem;
+  padding:1.4rem 0; border-left:0; border-bottom:1px solid var(--line-2); }
+.readout li:first-child{ padding-top:0; }
+.readout li:last-child{ padding-bottom:0; border-bottom:0; }
+.readout__v{ font-size:clamp(2.6rem,3.4vw,3.4rem); }
+/* Below the two-column threshold the card drops under the copy and the two
+   figures sit side by side, which keeps it from becoming a tall empty slab. */
+@media (max-width:980px){
+  .about{ grid-template-columns:1fr; }
+  .about__lead{ max-width:72ch; }
+  .readout{ grid-template-columns:1fr 1fr; gap:1.2rem; padding:1.7rem 1.9rem 1.9rem; }
+  .readout li{ padding:0 0 0 1.25rem; border-bottom:0; border-left:1px solid var(--line-2); }
+  .readout li:first-child{ border-left:0; padding-left:0; }
+}
 
 /* =====================================================================
    DOSSIER LAYER — responsive + touch

@@ -495,7 +495,7 @@
           <span class="mcard__kind">${m.kind}</span>
         </div>
         <div class="mcard__thumb">
-          <img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.n}: ${m.title}" loading="lazy" width="640" height="400">
+          <img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.n}: ${m.title}" loading="lazy" decoding="async" width="640" height="400">
           <span class="mcard__scan" aria-hidden="true"></span>
           <span class="mcard__reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <span class="mcard__coord" aria-hidden="true">Meeting ${m.n} · ${m.kind || "Deck"}</span>
@@ -546,7 +546,7 @@
     const heroWrap = el("div", "mt mt--hero");
     heroWrap.innerHTML = `
       <span class="mt__n">Deck cover</span>
-      <img src="${deckThumb(m.n)}" alt="Cover slide, Meeting ${m.n}: ${m.title}" loading="lazy" />
+      <img src="${deckThumb(m.n)}" alt="Cover slide, Meeting ${m.n}: ${m.title}" loading="lazy" decoding="async" />
     `;
     thumbs.appendChild(heroWrap);
     // Show 1st page of any lecture-note handout as supporting preview
@@ -555,7 +555,7 @@
       const nWrap = el("div", "mt");
       nWrap.innerHTML = `
         <span class="mt__n">Handout · pg 1</span>
-        <img src="${noteThumb(noteId)}" alt="First page of the meeting handout" loading="lazy" />
+        <img src="${noteThumb(noteId)}" alt="First page of the meeting handout" loading="lazy" decoding="async" />
       `;
       thumbs.appendChild(nWrap);
     }
@@ -622,7 +622,7 @@
         <div class="ncard__thumb">
           <div class="ncard__mbadge"><span class="ncard__mbadge-k">Meeting</span><span class="ncard__mbadge-v">${pad(nd.meeting)}</span></div>
           <span class="ncard__type" data-type="${nd.type}">${nd.type}</span>
-          <img src="${noteThumb(id)}" alt="First page of ${nd.title}" loading="lazy" width="340" height="440">
+          <img src="${noteThumb(id)}" alt="First page of ${nd.title}" loading="lazy" decoding="async" width="340" height="440">
           <div class="ncard__cloud" aria-hidden="true">
             <span class="ncard__cloud-k">Topics inside</span>
             <div class="ncard__cloud-list">${topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
@@ -661,7 +661,7 @@
         const li = el("article", "tcard reveal");
         li.style.setProperty("--i", i);
         const portrait = o.photo
-          ? `<img src="${o.photo}" alt="Portrait of ${o.name}" loading="lazy">`
+          ? `<img src="${o.photo}" alt="Portrait of ${o.name}" loading="lazy" decoding="async">`
           : `<span class="tcard__initials" aria-hidden="true">${initials}</span>`;
         li.innerHTML = `
           <div class="tcard__portrait">${portrait}</div>
@@ -790,17 +790,72 @@
      Reveal
      ------------------------------------------------------------------- */
   let revealIO;
+  // Current scroll speed in px/s, sampled passively. Above FLING we stop trying to
+  // animate cards in — see the .reveal-now note in the CSS.
+  const FLING = 1100;
+  let scrollVel = 0;
+  function trackScrollVelocity() {
+    let lastY = window.scrollY, lastT = performance.now();
+    window.addEventListener("scroll", () => {
+      const t = performance.now(), y = window.scrollY, dt = t - lastT;
+      if (dt > 0) scrollVel = Math.abs(y - lastY) / dt * 1000;
+      lastY = y; lastT = t;
+    }, { passive: true });
+  }
+
+  // Observed but not yet revealed. Needed for the scroll-end sweep below.
+  const pendingReveal = new Set();
+
+  function showReveal(node, instant) {
+    if (instant) node.classList.add("reveal-now");
+    node.classList.add("is-visible");
+    pendingReveal.delete(node);
+    if (revealIO) revealIO.unobserve(node);
+  }
+
+  /* An IntersectionObserver SAMPLES the layout; it does not track it continuously.
+     Fling a long grid and a card can enter AND leave the viewport between two
+     samples, so the observer never reports it — and it sits at opacity 0 forever.
+     That is the blank-card glitch: not a slow fade, a card that never rendered at
+     all. Measured on /notes, a full-page fling left 8 of 16 cards permanently
+     invisible on desktop and 13 of 16 on a phone.
+
+     So IO stays the fast path, and this runs once when scrolling STOPS: anything
+     still pending that is level with or above the fold must be on screen by now,
+     so show it immediately. It can't steal the animation from normal scrolling,
+     because at reading speed IO has always already fired long before this. */
+  function sweepPendingReveals() {
+    if (!pendingReveal.size) return;
+    const h = window.innerHeight;
+    for (const n of [...pendingReveal]) {
+      if (n.getBoundingClientRect().top < h) showReveal(n, true);
+    }
+  }
+
   function initReveal() {
+    trackScrollVelocity();
     const observe = (nodes) => {
       if (REDUCED || !("IntersectionObserver" in window)) {
         nodes.forEach((n) => n.classList.add("is-visible"));
         return;
       }
+      // The old box was INSET at the bottom (-4%) with a 6% threshold, so a card
+      // had to be several percent into view before its 0.9s reveal even started —
+      // guaranteeing you'd watch it finish. Trigger a quarter-viewport early
+      // instead, so at normal reading speed the fade is done on arrival.
       if (!revealIO) revealIO = new IntersectionObserver((es) => {
-        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-visible"); revealIO.unobserve(e.target); } });
-      }, { threshold: 0.06, rootMargin: "0px 0px -4% 0px" });
-      nodes.forEach((n) => revealIO.observe(n));
+        es.forEach((e) => {
+          if (e.isIntersecting) showReveal(e.target, scrollVel > FLING);
+        });
+      }, { threshold: 0, rootMargin: "0px 0px 25% 0px" });
+      nodes.forEach((n) => { pendingReveal.add(n); revealIO.observe(n); });
     };
+    let sweepT;
+    window.addEventListener("scroll", () => {
+      clearTimeout(sweepT);
+      sweepT = setTimeout(sweepPendingReveals, 140);
+    }, { passive: true });
+
     observe($$(".reveal"));
     observe($$(".section-in"));
     window.__astroObserveReveals = () => { observe($$(".reveal:not(.is-visible)")); observe($$(".section-in:not(.is-visible)")); };
@@ -1207,12 +1262,14 @@
     const nodes = $$(".home__equations .eqn");
     if (!nodes.length) return;
 
-    // The equations are a decorative background layer. Typesetting them means
-    // shipping ~280KB of KaTeX + parsing 27 formulas — a bad trade on a phone,
-    // where they're tiny and barely visible. Drop the whole layer on coarse /
-    // touch devices and never load KaTeX there. The nebula + wordmark carry the
-    // hero. Desktop (fine pointer) keeps the full drifting-math field.
-    if (!FINE || REDUCED) { if (container) container.remove(); return; }
+    // The equations run on EVERY pointer type. They used to be dropped whenever
+    // the device wasn't fine-pointer, to save the ~280KB KaTeX download — but the
+    // drifting math is the hero's whole idea, and killing it left phones with a
+    // bare wordmark that didn't look like the same site. KaTeX still loads lazily,
+    // off the critical path (requestIdleCallback below), and the responsive CSS
+    // thins the field on small screens, so a phone only ever typesets 7–9 of the 27.
+    // Reduced-motion is the one case that still drops the layer entirely.
+    if (REDUCED) { if (container) container.remove(); return; }
 
     // Randomize drift/scale up front (independent of KaTeX being ready) so the
     // float animation is varied even before the math renders.
@@ -1248,6 +1305,15 @@
     const start = () => loadKatex().then(render);
     if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 2000 });
     else start();
+
+    // render() skips equations the responsive CSS has hidden, and the hidden set
+    // changes when a phone or tablet is rotated. Without this, rotating to
+    // landscape reveals spans that were never typeset — they'd drift as blanks.
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(render, 250);
+    });
   }
 
   /* -------------------------------------------------------------------
@@ -1269,55 +1335,6 @@
       c.appendChild(p);
     }
     document.body.appendChild(c);
-  }
-
-  /* -------------------------------------------------------------------
-     Space figures — feathered nebula/galaxy orbs placed through the site,
-     scrolling WITH the page and parallaxing slightly slower than content.
-     One shared scroll rAF drives all of them (transform only, compositor).
-     Skipped entirely on phones (≤640) and reduced-motion — extra decoded
-     image layers are exactly what crashes a low-memory iPhone.
-     ------------------------------------------------------------------- */
-  function initSpaceFigures() {
-    if (REDUCED) return;
-    // [image, top%, side, offset%, max-vw size, parallax speed]
-    // Home is deliberately left clean — just the JWST field + wordmark. The
-    // decorative orbs (Pleiades, Kohoutek, etc.) live on the inner routes and the
-    // Atlas instead, so the title page reads uncluttered.
-    const PLACEMENT = {
-      "/about":    [["andromeda", 15, "left", 3, 27, 0.15], ["whirlpool", 62, "right", 4, 24, 0.09]],
-      "/meetings": [["pillars", 13, "right", 3, 25, 0.13], ["orion", 60, "left", 4, 27, 0.08]],
-      "/notes":    [["cliffs", 15, "left", 3, 26, 0.14], ["ring", 64, "right", 5, 22, 0.10]],
-      "/team":     [["helix", 18, "right", 4, 25, 0.12]],
-      "/join":     [["tarantula", 16, "left", 4, 26, 0.11]],
-    };
-    const figs = [];
-    Object.keys(PLACEMENT).forEach((route) => {
-      const sec = document.querySelector(`.route[data-route="${route}"]`);
-      if (!sec) return;
-      PLACEMENT[route].forEach(([img, top, side, off, vw, speed]) => {
-        const d = el("div", "space-fig");
-        // position/z-index inline so they win over the `.route > *` content rule
-        // (which is position:relative z-index:1) — otherwise figures flow inline and
-        // shove the page content down instead of sitting absolutely behind it.
-        d.style.cssText = `position:absolute; z-index:0; top:${top}%; ${side}:${off}%; width:clamp(190px, ${vw}vw, 400px); background-image:url("assets/bg/fig-${img}.jpg");`;
-        d.dataset.sp = speed;
-        sec.insertBefore(d, sec.firstChild);
-        figs.push(d);
-      });
-    });
-    // Parallax only where the figures actually show (>640px). Phones keep them
-    // display:none (see CSS) — no decode, no scroll work — so the tab stays light.
-    if (!figs.length || !window.matchMedia("(min-width:641px)").matches) return;
-    let ticking = false;
-    const apply = () => {
-      const y = window.scrollY;
-      for (const d of figs) d.style.transform = `translate3d(0, ${(y * +d.dataset.sp).toFixed(1)}px, 0)`;
-      ticking = false;
-    };
-    window.addEventListener("scroll", () => {
-      if (ticking) return; ticking = true; requestAnimationFrame(apply);
-    }, { passive: true });
   }
 
   /* -------------------------------------------------------------------
@@ -1355,7 +1372,6 @@
     initHeroInteractions();
     initRouter();
     initWarpIntro();
-    initSpaceFigures();
     const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
