@@ -869,6 +869,71 @@
   }
 
   /* -------------------------------------------------------------------
+     Next meeting countdown
+
+     Ticks down to the instant in the card's data-when. That attribute carries an
+     explicit UTC offset, so everyone counts down to the same moment no matter what
+     timezone their device is in.
+
+     Three states, driven onto the card as data-nm-state so the CSS can restyle the
+     pill and the numerals without any of that knowledge living here:
+       counting -> the meeting is ahead
+       now      -> we're inside the meeting window
+       past     -> it's over; the interval stops, nothing is left running
+     ------------------------------------------------------------------- */
+  function initNextMeeting() {
+    const card = $("#nextMeeting");
+    if (!card) return;
+    const target = Date.parse(card.dataset.when || "");
+    if (!Number.isFinite(target)) return;      // bad/missing date: leave the static markup alone
+
+    const statusEl = $("[data-nm-status]", card);
+    const units = ["days", "hours", "mins", "secs"].map((k) => $(`[data-nm-unit="${k}"]`, card));
+    if (units.some((u) => !u)) return;
+    const LUNCH_MS = 40 * 60 * 1000;           // hold the "happening now" state for the lunch period
+
+    // Writing only on change keeps this to ~1 text mutation a second instead of 4,
+    // and gives us the hook for the tick animation.
+    function setUnit(el, value, pad) {
+      const next = pad && value < 10 ? "0" + value : String(value);
+      if (el.textContent === next) return;
+      el.textContent = next;
+      if (REDUCED) return;
+      el.classList.remove("is-tick");
+      void el.offsetWidth;                     // restart the animation on a re-tick
+      el.classList.add("is-tick");
+    }
+
+    let timer = null;
+    function paint() {
+      const diff = target - Date.now();
+
+      if (diff <= 0) {
+        const over = diff <= -LUNCH_MS;
+        card.dataset.nmState = over ? "past" : "now";
+        if (statusEl) statusEl.textContent = over ? "Just wrapped" : "Happening now";
+        units.forEach((el, i) => setUnit(el, 0, i > 0));
+        if (over && timer) { clearInterval(timer); timer = null; }
+        return;
+      }
+
+      card.dataset.nmState = "counting";
+      if (statusEl) statusEl.textContent = "T–minus";
+      const s = Math.floor(diff / 1000);
+      setUnit(units[0], Math.floor(s / 86400), false);
+      setUnit(units[1], Math.floor(s / 3600) % 24, true);
+      setUnit(units[2], Math.floor(s / 60) % 60, true);
+      setUnit(units[3], s % 60, true);
+    }
+
+    paint();
+    timer = setInterval(paint, 1000);
+    // A backgrounded tab throttles the interval, so the clock can come back stale.
+    // Repaint the moment it's visible again.
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && timer) paint(); });
+  }
+
+  /* -------------------------------------------------------------------
      Back to top
      ------------------------------------------------------------------- */
   function initBackTop() {
@@ -1368,6 +1433,7 @@
     initCopy();
     initSignup();
     initBackTop();
+    initNextMeeting();
     initScrollSpy();
     initHeroInteractions();
     initRouter();

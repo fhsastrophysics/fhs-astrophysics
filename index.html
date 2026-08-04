@@ -433,12 +433,32 @@
 
         <!-- Pushed to the bottom of this column (margin-top:auto) so its bottom edge
              lines up with the Contact/Elsewhere block's bottom in the other column. -->
-        <div class="nextmeet" id="nextMeeting">
-          <span class="nextmeet__k">§ Next meeting</span>
-          <ul class="nextmeet__grid">
-            <li><span class="nextmeet__label">Date</span><span class="nextmeet__val">TBA</span></li>
-            <li><span class="nextmeet__label">Time</span><span class="nextmeet__val">TBA</span></li>
-            <li><span class="nextmeet__label">Topic</span><span class="nextmeet__val">TBA</span></li>
+        <!-- The countdown is driven entirely off data-when — an ISO instant WITH an
+             explicit offset (-07:00 = PDT), so the target is a fixed moment in time
+             rather than "12:55 wherever you happen to be". To roll the card to the
+             next session, change this one attribute and the three visible strings
+             below; initNextMeeting() does the rest. -->
+        <div class="nextmeet" id="nextMeeting" data-when="2026-08-26T12:55:00-07:00">
+          <div class="nextmeet__top">
+            <span class="nextmeet__k">§ Next meeting</span>
+            <span class="nextmeet__status" data-nm-status>T–minus</span>
+          </div>
+
+          <p class="nextmeet__topic">Introduction to Astrophysics Club</p>
+          <!-- No room here on purpose: "When & Where" states it a few lines above, and
+               repeating it read as a stray orphan once it wrapped on a phone. -->
+          <p class="nextmeet__when">
+            <time datetime="2026-08-26T12:55:00-07:00">Wednesday, August 26 · 12:55 PM</time>
+          </p>
+
+          <!-- aria-hidden: the <time> above already states the meeting for assistive
+               tech, and a field that rewrites itself every second would otherwise be
+               announced endlessly. -->
+          <ul class="nextmeet__clock" data-nm-clock aria-hidden="true">
+            <li class="nmu"><span class="nmu__v" data-nm-unit="days">--</span><span class="nmu__l">Days</span></li>
+            <li class="nmu"><span class="nmu__v" data-nm-unit="hours">--</span><span class="nmu__l">Hrs</span></li>
+            <li class="nmu"><span class="nmu__v" data-nm-unit="mins">--</span><span class="nmu__l">Min</span></li>
+            <li class="nmu"><span class="nmu__v" data-nm-unit="secs">--</span><span class="nmu__l">Sec</span></li>
           </ul>
         </div>
       </div>

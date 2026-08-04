@@ -963,13 +963,39 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .field__copy svg{ width:12px; height:12px; }
 @media (hover: none){ .field__copy{ opacity:1; } }
 
-/* Next meeting — placeholder card, ready to fill in */
+/* Next meeting — live countdown card. Hierarchy top to bottom: eyebrow + state
+   pill, then the topic as the headline, then when/where, then the clock. */
 .nextmeet{ margin-top:1.4rem; padding:1.4rem 1.5rem 1.5rem; border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }
-.nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:-.01em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:1.1rem; }
-.nextmeet__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
-.nextmeet__grid li{ display:flex; flex-direction:column; gap:.4rem; }
-.nextmeet__label{ font-family:var(--font-mono); font-weight:700; font-size:.6rem; letter-spacing:-.01em; text-transform:uppercase; color:var(--ink-mute); }
-.nextmeet__val{ font-family:var(--font-display); font-weight:400; font-size:1.6rem; line-height:1; color:var(--ink); letter-spacing:-.01em; }
+.nextmeet__top{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+.nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:-.01em; text-transform:uppercase; color:var(--accent); }
+/* State pill. The dot pulses only while the meeting is actually live. */
+.nextmeet__status{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--line); border-radius:999px; padding:.3rem .6rem; white-space:nowrap; }
+.nextmeet__status::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--ink-mute); flex:0 0 auto; }
+.nextmeet[data-nm-state="counting"] .nextmeet__status{ color:var(--accent); border-color:rgba(188,215,255,.3); }
+.nextmeet[data-nm-state="counting"] .nextmeet__status::before{ background:var(--accent); box-shadow:0 0 8px rgba(188,215,255,.7); }
+.nextmeet[data-nm-state="now"] .nextmeet__status{ color:#8FE9B0; border-color:rgba(143,233,176,.38); }
+.nextmeet[data-nm-state="now"] .nextmeet__status::before{ background:#8FE9B0; box-shadow:0 0 8px rgba(143,233,176,.8); animation:nmPulse 1.8s var(--ease) infinite; }
+@keyframes nmPulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.45; transform:scale(.72); } }
+
+.nextmeet__topic{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.45rem,2.1vw,1.85rem); line-height:1.12; letter-spacing:-.01em; color:var(--ink); margin:0; text-wrap:balance; }
+.nextmeet__when{ margin:.55rem 0 0; font-size:.95rem; color:var(--ink); }
+
+/* The clock — four columns split by hairlines, tabular figures so the seconds
+   ticking over never nudges the layout. */
+.nextmeet__clock{ display:grid; grid-template-columns:repeat(4,1fr); margin-top:1.25rem; padding-top:1.15rem; border-top:1px solid var(--line); }
+.nmu{ display:flex; flex-direction:column; align-items:center; gap:.4rem; text-align:center; }
+.nmu + .nmu{ border-left:1px solid var(--line); }
+.nmu__v{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.7rem,3vw,2.15rem); line-height:1; letter-spacing:-.01em; color:var(--ink); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+.nmu__l{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-mute); }
+/* Each digit change gets one short lift — enough to read as ticking, no layout cost. */
+.nmu__v.is-tick{ animation:nmTick .42s var(--ease-out); }
+@keyframes nmTick{ 0%{ transform:translateY(-.16em); opacity:.35; } 100%{ transform:translateY(0); opacity:1; } }
+/* Meeting done: the numbers are all zero, so stop them competing with the text. */
+.nextmeet[data-nm-state="past"] .nmu__v{ color:var(--ink-mute); opacity:.5; }
+@media (prefers-reduced-motion: reduce){
+  .nmu__v.is-tick{ animation:none; }
+  .nextmeet[data-nm-state="now"] .nextmeet__status::before{ animation:none; }
+}
 
 /* Elsewhere — clean inline text links (no card boxes), brand-color on hover */
 .socials{ display:flex; flex-direction:column; gap:.9rem; margin-top:.2rem; align-items:flex-start; }
@@ -1283,7 +1309,14 @@ body[data-route="/"] .footer{ margin-top:0; }
   .footer__legal{ text-align:left; }
   .chapter{ padding-top:7rem; }
   .modal__thumbs{ grid-template-columns:1fr; }
-  .nextmeet__grid{ grid-template-columns:1fr; gap:.7rem; }
+  /* The clock keeps all four columns on a phone — it's the point of the card, and
+     at .58rem labels with tabular figures four fit comfortably above 320px. Only
+     the padding and the eyebrow row tighten up. */
+  .nextmeet{ padding:1.25rem 1.2rem 1.35rem; }
+  .nextmeet__top{ flex-wrap:wrap; gap:.55rem; }
+  .nextmeet__clock{ margin-top:1.1rem; padding-top:1rem; }
+  .nmu__v{ font-size:1.75rem; }
+  .nmu__l{ font-size:.54rem; letter-spacing:.08em; }
   .field-row{ grid-template-columns:1fr; gap:0; }
   .field-row .field:first-of-type + .field{ border-top:1px solid var(--line); }
   .signup__row{ flex-direction:column; }
