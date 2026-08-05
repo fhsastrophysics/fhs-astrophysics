@@ -155,7 +155,9 @@
       <span class="eqn" data-tex="v_{\text{esc}} = \sqrt{\tfrac{2GM}{R}}"                                                        style="--x:38%; --y:52%; --dur:17s; --delay:-10s;"></span>
       <span class="eqn" data-tex="T_H = \tfrac{\hbar c^3}{8\pi G M k_B}"                                                         style="--x:82%; --y:38%; --dur:21s; --delay:-15s;"></span>
       <span class="eqn" data-tex="N(t) = N_0\, e^{-\lambda t}"                                                                   style="--x:5%;  --y:70%; --dur:19s; --delay:-12s;"></span>
-      <span class="eqn" data-tex="\lambda_{\max} T = 2.898 \times 10^{-3}\ \text{m·K}"                                            style="--x:64%; --y:66%; --dur:23s; --delay:-8s;"></span>
+      <!-- \cdot, not a literal "·": KaTeX only defines U+00B7 in MATH mode (as
+           \cdotp), so inside \text{} it threw and rendered the error in red. -->
+      <span class="eqn" data-tex="\lambda_{\max} T = 2.898 \times 10^{-3}\ \text{m}\cdot\text{K}"                                 style="--x:64%; --y:66%; --dur:23s; --delay:-8s;"></span>
       <span class="eqn" data-tex="v_{\text{orb}} = \sqrt{\tfrac{GM}{r}}"                                                         style="--x:28%; --y:88%; --dur:18s; --delay:-17s;"></span>
       <span class="eqn" data-tex="M_{\text{Ch}} \approx 1.4\, M_\odot"                                                           style="--x:92%; --y:20%; --dur:20s; --delay:-4s;"></span>
       <span class="eqn" data-tex="H_0 \approx 70\ \text{km/s/Mpc}"                                                               style="--x:48%; --y:46%; --dur:22s; --delay:-19s;"></span>
@@ -179,8 +181,12 @@
       <!-- Astronaut floating in front of the letters. Wrapper carries the position,
            filter, glow aura (::before) and JS ragdoll transforms; the <img> is the art. -->
       <div class="home__astro-wrap" aria-hidden="true">
+        <!-- The 1024w tier exists for tablets. With only 720w/1536w on offer, an
+             iPad (440 CSS px at 2x = 880px needed) had to jump to the 1536w master:
+             a 2.3 MB download and a 1.5 MP decode to fill a 440px box. 1024w covers
+             it at 331 KB. Phones still take 720w, desktop still takes the master. -->
         <img class="home__astro" src="assets/astronaut.png"
-             srcset="assets/astronaut-sm.png 720w, assets/astronaut.png 1536w"
+             srcset="assets/astronaut-sm.png 720w, assets/astronaut-md.png 1024w, assets/astronaut.png 1536w"
              sizes="(max-width:640px) 214px, (max-width:980px) 440px, 560px"
              alt="" aria-hidden="true" draggable="false" decoding="async"
              onerror="this.style.visibility='hidden'" />

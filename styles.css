@@ -65,6 +65,10 @@
   --ease: cubic-bezier(.4, 0, .1, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-swift: cubic-bezier(.7, 0, .2, 1);
+  /* Plain ease-out-quad. --ease-out has a long, showy tail that reads as
+     "animated"; this just decelerates and stops, which is what a hover should
+     do. Used by the deck-card hover. */
+  --ease-calm: cubic-bezier(.22, .61, .36, 1);
 }
 
 *, *::before, *::after{ box-sizing: border-box; }
@@ -170,16 +174,22 @@ main, .nav, .footer{ position:relative; z-index:3; }
    back out — smooth dim, no harsh lighting change — with bright streaks over it. */
 .warp-intro--jump{ opacity:0; background:rgba(4,7,16,.5); transition:opacity .2s var(--ease); }
 .warp-intro--jump.show{ opacity:1; }
-.warp-line{ position:absolute; left:50%; top:50%; width:2px; height:0;
+/* The streak grows via transform:scaleY, NOT height. Animating `height` re-ran
+   layout for all 20-26 lines on EVERY frame of the intro — i.e. layout thrash
+   during the first 1.4s of the page, the exact window a phone is also decoding
+   the sky, booting the router and building six routes. scaleY is compositor-only:
+   the line is laid out once at full length and the GPU squashes it. Same look,
+   no layout. transform-origin:top center already anchors it at the centre. */
+.warp-line{ position:absolute; left:50%; top:50%; width:2px; height:62vmax;
   background:linear-gradient(to bottom, #ffffff, rgba(200,224,255,.7) 40%, rgba(188,215,255,0));
   box-shadow:0 0 6px rgba(190,215,255,.7);
-  transform-origin:top center; transform:rotate(var(--a)); opacity:0;
+  transform-origin:top center; transform:rotate(var(--a)) scaleY(0); opacity:0;
   animation:warpline 1.4s var(--ease-out) forwards; animation-delay:var(--d,0s); }
 @keyframes warpline{
-  0%{ height:0; opacity:0; }
+  0%{ transform:rotate(var(--a)) scaleY(0); opacity:0; }
   18%{ opacity:1; }
-  55%{ height:62vmax; opacity:.9; }
-  100%{ height:62vmax; opacity:0; transform:rotate(var(--a)) translateY(28vmax); }
+  55%{ transform:rotate(var(--a)) scaleY(1); opacity:.9; }
+  100%{ transform:rotate(var(--a)) scaleY(1) translateY(28vmax); opacity:0; }
 }
 .warp-bloom{ position:fixed; z-index:2; left:50%; top:50%; width:600px; height:600px; margin:-300px 0 0 -300px; border-radius:50%; pointer-events:none; opacity:0; background: radial-gradient(circle, rgba(188,215,255,.35), rgba(188,215,255,0) 60%); mix-blend-mode:screen; transition: opacity .3s var(--ease); }
 .warp-bloom.on{ opacity:1; transition:opacity .15s var(--ease); }
@@ -734,46 +744,35 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* align-items:start so each card hugs its own content height (no blank band
    below the text); cards stay visually tight rather than stretching to fill. */
 .meetings{ display:grid; grid-template-columns:repeat(3,1fr); gap:2.4rem; align-items:stretch; }
-/* Meeting decks read like an observation instrument acquiring a target:
-   a status line draws across the top, a reticle snaps onto the cover, and a
-   spectral scan-line sweeps down and develops the grayscale plate into colour.
-   Deliberately NOT the lift+scale+follow-glow+zoom+arrow default kit. */
-.mcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); overflow:hidden; transition:transform .5s var(--ease-out), border-color .45s var(--ease), box-shadow .5s var(--ease); cursor:pointer; contain:layout paint; }
-/* Instrument status line that wipes across the top edge on acquire. */
-.mcard::before{ content:""; position:absolute; top:0; left:0; right:0; height:1.5px; z-index:5; transform:scaleX(0); transform-origin:left center; background:linear-gradient(90deg, transparent, var(--accent) 20%, var(--accent-2) 80%, transparent); opacity:0; transition:transform .55s var(--ease-out), opacity .4s var(--ease); pointer-events:none; }
-.mcard:hover{ transform:translateY(-2px); border-color:rgba(188,215,255,0.4); box-shadow:0 14px 46px rgba(63,130,240,.16), inset 0 1px 0 rgba(255,255,255,.07); }
-.mcard:hover::before{ transform:scaleX(1); opacity:1; }
+/* Deck card hover — deliberately quiet.
+   This used to fire six things at once on hover: a status line wiping across the
+   top edge, four corner brackets snapping inward, a spectral scan-line sweeping
+   down the plate, a coordinate readout fading up, an infinitely pulsing "lock"
+   ring, and a blue glow bloom. Individually clever; together it read as an
+   effects demo rather than a card, and the infinite pulse never stopped.
+   What's left is what a person actually needs to know — "this is clickable, and
+   here's the slide": the card lifts a couple of pixels, the border warms, and
+   the plate comes to colour. One shared 220ms ease-out so it feels like a single
+   physical response instead of a choreographed sequence. */
+.mcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); overflow:hidden; transition:transform .22s var(--ease-calm), border-color .22s var(--ease-calm), box-shadow .22s var(--ease-calm); cursor:pointer; contain:layout paint; }
+/* A believable shadow, not a blue bloom — the card is lifting off the page, it
+   isn't emitting light. */
+.mcard:hover{ transform:translateY(-2px); border-color:rgba(188,215,255,.26); box-shadow:0 10px 26px rgba(2,6,18,.5), inset 0 1px 0 rgba(255,255,255,.06); }
 .mcard > .mcard__head, .mcard > .mcard__body{ position:relative; z-index:2; }
 .mcard__head{ display:flex; align-items:flex-start; justify-content:space-between; padding:1.5rem 1.6rem 1.2rem; gap:1rem; }
-.mcard__no{ font-family:var(--font-display); font-size:3rem; font-weight:400; color:var(--ink); opacity:0.14; line-height:.85; letter-spacing:-.03em; user-select:none; transition:opacity .35s var(--ease), color .35s var(--ease); }
-.mcard:hover .mcard__no{ opacity:.55; color:var(--accent); }
+.mcard__no{ font-family:var(--font-display); font-size:3rem; font-weight:400; color:var(--ink); opacity:0.14; line-height:.85; letter-spacing:-.03em; user-select:none; transition:opacity .22s var(--ease-calm); }
+/* Was 0.14 -> 0.55 AND a colour flip to accent; that much change on a 3rem
+   numeral pulled the eye away from the slide itself. A small lift in opacity is
+   enough to say the card woke up. */
+.mcard:hover .mcard__no{ opacity:.3; }
 .mcard__kind{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); padding-top:.5rem; }
 
 .mcard__thumb{ position:relative; aspect-ratio:16/10; overflow:hidden; background:#0a0e18; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-/* The plate develops from grayscale to colour as the scan passes — no zoom. */
-.mcard__thumb img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.05) brightness(.8); transition:filter .7s .12s var(--ease); }
+/* The plate comes to colour. No delay — the old .12s existed to let the scan-line
+   pass first, and that beam is gone, so the image now responds the instant you
+   arrive rather than appearing to wait its turn. */
+.mcard__thumb img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.05) brightness(.8); transition:filter .3s var(--ease-calm); }
 .mcard:hover .mcard__thumb img{ filter:grayscale(0) contrast(1.04) brightness(1.02); }
-
-/* Spectral scan-line: a bright beam with a soft trailing wash that sweeps once. */
-.mcard__scan{ position:absolute; left:0; right:0; top:0; height:38%; z-index:3; pointer-events:none; opacity:0;
-  background:linear-gradient(to bottom, rgba(127,176,255,0) 0%, rgba(127,176,255,.12) 78%, rgba(188,215,255,.9) 99%, transparent 100%);
-  border-bottom:1.5px solid rgba(219,233,255,.95); box-shadow:0 0 16px 1px rgba(127,176,255,.55); transform:translateY(-110%); }
-.mcard:hover .mcard__scan{ animation:deck-scan 1.05s var(--ease-swift) forwards; }
-@keyframes deck-scan{ 0%{ opacity:0; transform:translateY(-110%); } 12%{ opacity:1; } 88%{ opacity:1; } 100%{ opacity:0; transform:translateY(360%); } }
-
-/* Reticle: four corner brackets that snap inward to frame the target. */
-.mcard__reticle{ position:absolute; inset:12px; z-index:4; pointer-events:none; opacity:0; transition:opacity .35s var(--ease); }
-.mcard:hover .mcard__reticle{ opacity:.9; }
-.mcard__reticle i{ position:absolute; width:15px; height:15px; border:1.5px solid var(--accent); transition:transform .45s var(--ease-out); }
-.mcard__reticle i:nth-child(1){ top:0; left:0; border-right:0; border-bottom:0; transform:translate(-9px,-9px); }
-.mcard__reticle i:nth-child(2){ top:0; right:0; border-left:0; border-bottom:0; transform:translate(9px,-9px); }
-.mcard__reticle i:nth-child(3){ bottom:0; left:0; border-right:0; border-top:0; transform:translate(-9px,9px); }
-.mcard__reticle i:nth-child(4){ bottom:0; right:0; border-left:0; border-top:0; transform:translate(9px,9px); }
-.mcard:hover .mcard__reticle i{ transform:translate(0,0); }
-
-/* Coordinate readout that fades up in the corner of the plate. */
-.mcard__coord{ position:absolute; left:12px; bottom:12px; z-index:4; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.16em; color:var(--accent); text-shadow:0 1px 6px rgba(0,0,0,.9); opacity:0; transform:translateY(6px); transition:opacity .4s var(--ease), transform .4s var(--ease-out); }
-.mcard:hover .mcard__coord{ opacity:.92; transform:translateY(0); }
 
 .mcard__body{ padding:1.6rem 1.6rem 1.7rem; display:flex; flex-direction:column; flex:1; gap:1.1rem; }
 .mcard__title{ font-family:var(--font-display); font-weight:400; font-size:1.85rem; letter-spacing:-.01em; line-height:1.05; margin:0; }
@@ -781,12 +780,12 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .mcard__topics{ display:flex; flex-wrap:wrap; gap:.45rem; }
 .chip{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.02em; color:var(--ink-soft); border:1px solid var(--line-2); padding:.32rem .6rem; border-radius:100px; }
 .mcard__cta{ margin-top:auto; padding-top:1.2rem; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
-/* Lock indicator: a hollow ring that fills + pulses when the target is acquired. */
-.mcard__cta-lock{ display:inline-flex; align-items:center; gap:.5rem; opacity:.6; transition:opacity .3s var(--ease); }
-.mcard__cta-lock b{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--accent); background:transparent; transition:background .3s var(--ease), box-shadow .3s var(--ease); }
-.mcard:hover .mcard__cta-lock{ opacity:1; }
-.mcard:hover .mcard__cta-lock b{ background:var(--accent); box-shadow:0 0 0 3px rgba(127,176,255,.18); animation:lock-pulse 1.4s var(--ease) infinite; }
-@keyframes lock-pulse{ 0%,100%{ box-shadow:0 0 0 2px rgba(127,176,255,.22); } 50%{ box-shadow:0 0 0 5px rgba(127,176,255,0); } }
+/* Replaces the pulsing "ACQUIRE" lock ring. An arrow that moves a couple of
+   pixels toward where the click will take you — the smallest honest signal, and
+   it stops when you stop. (The old ring animated forever on hover, which the
+   animation guidance reserves for loading indicators only.) */
+.mcard__cta-arw{ display:inline-block; opacity:.55; transition:transform .22s var(--ease-calm), opacity .22s var(--ease-calm); }
+.mcard:hover .mcard__cta-arw{ opacity:1; transform:translateX(3px); }
 
 /* =====================================================================
    MEETING MODAL — deck preview
@@ -1203,6 +1202,80 @@ body[data-route="/"] .footer{ margin-top:0; }
     backdrop-filter:none; -webkit-backdrop-filter:none; }
   .readout, .nextmeet, .signup{ background:var(--glass-flat); }
   .nav.scrolled{ background:rgba(4,7,15,.94); }
+
+  /* ------------------------------------------------------------------
+     NO BLEND MODES ON TOUCH.
+     mix-blend-mode is the single most expensive compositing feature on a
+     phone: the element can't be composited directly, so the browser has to
+     rasterise everything BEHIND it into an offscreen backdrop buffer, blend
+     on the CPU/GPU, and hold both buffers in memory — per blended element,
+     for as long as it exists. Measured on an emulated iPhone (393x852 @3x)
+     there were three of them live on the home route (~36 MB of blend
+     buffers) and two live on EVERY route.
+     `screen` over an almost-black sky is visually near-identical to normal
+     alpha compositing, so dropping it costs essentially nothing to look at.
+     ------------------------------------------------------------------ */
+  .home__earth-limb, .home__earth::before, .home__earth-clouds, .home__rings{
+    mix-blend-mode:normal; }
+  /* The warp bloom is the desktop canvas-warp's centre flash — navigate() only
+     ever touches #warpBloom on the fine-pointer path. On touch it is a dead
+     element that STILL costs a permanent 600x600 screen-blend group on every
+     route, because a blend layer is allocated whether or not it's opaque. */
+  .warp-bloom{ display:none; }
+
+  /* ------------------------------------------------------------------
+     NO PERMANENT FILTER BUFFERS ON CARD THUMBNAILS.
+     Every card image carried a base filter() purely to set up a hover
+     transition to full colour. A touch device can never fire that hover, so
+     the greyscale was permanent (a visual bug in its own right) AND each
+     filtered <img> holds its own offscreen buffer: measured at 89 MB across
+     the 16 cards on /notes and 37 MB on /atlas.
+     Touch now gets the hover END state — full colour, zero filter buffers —
+     which is the same convention .ncard__cloud / .tcard__bio / .acard__stats
+     already follow under @media (hover:none).
+     ------------------------------------------------------------------ */
+  .mcard__thumb img, .ncard__thumb img, .tcard__portrait img, .acard__media img{
+    filter:none; transition:transform .5s var(--ease-out); }
+
+  /* ------------------------------------------------------------------
+     COMPOSITOR PROMOTIONS — keep only the ones that actually animate.
+     will-change permanently reserves a layer. .btn's is for a hover lift that
+     touch never triggers, and there is a .btn on nearly every route.
+     ------------------------------------------------------------------ */
+  .btn, .eqn, .ambient-particles span{ will-change:auto; }
+
+  /* NOTE: deliberately NO content-visibility:auto on the cards. It looks like a
+     free win — skip layout/paint for offscreen cards — but every card in these
+     grids is taller than any single intrinsic-size guess, so the page height is
+     wrong until each card has been visited once. Measured: /notes went from a
+     10844px document to 7970px and /meetings 11073px to 7084px, i.e. the page
+     grows under your thumb and the scroll position drifts as you read. That is
+     worse than the paint it saves — especially now that the real cost here (the
+     per-image filter buffers above) is gone. The cards already carry
+     contain:layout paint, and their images are loading="lazy".
+     ------------------------------------------------------------------ */
+
+  /* One shadow on the astronaut, not two chained ones. Each drop-shadow() is a
+     separate blur pass over its own buffer, and this element runs an infinite
+     transform animation, so both passes were live for the life of the page.
+     The blue halo is already drawn by .home__astro-wrap::before. */
+  .home__astro-wrap{ filter:drop-shadow(0 14px 26px rgba(0,0,0,.6)); }
+
+  /* The ONE promotion worth paying for on touch. The sky is a fixed, full-bleed
+     photo sitting under everything that scrolls; left unpromoted, iOS Safari can
+     re-rasterise that whole viewport-sized image on every scroll frame. Pinned to
+     its own layer it becomes a static texture the compositor just re-offsets —
+     one buffer, allocated once, instead of a full-viewport repaint per frame.
+     This is why the will-change purge above is targeted rather than blanket:
+     promotion is only waste when the layer never moves relative to its paint. */
+  .bg-nebula{ transform:translateZ(0); backface-visibility:hidden; }
+
+  /* The glow is a radial gradient — already smooth. blur(16px) on a 652x652 box
+     is a ~1956x1956 device-pixel Gaussian for no visible gain, so soften the
+     gradient's own stops instead and drop the filter entirely. */
+  .home__earth-glow{ filter:none; background:
+    radial-gradient(circle, rgba(150,195,255,.42) 0%, rgba(100,165,255,.30) 22%,
+                    rgba(60,125,235,.19) 40%, rgba(30,80,180,.09) 58%, transparent 74%); }
 }
 
 /* =====================================================================
@@ -1266,7 +1339,19 @@ body[data-route="/"] .footer{ margin-top:0; }
   .home__title{ width:auto; max-width:100%; margin-inline:0; }
   /* A calmer planet limb, not a bright wall filling the lower half. */
   .home__earth-wrap{ bottom:-84vmin; width:148vmin; height:148vmin; }
-  .home__earth-glow{ filter:blur(16px); }
+  /* NB: no .home__earth-glow{filter:blur()} here — the coarse-pointer block above
+     bakes that softness into the gradient's own stops. Re-declaring a blur here
+     would win the cascade (this block is later) and hand the filter buffer back.
+     The four inset box-shadows below are the expensive half of the planet: blur
+     radii of 90/150/130px plus a 140px outer glow, rasterised over a ~586px
+     circle at 3x. Two tighter shadows read the same at this size for a fraction
+     of the raster cost. */
+  .home__earth{ box-shadow:
+      inset 0 -26px 52px 10px rgba(0,8,26,.82),
+      inset 34px 40px 76px rgba(190,224,255,.24); }
+  /* Continents: drop blur+contrast+saturate. Three chained colour operations over
+     the full sphere, for six soft gradient blobs that are already soft. */
+  .home__earth::before{ filter:none; opacity:.62; }
   /* Trim the heaviest hero layers on phones HARD — this density of large blurred
      / filtered / perpetually-animating layers was the actual GPU-memory blow-out
      that crashed the tab on return to home (NOT the warp). iPad (>640px) keeps
@@ -1490,4 +1575,21 @@ body[data-route="/"] .footer{ margin-top:0; }
   .home__discover-ring{ animation:none !important; }
   .acard__scan{ display:none !important; }
   .acard__media img{ transition:none !important; }
+}
+
+/* =====================================================================
+   TOUCH BUDGET — atlas tail.
+   The main @media(any-pointer:coarse) block sits before the DOSSIER/ATLAS
+   section, so its `.acard__media img{filter:none}` lost on source order and the
+   ten plates kept their filter buffers (measured: 37 MB still live on /atlas
+   after the rest of the touch budget had landed). Same specificity, so the fix
+   is position, not !important — this block is last in the file.
+   ===================================================================== */
+@media (any-pointer: coarse){
+  /* saturate(1.02) brightness(.92) is a change of about one percent that costs a
+     full offscreen buffer per plate. The 1.01 idle scale is a hover-preload for a
+     zoom touch never fires, and it forces resampling of a 640px image. */
+  .acard__media img{ filter:none; transform:none; transition:none; }
+  .acard::after{ display:none; }     /* cursor spotlight — unreachable on touch */
+  .acard{ transition:border-color .35s var(--ease); }
 }

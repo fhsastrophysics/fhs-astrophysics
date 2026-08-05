@@ -146,6 +146,37 @@
   const IC_OPEN = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
   /* -------------------------------------------------------------------
+     Scroll bus — ONE listener for the whole app.
+
+     There were five independent window "scroll" listeners (nav shadow, back-to-
+     top, reveal sweep, scroll velocity, starfield parallax). A phone fires
+     scroll events at touch-sampling rate, so every one of those ran on every
+     tick, three of them each racing their own requestAnimationFrame. That is
+     pure main-thread contention during the one interaction where jank is most
+     visible.
+
+     Now: one passive listener, one rAF per frame, subscribers called with the
+     already-read scrollY. Reading it once also removes four redundant layout-
+     inducing reads of window.scrollY per frame.
+     ------------------------------------------------------------------- */
+  const scrollSubs = [];
+  let scrollTicking = false;
+  const onScroll = (fn) => scrollSubs.push(fn);
+  function initScrollBus() {
+    window.addEventListener("scroll", () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        scrollTicking = false;
+        const y = window.scrollY;
+        for (let i = 0; i < scrollSubs.length; i++) {
+          try { scrollSubs[i](y); } catch (e) { /* one bad subscriber must not kill the rest */ }
+        }
+      });
+    }, { passive: true });
+  }
+
+  /* -------------------------------------------------------------------
      Split text - wrap chars in .split-c
      ------------------------------------------------------------------- */
   function splitLine(node) {
@@ -496,9 +527,6 @@
         </div>
         <div class="mcard__thumb">
           <img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.n}: ${m.title}" loading="lazy" decoding="async" width="640" height="400">
-          <span class="mcard__scan" aria-hidden="true"></span>
-          <span class="mcard__reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span class="mcard__coord" aria-hidden="true">Meeting ${m.n} · ${m.kind || "Deck"}</span>
         </div>
         <div class="mcard__body">
           <h3 class="mcard__title">${m.title}</h3>
@@ -506,7 +534,7 @@
           <div class="mcard__topics">${m.topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
           <div class="mcard__cta">
             <span>Preview deck</span>
-            <span class="mcard__cta-lock" aria-hidden="true"><b></b>ACQUIRE</span>
+            <span class="mcard__cta-arw" aria-hidden="true">→</span>
           </div>
         </div>`;
       grid.appendChild(card);
@@ -796,11 +824,11 @@
   let scrollVel = 0;
   function trackScrollVelocity() {
     let lastY = window.scrollY, lastT = performance.now();
-    window.addEventListener("scroll", () => {
-      const t = performance.now(), y = window.scrollY, dt = t - lastT;
+    onScroll((y) => {
+      const t = performance.now(), dt = t - lastT;
       if (dt > 0) scrollVel = Math.abs(y - lastY) / dt * 1000;
       lastY = y; lastT = t;
-    }, { passive: true });
+    });
   }
 
   // Observed but not yet revealed. Needed for the scroll-end sweep below.
@@ -851,10 +879,10 @@
       nodes.forEach((n) => { pendingReveal.add(n); revealIO.observe(n); });
     };
     let sweepT;
-    window.addEventListener("scroll", () => {
+    onScroll(() => {
       clearTimeout(sweepT);
       sweepT = setTimeout(sweepPendingReveals, 140);
-    }, { passive: true });
+    });
 
     observe($$(".reveal"));
     observe($$(".section-in"));
@@ -939,15 +967,15 @@
   function initBackTop() {
     const btn = $("#backTop");
     if (!btn) return;
-    let ticking = false;
-    function update() {
-      btn.classList.toggle("on", window.scrollY > 480);
-      ticking = false;
-    }
-    window.addEventListener("scroll", () => {
-      if (ticking) return; ticking = true;
-      requestAnimationFrame(update);
-    }, { passive: true });
+    // Only touch the class when the state actually flips — an unconditional
+    // classList.toggle() with the same value still dirties style on some engines.
+    let shown = false;
+    onScroll((y) => {
+      const next = y > 480;
+      if (next === shown) return;
+      shown = next;
+      btn.classList.toggle("on", next);
+    });
     btn.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
     });
@@ -1137,12 +1165,16 @@
      ------------------------------------------------------------------- */
   function initNav() {
     const nav = $("#nav"), links = $("#navLinks"), toggle = $("#navToggle");
-    let ticking = false;
-    window.addEventListener("scroll", () => {
-      if (ticking) return; ticking = true;
-      requestAnimationFrame(() => { nav.classList.toggle("scrolled", window.scrollY > 16); ticking = false; });
-    }, { passive: true });
-    nav.classList.toggle("scrolled", window.scrollY > 16);
+    // Same edge-triggered guard as back-to-top: the nav crosses this threshold
+    // twice per page, not sixty times a second.
+    let scrolled = window.scrollY > 16;
+    nav.classList.toggle("scrolled", scrolled);
+    onScroll((y) => {
+      const next = y > 16;
+      if (next === scrolled) return;
+      scrolled = next;
+      nav.classList.toggle("scrolled", next);
+    });
     const close = () => { links.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Open menu"); };
     toggle.addEventListener("click", () => {
       const open = links.classList.toggle("open");
@@ -1255,7 +1287,7 @@
     function statik() { ctx.clearRect(0, 0, w, h); }
     resize();
     let dt; window.addEventListener("resize", () => { clearTimeout(dt); dt = setTimeout(() => { resize(); if (REDUCED) statik(); }, 200); });
-    window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
+    onScroll((y) => { scrollY = y; });
     if (REDUCED) { statik(); return; }
     raf = requestAnimationFrame(frame);
     document.addEventListener("visibilitychange", () => {
@@ -1386,7 +1418,11 @@
      pages share the hero's depth (not a flat black void).
      ------------------------------------------------------------------- */
   function initAmbientParticles() {
-    if (REDUCED) return;
+    // Touch already hides these via CSS (.ambient-particles{display:none}), so
+    // building 12 nodes with 12 infinite animations attached — only to have the
+    // stylesheet throw them away — was pure setup cost on the device that can
+    // least afford it. Don't create them at all.
+    if (REDUCED || COARSE) return;
     const c = el("div", "ambient-particles");
     c.setAttribute("aria-hidden", "true");
     for (let i = 0; i < 12; i++) {
@@ -1406,6 +1442,13 @@
      Boot
      ------------------------------------------------------------------- */
   function boot() {
+    initScrollBus();
+    // The warp bloom is the desktop canvas-warp's centre flash; navigate() only
+    // reaches for #warpBloom on the fine-pointer path. On touch it's an unused
+    // node that still costs a permanent full-time screen-blend group (the CSS
+    // hides it too — this drops it from the DOM outright).
+    if (COARSE) { const b = $("#warpBloom"); if (b) b.remove(); }
+
     // First-load cinematic sequence (CSS-driven). Class is removed after the
     // sequence so it never replays on SPA route re-entry.
     if (!REDUCED) {
