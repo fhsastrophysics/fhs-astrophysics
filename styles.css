@@ -333,10 +333,22 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    full-page blur and NO scale re-raster (the two GPU-heavy parts), so it reads
    as hyperspace without the memory cost that crashed mobile. Driven explicitly
    by navigate() on touch, so it never depends on width/hover media queries. */
-.route.warp-out-touch{ animation: warpOutTouch .42s var(--ease) both; pointer-events:none; will-change:opacity; }
-.route.warp-in-touch{ animation: warpInTouch .6s var(--ease-out) both; will-change:opacity, transform; }
+/* ONE motion per navigation on touch: a straight cross-fade, same on every route.
+
+   The leave duration is written from JS (navigate() sets animationDuration to the
+   swap delay) so the outgoing page always finishes fading BEFORE it is replaced.
+   It used to be a 420ms fade swapped at 210ms — the page was cut at roughly half
+   opacity, which is the "jump".
+
+   No translate on the way in, deliberately. The 10px rise looked fine on a text
+   route but on home it slid the entire full-bleed hero against a sky that is
+   position:fixed and therefore doesn't move with it — that mismatch is what read
+   as the "weird fade" on the homepage. A pure opacity change is the one motion
+   that behaves identically whether the route is a photo hero or a page of text. */
+.route.warp-out-touch{ animation: warpOutTouch .26s var(--ease-calm) both; pointer-events:none; }
+.route.warp-in-touch{ animation: warpInTouch .34s var(--ease-calm) both; }
 @keyframes warpOutTouch{ from{ opacity:1; } to{ opacity:0; } }
-@keyframes warpInTouch{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@keyframes warpInTouch{ from{ opacity:0; } to{ opacity:1; } }
 
 /* Touch route transitions — clean and compositor-only (opacity + a small
    translate; no canvas, no blur, no scale-repaint). Applied by navigate() on
@@ -1260,6 +1272,13 @@ body[data-route="/"] .footer{ margin-top:0; }
      transform animation, so both passes were live for the life of the page.
      The blue halo is already drawn by .home__astro-wrap::before. */
   .home__astro-wrap{ filter:drop-shadow(0 14px 26px rgba(0,0,0,.6)); }
+
+  /* Chapter titles sit at rest on touch. The per-character stagger (24ms apart,
+     750ms each) was a third timing layered over the route fade and the reveals,
+     and on a phone the title is always above the fold, so it fired on every
+     single navigation. playChapter() marks .is-in without replaying it; this
+     makes that hold even on the very first paint of a route. */
+  .split-chars .split-c{ opacity:1; transform:none; transition:none; }
 
   /* The ONE promotion worth paying for on touch. The sky is a fixed, full-bleed
      photo sitting under everything that scrolls; left unpromoted, iOS Safari can

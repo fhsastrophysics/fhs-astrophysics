@@ -834,6 +834,12 @@
   // Observed but not yet revealed. Needed for the scroll-end sweep below.
   const pendingReveal = new Set();
 
+  // How far below the fold the reveal observer fires, as a fraction of the
+  // viewport. settleOnArrival() reads the same constant, so "what the observer
+  // would fire immediately" and "what arrives already settled" can never drift
+  // apart — that gap is why /about still had .arc rolling up mid-transition.
+  const REVEAL_LEAD = 0.25;
+
   function showReveal(node, instant) {
     if (instant) node.classList.add("reveal-now");
     node.classList.add("is-visible");
@@ -875,7 +881,7 @@
         es.forEach((e) => {
           if (e.isIntersecting) showReveal(e.target, scrollVel > FLING);
         });
-      }, { threshold: 0, rootMargin: "0px 0px 25% 0px" });
+      }, { threshold: 0, rootMargin: `0px 0px ${REVEAL_LEAD * 100}% 0px` });
       nodes.forEach((n) => { pendingReveal.add(n); revealIO.observe(n); });
     };
     let sweepT;
@@ -994,10 +1000,36 @@
     return "/";
   }
 
+  /* Touch: whatever is already on screen when a route arrives is shown at rest.
+
+     A navigation used to start FOUR entrance systems at once, each with its own
+     timing and travel: the route fade (600ms / 10px), the chapter title's
+     per-character stagger (24ms per char, 750ms each), .reveal roll-ups (900ms /
+     24px, staggered 60ms), and .section-in (900ms / 24px). Worse, which of them
+     you saw depended entirely on the route — /about carries 11 such elements,
+     /atlas carries 2, and home carries none at all. Same gesture, different
+     result every time: that is why the transitions felt random.
+
+     Now the route cross-fade is the whole transition and the content is simply
+     there. Scroll-reveal is untouched — anything BELOW the fold still animates in
+     as you scroll to it, which is a different interaction and still reads well. */
+  function settleOnArrival(routeEl) {
+    // Match the observer's trigger zone, not just the fold: anything it would fire
+    // for on this frame must arrive settled, or it starts a 900ms roll-up during
+    // the cross-fade. Content further down is left alone and still reveals on scroll.
+    const limit = window.innerHeight * (1 + REVEAL_LEAD);
+    $$(".reveal:not(.is-visible), .section-in:not(.is-visible)", routeEl).forEach((n) => {
+      if (n.getBoundingClientRect().top < limit) showReveal(n, true);   // true = no transition
+    });
+  }
+
   function playChapter(routeEl) {
     const splits = $$(".split-chars", routeEl);
     splits.forEach((n) => {
       if (!n.dataset.split) { splitLine(n); n.dataset.split = "1"; }
+      // On touch the characters are pinned at rest by CSS; just mark it in place
+      // rather than replaying the stagger on every visit.
+      if (COARSE) { n.classList.add("is-in"); return; }
       n.classList.remove("is-in");
       requestAnimationFrame(() => requestAnimationFrame(() => n.classList.add("is-in")));
       setTimeout(() => n.classList.add("is-in"), 500);
@@ -1007,6 +1039,9 @@
       setTimeout(() => odometer(n, target), 200);
     });
     if (window.__astroObserveReveals) window.__astroObserveReveals();
+    // After observing, immediately settle everything above the fold so the
+    // observer's own callback can't start a second wave of motion.
+    if (COARSE) settleOnArrival(routeEl);
   }
 
   function activateRoute(route, opts = {}) {
@@ -1047,8 +1082,10 @@
   const WARP_TOUCH_SWAP = 430;
   // Phones: a fast, overlay-free cross-fade. No streak overlay/bloom — navigation is
   // where a low-memory iPhone crashes, so the transition adds zero extra layers.
-  const WARP_PHONE_TOTAL = 560;
-  const WARP_PHONE_SWAP = 210;
+  // SWAP is also the leave-fade duration (navigate() writes it onto the element),
+  // and TOTAL is SWAP + the .34s enter fade declared on .route.warp-in-touch.
+  const WARP_PHONE_TOTAL = 600;
+  const WARP_PHONE_SWAP = 260;
 
   // Spawn a transient light-speed streak overlay (radial lines + tunnel vignette)
   // for one route jump on touch, then remove it. This is the mobile stand-in for
@@ -1100,9 +1137,17 @@
       // Force the leave fade to commit before the hamburger close() mutates the fixed
       // nav overlay in the same tick (WebKit would otherwise coalesce them and skip
       // the fade). Plain timers drive the swap so navigation always completes.
-      if (current) { current.classList.add("warp-out-touch"); void current.offsetHeight; }
+      if (current) {
+        // Pin the leave to the swap delay so it ALWAYS lands on opacity 0 exactly
+        // as the route is replaced. Hard-coding it in CSS meant the two could drift
+        // apart (they had: .42s animation, 210ms swap) and the outgoing page got
+        // cut mid-fade. Deriving it here makes that impossible on any device.
+        current.style.animationDuration = swap + "ms";
+        current.classList.add("warp-out-touch");
+        void current.offsetHeight;
+      }
       setTimeout(() => {
-        if (current) current.classList.remove("warp-out-touch");
+        if (current) { current.classList.remove("warp-out-touch"); current.style.animationDuration = ""; }
         activateRoute(route, opts);
         const target = $(".route.active");
         if (target) {
