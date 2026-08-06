@@ -69,6 +69,13 @@
      "animated"; this just decelerates and stops, which is what a hover should
      do. Used by the deck-card hover. */
   --ease-calm: cubic-bezier(.22, .61, .36, 1);
+  /* Decisive ease-out: most of the distance is covered in the first third, then
+     it settles hard. This is what makes a transition read as "arrived" instead
+     of "still loading" — a linear-ish or symmetric fade is exactly what a
+     spinner does, which is why a pure opacity change feels like latency. */
+  --ease-snap: cubic-bezier(.2, .85, .3, 1);
+  /* Accelerating ease-in for exits — content leaves, it doesn't linger. */
+  --ease-exit: cubic-bezier(.4, 0, 1, 1);
 }
 
 *, *::before, *::after{ box-sizing: border-box; }
@@ -340,15 +347,20 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    It used to be a 420ms fade swapped at 210ms — the page was cut at roughly half
    opacity, which is the "jump".
 
-   No translate on the way in, deliberately. The 10px rise looked fine on a text
-   route but on home it slid the entire full-bleed hero against a sky that is
-   position:fixed and therefore doesn't move with it — that mismatch is what read
-   as the "weird fade" on the homepage. A pure opacity change is the one motion
-   that behaves identically whether the route is a photo hero or a page of text. */
-.route.warp-out-touch{ animation: warpOutTouch .26s var(--ease-calm) both; pointer-events:none; }
-.route.warp-in-touch{ animation: warpInTouch .34s var(--ease-calm) both; }
-@keyframes warpOutTouch{ from{ opacity:1; } to{ opacity:0; } }
-@keyframes warpInTouch{ from{ opacity:0; } to{ opacity:1; } }
+   The content ROLLS: it comes up from below on arrival and leaves upward, which
+   is the direction convention for going deeper and coming back. A pure opacity
+   change was tried and it reads as latency — fading in with no direction is
+   precisely what a loading state looks like, so the eye files it as "the server
+   is slow" rather than "the page moved". Direction is what makes it read as
+   navigation.
+
+   Exit is deliberately much shorter than enter (180ms vs 300ms). The half you
+   watch is the arrival; the departure just needs to get out of the way, and a
+   slow exit is most of what made this feel sluggish. */
+.route.warp-out-touch{ animation: warpOutTouch .18s var(--ease-exit) both; pointer-events:none; }
+.route.warp-in-touch{ animation: warpInTouch .3s var(--ease-snap) both; }
+@keyframes warpOutTouch{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(-8px); } }
+@keyframes warpInTouch{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:none; } }
 
 /* Touch route transitions — clean and compositor-only (opacity + a small
    translate; no canvas, no blur, no scale-repaint). Applied by navigate() on
@@ -1216,6 +1228,95 @@ body[data-route="/"] .footer{ margin-top:0; }
   .nav.scrolled{ background:rgba(4,7,15,.94); }
 
   /* ------------------------------------------------------------------
+     SOLID SURFACES — the fix for "it feels like a hologram".
+     Blur is what makes translucency read as a material. Touch has no
+     backdrop-filter (removed above, it was a GPU cost), so every "glass"
+     surface was just a flat wash letting the nebula through — panels you can
+     see the sky inside don't read as objects, they read as projections.
+     With no blur, the honest choice is an opaque surface with a visible edge
+     and a real contact shadow, so a card sits ON the page instead of hovering
+     over it. Desktop keeps the blur and therefore keeps the glass.
+     ------------------------------------------------------------------ */
+  :root{
+    --glass:      rgba(10,15,30,.95);
+    --glass-flat: rgba(10,15,30,.95);
+    --glass-brd:  rgba(255,255,255,.17);   /* .10 was barely an edge at all */
+    --line:       rgba(230,238,255,.11);
+    --line-2:     rgba(230,238,255,.2);
+    /* Tight contact shadow + a hard 1px base, which is what reads as weight.
+       The old 40px blue-black bloom just made things look like they floated. */
+    --glass-glow: 0 1px 0 rgba(255,255,255,.05) inset, 0 2px 0 rgba(0,0,0,.35), 0 8px 20px rgba(0,0,0,.42);
+  }
+  /* Buttons become objects: solid fill, defined edge, and a hard bottom shadow
+     that reads as thickness. */
+  .btn--solid{ background:#151E37; border-color:rgba(255,255,255,.24);
+    box-shadow:0 2px 0 rgba(0,0,0,.5), 0 8px 18px rgba(0,0,0,.4); }
+  .btn--ghost{ background:rgba(10,15,30,.92); border-color:rgba(255,255,255,.3); }
+  .signup__btn, .modal__primary{ box-shadow:0 2px 0 rgba(0,0,0,.4); }
+
+  /* ------------------------------------------------------------------
+     PRESS FEEDBACK — the fix for "tapping feels weak".
+     There was not a single :active rule in the stylesheet. Every interactive
+     state was :hover, which on a phone either never fires or — on iOS — fires
+     on tap and then STICKS until you tap something else. So the card lifted at
+     the wrong moment and stayed lifted, and the tap itself produced nothing.
+     ------------------------------------------------------------------ */
+  a, button, [role="button"], input, textarea, select,
+  .mcard, .ncard, .acard, .tcard, .mi-item, .arc-node{
+    -webkit-tap-highlight-color:transparent;  /* replaced by the states below */
+    touch-action:manipulation;                /* drop the 300ms double-tap wait */
+  }
+  /* Neutralise hover-driven motion first, so :active is the only thing that
+     moves and it can't be fought by a stuck :hover. */
+  .mcard:hover, .ncard:hover, .acard:hover, .tcard:hover, .mi-item:hover,
+  .arc-node:hover, .btn:hover, .nav__cta:hover, .nav__soc:hover,
+  .route__next-link:hover, .goal:hover{ transform:none; }
+
+  /* Press: down in 70ms (inside the 100ms the eye reads as instant), back up on
+     the element's own slower curve. Transform only — no layout is disturbed. */
+  .btn:active, .nav__cta:active, .fbtn:active, .slink:active, .signup__btn:active,
+  .field__copy:active, .back-top:active, .modal__close:active,
+  .modal__primary:active, .modal__secondary:active, .nav__soc:active,
+  .nav__toggle:active{
+    transform:scale(.955); transition-duration:.07s; }
+  .mcard:active, .ncard:active, .tcard:active, .mi-item:active,
+  .arc-node:active, .goal:active, .route__next-link:active{
+    transform:scale(.982); transition-duration:.07s; }
+  /* Text links can't scale convincingly — flash the surface behind them instead. */
+  .nav__links a:active, .footer__nav a:active, .ulink:active, .home__discover:active{
+    background:rgba(188,215,255,.16); border-radius:8px; }
+
+  /* ------------------------------------------------------------------
+     TOUCH DENSITY — the fix for "cramped".
+     Measured at 393px: footer links were 24px tall, filter chips 35px, the
+     brand 35px, against a 44px minimum. Sub-44px targets are why a page feels
+     fiddly even when nothing is visibly wrong.
+     ------------------------------------------------------------------ */
+  .footer__nav a, .fbtn, .brand, .mi-item, .contact .ulink{
+    min-height:44px; display:inline-flex; align-items:center; }
+  /* Short labels ("Team", "Join") were only ~28px wide even once tall enough.
+     Pad them out and pull the row gap in to compensate, so each target is a
+     comfortable box rather than a thin word with air around it. */
+  .footer__nav a{ padding-inline:.6rem; }
+  .footer__nav{ gap:.1rem .5rem; margin-inline:-.6rem; }
+  .fbtn{ justify-content:center; }
+  /* 18.4px of gutter put body copy almost against the screen edge. */
+  :root{ --gutter: clamp(1.35rem, 5.2vw, 3rem); }
+
+  /* ONE ROLL. The scroll reveal now uses exactly the same distance, curve and
+     duration as the route transition above, so arriving on a page and scrolling
+     down it feel like the same gesture. Before, the site had three different
+     rolls — 900ms/24px for .reveal, 700ms/18px for .stagger, 300ms/16px for the
+     route — which is what made the motion read as unrelated effects rather than
+     one system. Stagger tightened to 40ms per item (guidance is 30–50ms; 60–70
+     made the tail of a grid visibly lag the head). */
+  .reveal, .section-in, .mcard.reveal, .ncard.reveal{
+    transform:translateY(16px);
+    transition:opacity .3s var(--ease-snap), transform .3s var(--ease-snap);
+    transition-delay:calc(var(--i,0) * 40ms); }
+  .reveal.is-visible, .section-in.is-visible{ transform:none; }
+
+  /* ------------------------------------------------------------------
      NO BLEND MODES ON TOUCH.
      mix-blend-mode is the single most expensive compositing feature on a
      phone: the element can't be composited directly, so the browser has to
@@ -1402,7 +1503,11 @@ body[data-route="/"] .footer{ margin-top:0; }
   .home__actions{ width:100%; flex-direction:column; gap:.55rem; }
   .home__actions .btn{ width:100%; justify-content:center; padding:.9rem 1rem; font-size:.95rem; }
   .meetings{ grid-template-columns:1fr; }
-  .notes-grid{ grid-template-columns:repeat(2,1fr); gap:1.2rem; }
+  /* auto-fit with a real minimum instead of a hard 2 columns. At 430px (Pro Max
+     / Plus) the fixed 2-up produced 187px cards holding a title, two badges and
+     a meta row — that was a large part of "cramped". Now the column count falls
+     out of the available width and a card can never go below 240px. */
+  .notes-grid{ grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.35rem; }
   /* Single stacked column — drop the margin-top:auto pushes so blocks flow naturally. */
   .join{ grid-template-columns:1fr; gap:clamp(1.75rem,3vw,2.4rem); }
   .join__col--info > .nextmeet, .join__col--form > .join__foot{ margin-top:0; }
@@ -1431,7 +1536,8 @@ body[data-route="/"] .footer{ margin-top:0; }
   .back-top{ right:1rem; bottom:1rem; width:46px; height:46px; }
 }
 @media (max-width:420px){
-  .notes-grid{ grid-template-columns:1fr; }
+  /* .notes-grid no longer needs a rule here — the auto-fit minmax above already
+     resolves to a single column at this width. */
   .meetings-index{ grid-template-columns:repeat(2,1fr); }
   /* Smallest / weakest phones: pare the hero down to the essentials. Note most
      current phones (390–430px) land here, so this is the count people actually
@@ -1610,5 +1716,9 @@ body[data-route="/"] .footer{ margin-top:0; }
      zoom touch never fires, and it forces resampling of a 640px image. */
   .acard__media img{ filter:none; transform:none; transition:none; }
   .acard::after{ display:none; }     /* cursor spotlight — unreachable on touch */
-  .acard{ transition:border-color .35s var(--ease); }
+  /* transform stays in the transition list so the press below eases back out;
+     without it the scale would snap on release. */
+  .acard{ transition:border-color .35s var(--ease), transform .3s var(--ease-calm); }
+  .acard:hover{ transform:none; }
+  .acard:active{ transform:scale(.982); transition-duration:.07s; }
 }

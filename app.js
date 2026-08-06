@@ -1082,10 +1082,12 @@
   const WARP_TOUCH_SWAP = 430;
   // Phones: a fast, overlay-free cross-fade. No streak overlay/bloom — navigation is
   // where a low-memory iPhone crashes, so the transition adds zero extra layers.
-  // SWAP is also the leave-fade duration (navigate() writes it onto the element),
-  // and TOTAL is SWAP + the .34s enter fade declared on .route.warp-in-touch.
-  const WARP_PHONE_TOTAL = 600;
-  const WARP_PHONE_SWAP = 260;
+  // SWAP is also the leave duration (navigate() writes it onto the element), and
+  // TOTAL is SWAP + the .3s enter declared on .route.warp-in-touch. 180+300=480,
+  // down from 600 — the old timing was slow enough to read as waiting rather
+  // than as motion.
+  const WARP_PHONE_TOTAL = 490;
+  const WARP_PHONE_SWAP = 180;
 
   // Spawn a transient light-speed streak overlay (radial lines + tunnel vignette)
   // for one route jump on touch, then remove it. This is the mobile stand-in for
