@@ -177,10 +177,8 @@ main, .nav, .footer{ position:relative; z-index:3; }
    ===================================================================== */
 .warp-intro{ position:fixed; inset:0; z-index:300; pointer-events:none; overflow:hidden; opacity:1; background:radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,.5) 80%); }
 .warp-intro.done{ opacity:0; transition:opacity .5s var(--ease); }
-/* Route-jump variant: a UNIFORM veil (no vignette) that fades in over the swap and
-   back out — smooth dim, no harsh lighting change — with bright streaks over it. */
-.warp-intro--jump{ opacity:0; background:rgba(4,7,16,.5); transition:opacity .2s var(--ease); }
-.warp-intro--jump.show{ opacity:1; }
+/* (.warp-intro--jump, the touch route-jump veil, was removed along with warpJump()
+   in app.js — touch navigation is now an instant swap with no overlay.) */
 /* The streak grows via transform:scaleY, NOT height. Animating `height` re-ran
    layout for all 20-26 lines on EVERY frame of the intro — i.e. layout thrash
    during the first 1.4s of the page, the exact window a phone is also decoding
@@ -316,11 +314,15 @@ main, .nav, .footer{ position:relative; z-index:3; }
    warp build-up (hidden behind the streaks) instead of at the swap. It's rendered
    but invisible + inert; the will-change:transform children stay composited under
    opacity:0, so they genuinely rasterise. activateRoute() drops it on activation. */
-.route--home.prewarm{ display:block; position:fixed; inset:0; z-index:45;
-  opacity:0; pointer-events:none; }
+/* Generalised from home-only: on touch, EVERY route is prewarmed, triggered by
+   pointerdown (see prewarm() in app.js). Laid out in the normal flow position so
+   the work the browser does here is the same work the real swap would need, and
+   is therefore actually reused rather than redone. */
+.route.prewarm{ display:block; position:absolute; left:0; right:0; top:0;
+  opacity:0; pointer-events:none; z-index:-1; }
 /* Don't burn frames animating an invisible page while it pre-warms — hold it on a
    static frame (that's all we need to rasterise). */
-.route--home.prewarm *, .route--home.prewarm *::before, .route--home.prewarm *::after{
+.route.prewarm *, .route.prewarm *::before, .route.prewarm *::after{
   animation-play-state:paused !important; }
 
 /* During a route jump, freeze the home hero's perpetual animations (spinning
@@ -347,20 +349,24 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    It used to be a 420ms fade swapped at 210ms — the page was cut at roughly half
    opacity, which is the "jump".
 
-   The content ROLLS: it comes up from below on arrival and leaves upward, which
-   is the direction convention for going deeper and coming back. A pure opacity
-   change was tried and it reads as latency — fading in with no direction is
-   precisely what a loading state looks like, so the eye files it as "the server
-   is slow" rather than "the page moved". Direction is what makes it read as
-   navigation.
+   THE SWAP IS INSTANT. There is no leave animation at all. Fading the old page
+   out for 180ms meant 180ms where the tap had visibly done nothing, and the old
+   page does not need a goodbye — native navigation doesn't give it one. The
+   press state already acknowledged the touch; the new page should just be there.
 
-   Exit is deliberately much shorter than enter (180ms vs 300ms). The half you
-   watch is the arrival; the departure just needs to get out of the way, and a
-   slow exit is most of what made this feel sluggish. */
-.route.warp-out-touch{ animation: warpOutTouch .18s var(--ease-exit) both; pointer-events:none; }
-.route.warp-in-touch{ animation: warpInTouch .3s var(--ease-snap) both; }
-@keyframes warpOutTouch{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(-8px); } }
-@keyframes warpInTouch{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:none; } }
+   OPACITY FINISHES EARLY — at 35% of the motion (~90ms), not at the end. Text
+   held at fractional opacity gets re-rasterised without subpixel antialiasing,
+   so a long opacity ramp makes type visibly shimmer and change weight partway
+   through. That is the "glitchy type fade". Reaching opacity 1 early means the
+   remaining ~170ms is pure movement on solid, properly-hinted text.
+
+   What's left is one honest motion: the content rolls up 14px into place. */
+.route.warp-in-touch{ animation: routeInTouch .26s var(--ease-snap) both; }
+@keyframes routeInTouch{
+  0%   { opacity:0; transform:translateY(14px); }
+  35%  { opacity:1; }
+  100% { opacity:1; transform:none; }
+}
 
 /* Touch route transitions — clean and compositor-only (opacity + a small
    translate; no canvas, no blur, no scale-repaint). Applied by navigate() on

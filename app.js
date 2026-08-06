@@ -1047,7 +1047,10 @@
   function activateRoute(route, opts = {}) {
     const target = document.querySelector(`.route[data-route="${route}"]`);
     if (!target) return;
-    target.classList.remove("prewarm");   // was pre-rendered during the jump build-up; now show it for real
+    // Clear every prewarmed copy, not just this one: a finger can land on two
+    // links before committing (drag off one, onto another), and a prewarmed
+    // route left in the layout is dead weight the compositor keeps paying for.
+    $$(".route.prewarm").forEach((r) => r.classList.remove("prewarm"));
     // Drive the per-route ambient colour zone + nebula texture (see CSS
     // body[data-route="…"] rules). Set on <body> so the fixed backdrop layers,
     // which live outside the route sections, can react to the active route.
@@ -1077,36 +1080,33 @@
        540 – 1290  decelerate: streaks compress back to dots WHILE the new page fades in   */
   const WARP_TOTAL = 1350;
   const WARP_SWAP = 540;
-  // Tablet (iPad) light-speed jump timing.
-  const WARP_TOUCH_TOTAL = 1050;
-  const WARP_TOUCH_SWAP = 430;
-  // Phones: a fast, overlay-free cross-fade. No streak overlay/bloom — navigation is
-  // where a low-memory iPhone crashes, so the transition adds zero extra layers.
-  // SWAP is also the leave duration (navigate() writes it onto the element), and
-  // TOTAL is SWAP + the .3s enter declared on .route.warp-in-touch. 180+300=480,
-  // down from 600 — the old timing was slow enough to read as waiting rather
-  // than as motion.
-  const WARP_PHONE_TOTAL = 490;
-  const WARP_PHONE_SWAP = 180;
+  // Touch: the swap is instant and only the arrival is animated. This is the
+  // duration of that roll, matching .route.warp-in-touch in CSS.
+  const TOUCH_IN = 260;
 
-  // Spawn a transient light-speed streak overlay (radial lines + tunnel vignette)
-  // for one route jump on touch, then remove it. This is the mobile stand-in for
-  // the desktop canvas warp: same look, but it exists only for ~1s per navigation
-  // and leaves zero always-on GPU/memory cost behind.
-  // Light-speed streak overlay for one route jump. A single UNIFORM veil (fades in,
-  // holds, fades out) covers the bright sky during the swap so there's no harsh
-  // lighting flash, with bright streaks radiating over it. Tablet/desktop-touch only
-  // — phones skip it (see navigate) because the overlay is what tips a low-memory
-  // iPhone over the edge during navigation.
-  function warpJump(dur) {
-    const box = el("div", "warp-intro warp-intro--jump");
-    box.setAttribute("aria-hidden", "true");
-    fillWarpLines(box, 26);
-    document.body.appendChild(box);
-    requestAnimationFrame(() => box.classList.add("show"));
-    setTimeout(() => box.classList.remove("show"), Math.max(0, dur - 280));
-    setTimeout(() => { if (box.parentNode) box.remove(); }, dur + 140);
+  /* Prewarm a route the moment a finger lands on a link pointing at it.
+
+     A tap is not instantaneous: there is typically 100ms+ between pointerdown and
+     the click firing. That window is free real estate, and it is exactly what the
+     browser needs to lay out and paint the incoming route.
+
+     Without this, flipping a route from display:none to display:block does all of
+     its layout, style and paint inside the single frame that swaps the page.
+     Measured at 20x CPU throttle, that produced one enormous frame on EVERY
+     navigation — 500ms into home (437ms of it layout), 101ms into /meetings,
+     67ms into /about — while every frame before and after ran a clean 16ms. One
+     hard hitch at the swap, every time, landing precisely where the transition
+     begins. That is the stutter that read as a glitchy fade. */
+  function prewarm(route) {
+    if (!COARSE || REDUCED) return;
+    const el = document.querySelector(`.route[data-route="${route}"]`);
+    if (!el || el.classList.contains("active") || el.classList.contains("prewarm")) return;
+    el.classList.add("prewarm");
+    void el.offsetHeight;          // force the layout now, while the finger is down
   }
+
+  // (The touch light-speed streak overlay lived here. Removed: tablets now use the
+  // same instant swap + roll as phones, so nothing spawned it any more.)
 
   function navigate(route, opts = {}) {
     if (transitioning) return;
@@ -1124,41 +1124,27 @@
       incoming.classList.add("prewarm");
     }
 
-    // Touch devices. Tablets (iPad) get the light-speed streak overlay; phones get a
-    // clean, overlay-free cross-fade (navigation is where a low-memory iPhone crashes,
-    // so we add ZERO extra layers there). No bloom on either — that flash, plus the
-    // old vignette, was the "weird lighting change". Routes just cross-fade underneath.
+    // Touch: instant swap, then the arrival rolls into place. No streak overlay on
+    // any touch device any more — one code path, one behaviour.
     if (COARSE) {
-      transitioning = true;
-      document.body.classList.add("warping");   // pause home hero anims during the jump
-      const current = $(".route.active");
-      const phone = window.innerWidth <= 640;
-      const swap = phone ? WARP_PHONE_SWAP : WARP_TOUCH_SWAP;
-      const total = phone ? WARP_PHONE_TOTAL : WARP_TOUCH_TOTAL;
-      if (!phone) warpJump(total);
-      // Force the leave fade to commit before the hamburger close() mutates the fixed
-      // nav overlay in the same tick (WebKit would otherwise coalesce them and skip
-      // the fade). Plain timers drive the swap so navigation always completes.
-      if (current) {
-        // Pin the leave to the swap delay so it ALWAYS lands on opacity 0 exactly
-        // as the route is replaced. Hard-coding it in CSS meant the two could drift
-        // apart (they had: .42s animation, 210ms swap) and the outgoing page got
-        // cut mid-fade. Deriving it here makes that impossible on any device.
-        current.style.animationDuration = swap + "ms";
-        current.classList.add("warp-out-touch");
-        void current.offsetHeight;
+      document.body.classList.add("warping");   // pause hero anims during the roll
+      // Swap NOW. pointerdown already prewarmed this route, so the expensive
+      // display:none -> block work is done and this frame is cheap. Tablets get
+      // the same thing as phones — the light-speed streak overlay is gone, one
+      // code path, one behaviour.
+      activateRoute(route, opts);
+      const target = $(".route.active");
+      if (target) {
+        target.classList.add("warp-in-touch");
+        setTimeout(() => target.classList.remove("warp-in-touch"), TOUCH_IN + 90);
       }
-      setTimeout(() => {
-        if (current) { current.classList.remove("warp-out-touch"); current.style.animationDuration = ""; }
-        activateRoute(route, opts);
-        const target = $(".route.active");
-        if (target) {
-          target.classList.add("warp-in-touch");
-          setTimeout(() => target.classList.remove("warp-in-touch"), 700);
-        }
-        location.hash = route === "/" ? "/" : route;
-      }, swap);
-      setTimeout(() => { transitioning = false; document.body.classList.remove("warping"); }, total);
+      location.hash = route === "/" ? "/" : route;
+      // Deliberately NOT setting `transitioning` on touch. The swap is synchronous,
+      // so there is no window where a second navigation could interleave with a
+      // first — and holding a lock for the length of the animation would swallow a
+      // tap made during it. A tap must never be ignored because something is still
+      // moving; the roll simply restarts on the new route.
+      setTimeout(() => document.body.classList.remove("warping"), TOUCH_IN);
       return;
     }
 
@@ -1190,6 +1176,25 @@
   }
 
   function initRouter() {
+    // Start laying out the destination as soon as a finger lands on the link —
+    // see prewarm(). By the time the click arrives the route is already built,
+    // so the swap frame has almost nothing left to do.
+    document.addEventListener("pointerdown", (e) => {
+      const a = e.target.closest("a[data-route]");
+      if (!a) return;
+      const r = a.getAttribute("data-route");
+      if (ROUTES.includes(r)) prewarm(r);
+    }, { passive: true });
+    // If the press didn't turn into a navigation (scrolled away, cancelled),
+    // drop the prewarmed copy again so nothing inactive stays in the layout.
+    const dropStale = () => setTimeout(() => {
+      $$(".route.prewarm").forEach((r) => {
+        if (!r.classList.contains("active")) r.classList.remove("prewarm");
+      });
+    }, 700);
+    document.addEventListener("pointerup", dropStale, { passive: true });
+    document.addEventListener("pointercancel", dropStale, { passive: true });
+
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a[data-route]");
       if (!a) return;
