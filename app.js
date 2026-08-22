@@ -101,7 +101,7 @@
       bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
   ];
 
-  const ROUTES = ["/", "/about", "/meetings", "/notes", "/atlas", "/team", "/join"];
+  const ROUTES = ["/", "/about", "/meetings", "/notes", "/atlas", "/team", "/faq", "/join"];
 
   /* -------------------------------------------------------------------
      DEEP-SKY ATLAS — real Hubble/Webb-archive objects (images already in
@@ -722,7 +722,6 @@
       card.setAttribute("aria-label", `Inspect ${m.name}, ${m.type}, ${m.dist} away in ${m.con}`);
       card.innerHTML = `
         <span class="acard__media"><img src="${atlasImg(m)}" alt="" loading="lazy" decoding="async"></span>
-        <span class="acard__scan" aria-hidden="true"></span>
         <span class="acard__top" aria-hidden="true">
           <span class="acard__idx">${pad(i + 1)}</span>
           <span class="acard__cat">${m.cat}</span>
@@ -737,33 +736,12 @@
         </span>`;
       grid.appendChild(card);
     });
-    initSpotlight($$(".acard", grid));
-    initAtlasTilt($$(".acard", grid));
+    // Atlas hover is one CSS step and nothing else: no cursor spotlight, no
+    // pointer-tracked tilt, no sweeping scan bar. Those three ran at once and
+    // read as a broken slider rather than a hover. See .acard in the CSS.
     grid.addEventListener("click", (e) => {
       const card = e.target.closest(".acard");
       if (card) openAtlasLightbox(parseInt(card.dataset.idx, 10));
-    });
-  }
-
-  /* Subtle 3D tilt toward the cursor — desktop only, transform-only. */
-  function initAtlasTilt(cards) {
-    if (!FINE || REDUCED) return;
-    cards.forEach((c) => {
-      let raf = null;
-      c.addEventListener("pointermove", (e) => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          const r = c.getBoundingClientRect();
-          const dx = (e.clientX - r.left) / r.width - 0.5;
-          const dy = (e.clientY - r.top) / r.height - 0.5;
-          c.style.transform = `perspective(700px) rotateX(${(-dy * 4).toFixed(2)}deg) rotateY(${(dx * 5).toFixed(2)}deg) translateY(-3px)`;
-          raf = null;
-        });
-      });
-      c.addEventListener("pointerleave", () => {
-        if (raf) { cancelAnimationFrame(raf); raf = null; }
-        c.style.transform = "";
-      });
     });
   }
 
