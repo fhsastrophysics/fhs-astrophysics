@@ -564,6 +564,20 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
 }
 /* Pulsars — slow-twinkling points */
 .cosmo--pulsar{ width:4px; height:4px; border-radius:50%; background:#EAF2FF; box-shadow:0 0 6px 2px rgba(188,215,255,.7); animation:pulsar 4.5s ease-in-out infinite; }
+
+/* ===== P4 — HERO MOTION RESTRAINT (base cascade; the mobile @media blocks below
+   still override for touch). Editorial calm over sci-fi busyness: the periodic
+   supernova FLASH and the twinkling pulsars are removed; the black hole barely
+   turns and no longer glows; the astronaut aura and the "Discover" ring hold still
+   (the ring turns only on hover); the drifting-equation field is thinned. The Earth,
+   astronaut and wordmark become the quiet, majestic focus. ===== */
+.cosmo--supernova{ display:none !important; }
+.cosmo--pulsar{ display:none !important; }
+.cosmo--blackhole{ animation-duration:120s; opacity:.5; filter:blur(.4px); }
+.home__astro-wrap::before{ animation:none; }
+.home__discover-ring{ animation:none; }
+.home__discover:hover .home__discover-ring{ animation:discoverSpin 22s linear infinite; }
+.home__equations .eqn:nth-child(2n){ display:none; }   /* ~13 of 27 on desktop */
 .cosmo--pulsar-a{ top:20%; left:66%; }
 .cosmo--pulsar-b{ top:72%; left:78%; animation-delay:-2.2s; }
 @keyframes pulsar{ 0%,100%{ opacity:.25; transform:scale(.7); } 50%{ opacity:1; transform:scale(1.3); } }

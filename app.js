@@ -1403,10 +1403,12 @@
     nodes.forEach((n) => {
       if (n.dataset.floated) return;
       n.dataset.floated = "1";
-      const dx = (Math.random() * 90 - 45).toFixed(0);
-      const dy = (Math.random() * 90 - 45).toFixed(0);
-      const sc = (0.62 + Math.random() * 0.5).toFixed(2);
-      const op = (0.34 + Math.random() * 0.24).toFixed(2);
+      // P4 — calmer field: smaller drift, and much lower peak opacity so the math
+      // reads as faint texture behind the wordmark rather than competing with it.
+      const dx = (Math.random() * 60 - 30).toFixed(0);
+      const dy = (Math.random() * 60 - 30).toFixed(0);
+      const sc = (0.6 + Math.random() * 0.4).toFixed(2);
+      const op = (0.13 + Math.random() * 0.11).toFixed(2);
       n.style.setProperty("--dx", dx + "px");
       n.style.setProperty("--dy", dy + "px");
       n.style.setProperty("--sc", sc);
@@ -1455,7 +1457,7 @@
     if (REDUCED || COARSE) return;
     const c = el("div", "ambient-particles");
     c.setAttribute("aria-hidden", "true");
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 6; i++) {   // P4: halve the drifting specks for a calmer field
       const p = document.createElement("span");
       p.style.cssText =
         `left:${(Math.random() * 100).toFixed(1)}%;` +
