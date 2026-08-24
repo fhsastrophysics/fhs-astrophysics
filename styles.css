@@ -1648,7 +1648,12 @@ body[data-route="/"] .footer{ margin-top:0; }
    ===================================================================== */
 /* ch is measured against the body font here, while .lede renders much larger —
    so this lands the big opening paragraph at roughly a 54-character measure. */
-.about__lead{ max-width:76ch; }
+/* Smoothing: give the naked intro prose the same quiet localized backing the FAQ
+   column uses, so About matches the rest of the site (content on a soft surface)
+   and reads calmly over a bright patch of galaxy — the sky still shows around it. */
+.about__lead{ position:relative; max-width:76ch; }
+.about__lead::before{ content:""; position:absolute; inset:-9% -6% -12% -5%; z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse 78% 74% at 30% 46%, rgba(3,5,12,.72) 0%, rgba(3,5,12,.42) 52%, transparent 80%); }
 
 /* =====================================================================
    FAQ — native <details>, hairline rows, nothing else.
