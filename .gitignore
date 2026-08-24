@@ -5,3 +5,8 @@
 # raw background source images (large); only the processed web assets are committed
 assets/bg/*-src.*
 assets/bg/cand-*.jpg
+
+# Gauntlet Loop working artifacts (screenshots, tooling, scratch) — not part of the site
+gauntlet/
+progress.html
+workbench.md
