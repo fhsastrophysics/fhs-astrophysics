@@ -673,7 +673,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    (see gauntlet/earth-lab). Sun is upper-left, terminator lower-right, axial
    tilt ~23.4° — matching the hero's original lighting. */
 .home__earth{ position:absolute; inset:0;
-  background:url("assets/hero-earth.png") center center / contain no-repeat; }
+  background:url("assets/hero-earth.webp") center center / contain no-repeat; }
 /* The overlay divs stay in the HTML (empty) but render nothing now. */
 .home__earth::before,
 .home__earth-clouds,
@@ -1458,8 +1458,8 @@ body[data-route="/"] .footer{ margin-top:0; }
      radii of 90/150/130px plus a 140px outer glow, rasterised over a ~586px
      circle at 3x. Two tighter shadows read the same at this size for a fraction
      of the raster cost. */
-  /* Lighter baked Earth on phones (735KB vs 2.1MB); shading is in the image. */
-  .home__earth{ background-image:url("assets/hero-earth-sm.png"); box-shadow:none; }
+  /* Lighter baked Earth on phones (55KB vs 151KB); shading is in the image. */
+  .home__earth{ background-image:url("assets/hero-earth-sm.webp"); box-shadow:none; }
   /* Continents: drop blur+contrast+saturate. Three chained colour operations over
      the full sphere, for six soft gradient blobs that are already soft. */
   .home__earth::before{ filter:none; opacity:.62; }
