@@ -225,7 +225,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 
 .brand{ display:inline-flex; align-items:center; gap:.65rem; }
 .brand__mark{ width:30px; height:30px; color:var(--accent); flex:none; }
-.brand__title{ font-family:var(--font-display); font-weight:520; font-optical-sizing:auto; font-size:1.35rem; color:var(--ink); letter-spacing:-.01em; }
+.brand__title{ font-family:var(--font-display); font-weight:520; font-optical-sizing:auto; font-variation-settings:"SOFT" 20, "WONK" 1; font-size:1.35rem; color:var(--ink); letter-spacing:-.01em; }
 
 .nav__links{ display:flex; align-items:center; gap:.2rem; }
 .nav__links a{ padding:.55rem .95rem; font-size:.95rem; font-weight:500; color:var(--ink-soft); position:relative; transition:color .25s var(--ease); }
@@ -452,6 +452,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
   font-family:var(--font-display);
   font-weight:600;
   font-optical-sizing:auto;
+  font-variation-settings:"SOFT" 20, "WONK" 1;   /* Fraunces character on the masthead */
   line-height:.92;
   letter-spacing:-.018em;
   font-size:clamp(2.6rem, 9.7vw, 12rem);
@@ -1170,6 +1171,9 @@ body[data-route="/"] .footer{ margin-top:0; }
   font-weight:560;
   font-optical-sizing:auto;
   letter-spacing:-.012em;
+  /* Fraunces' own character (its "wonk" + a touch of soft terminals) so the display
+     reads as a distinctive, hand-picked cut rather than a generic high-contrast serif. */
+  font-variation-settings:"SOFT" 22, "WONK" 1;
 }
 .chapter__title{ font-weight:640; font-size:clamp(2.5rem,7vw,5.4rem); line-height:1.02; letter-spacing:-.018em; }
 .mcard__title, .tcard__name, .ncard__title{ line-height:1.12; }
