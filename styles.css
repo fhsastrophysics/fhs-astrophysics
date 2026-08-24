@@ -666,52 +666,19 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
     radial-gradient(circle, rgba(150,195,255,.55) 0%, rgba(70,140,250,.30) 32%, rgba(30,80,180,.15) 52%, transparent 68%);
   filter: blur(26px);
 }
-.home__earth{ position:absolute; inset:0; border-radius:50%; overflow:hidden; isolation:isolate;
-  background:
-    radial-gradient(120% 120% at 38% 26%, #8CC5FF 0%, #3F86E6 22%, #1B5AC0 44%, #0C3A92 66%, #051E5C 84%, #02123C 100%);
-  box-shadow:
-    inset 0 -40px 90px 20px rgba(0,8,26,.8),
-    inset 60px 70px 150px rgba(190, 224, 255, .28),
-    inset -60px -40px 130px rgba(0, 16, 52, .85),
-    0 0 140px rgba(90,160,255,.30);
-}
-/* Continents / land masses */
-.home__earth::before{ content:""; position:absolute; inset:0; border-radius:50%;
-  background:
-    radial-gradient(26% 20% at 30% 40%, rgba(52, 104, 78, .7), transparent 62%),
-    radial-gradient(22% 17% at 60% 34%, rgba(64, 112, 74, .6), transparent 64%),
-    radial-gradient(18% 13% at 46% 58%, rgba(72, 118, 80, .55), transparent 62%),
-    radial-gradient(22% 15% at 70% 62%, rgba(58, 104, 72, .52), transparent 64%),
-    radial-gradient(15% 11% at 20% 60%, rgba(66, 110, 76, .5), transparent 62%),
-    radial-gradient(14% 20% at 82% 40%, rgba(56, 102, 74, .48), transparent 64%);
-  filter: blur(1px) contrast(1.08) saturate(1.1);
-  mix-blend-mode:screen;
-  opacity:.8;
-}
-/* Cloud swirls */
-.home__earth-clouds{ position:absolute; inset:0; border-radius:50%; pointer-events:none;
-  background:
-    radial-gradient(40% 9% at 40% 24%, rgba(255,255,255,.5), transparent 60%),
-    radial-gradient(30% 7% at 64% 34%, rgba(255,255,255,.42), transparent 62%),
-    radial-gradient(46% 8% at 46% 50%, rgba(255,255,255,.34), transparent 62%),
-    radial-gradient(34% 7% at 70% 60%, rgba(255,255,255,.4), transparent 62%),
-    radial-gradient(26% 6% at 22% 66%, rgba(255,255,255,.34), transparent 62%),
-    radial-gradient(22% 12% at 84% 46%, rgba(255,255,255,.3), transparent 64%);
-  filter: blur(3px);
-  mix-blend-mode:screen;
-  opacity:.85;
-}
-/* Night side / terminator shading toward the lower-right */
-.home__earth-terminator{ position:absolute; inset:0; border-radius:50%; pointer-events:none;
-  background: radial-gradient(120% 120% at 32% 22%, transparent 40%, rgba(1,6,22,.6) 78%, rgba(1,4,14,.92) 100%);
-}
-/* Bright sunlit limb highlight on the upper-left edge */
-.home__earth-limb{ position:absolute; inset:-2px; border-radius:50%; pointer-events:none;
-  background:
-    radial-gradient(circle at 40% 8%, rgba(215,235,255,.7) 0%, transparent 11%),
-    radial-gradient(circle at 16% 30%, rgba(180,215,255,.4) 0%, transparent 9%);
-  mix-blend-mode:screen;
-}
+/* A single baked, real-continent Earth image replaces the old procedural marble
+   (gradient ocean + gradient-blob "continents" + gradient clouds + terminator +
+   limb). All of the geography, day/night terminator, limb darkening, atmosphere
+   and lighting now live in the PNG, rendered from hand-authored coastline data
+   (see gauntlet/earth-lab). Sun is upper-left, terminator lower-right, axial
+   tilt ~23.4° — matching the hero's original lighting. */
+.home__earth{ position:absolute; inset:0;
+  background:url("assets/hero-earth.png") center center / contain no-repeat; }
+/* The overlay divs stay in the HTML (empty) but render nothing now. */
+.home__earth::before,
+.home__earth-clouds,
+.home__earth-terminator,
+.home__earth-limb{ display:none; }
 
 .home__foot{ position:relative; z-index:6; display:flex; flex-direction:column; align-items:center; gap:1.15rem; padding-top:2rem; }
 .home__tag{ margin:0; font-family:var(--font-sans); font-size:clamp(.95rem,1.6vw,1.15rem); color:var(--ink-soft); font-weight:400; letter-spacing:.01em; text-align:center; }
@@ -1491,9 +1458,8 @@ body[data-route="/"] .footer{ margin-top:0; }
      radii of 90/150/130px plus a 140px outer glow, rasterised over a ~586px
      circle at 3x. Two tighter shadows read the same at this size for a fraction
      of the raster cost. */
-  .home__earth{ box-shadow:
-      inset 0 -26px 52px 10px rgba(0,8,26,.82),
-      inset 34px 40px 76px rgba(190,224,255,.24); }
+  /* Lighter baked Earth on phones (735KB vs 2.1MB); shading is in the image. */
+  .home__earth{ background-image:url("assets/hero-earth-sm.png"); box-shadow:none; }
   /* Continents: drop blur+contrast+saturate. Three chained colour operations over
      the full sphere, for six soft gradient blobs that are already soft. */
   .home__earth::before{ filter:none; opacity:.62; }
