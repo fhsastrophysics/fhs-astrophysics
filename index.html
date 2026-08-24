@@ -404,44 +404,57 @@
 
   <div class="wrap">
     <div class="join">
-      <div class="join__col join__col--info reveal">
-        <ul class="join__benefits">
-          <li><span>Lectures, data labs and problem sets, worked from first principles.</span></li>
-          <li><span>A typeset LaTeX handout with every meeting, yours to keep.</span></li>
-          <li><span>No prerequisites. Come to one meeting or all of them.</span></li>
-          <li><span>Snacks at every meeting.</span></li>
-        </ul>
 
-        <div class="meet">
-          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">When &amp; Where</h2></div>
-          <dl class="meet__list">
-            <div class="meet__row">
-              <dt class="meet__key">When</dt>
-              <dd class="meet__val">Every other Wednesday, during lunch</dd>
-            </div>
-            <div class="meet__row">
-              <dt class="meet__key">Where</dt>
-              <dd class="meet__val">Room 153<span class="meet__sub">Mr. Bob's room · engineering building</span></dd>
-            </div>
-          </dl>
+      <!-- ── PRIMARY ACTION ─────────────────────────────────────────────────
+           The whole page funnels to one thing: get on the meeting list. The
+           signup leads, spans the full width and carries the warm accent, so
+           the eye lands here first. Everything below is supporting context. -->
+      <div class="signup reveal" style="--i:0">
+        <div class="signup__lead">
+          <span class="signup__eyebrow">↗ Get on the meeting list</span>
+          <h2 class="signup__title">Meeting reminders, by email.</h2>
+          <p class="signup__desc">We email a few days before each meeting with the room, the topic and what food there'll be. That's the whole list.</p>
         </div>
 
-        <!-- Pushed to the bottom of this column (margin-top:auto) so its bottom edge
-             lines up with the Contact/Elsewhere block's bottom in the other column. -->
+        <form class="signup__form" id="emailSignup" method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSdN1lY5leFFF1xiokBPWNjmFCU14EdVnXaPRvGqAHnIF_3uSw/viewform" target="_blank" rel="noopener">
+          <div class="signup__row">
+            <input class="signup__input" type="email" name="entry.624766096" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
+            <button class="signup__btn" type="submit">
+              <span>Sign up</span>
+              <span class="signup__btn-arw" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <span class="signup__meta">No spam · unsubscribe any time · open to any Fremont student, any grade</span>
+        </form>
+
+        <!-- Condensed from the old four-line benefits wall: four short proofs, the
+             club's own voice kept intact ("Snacks at every meeting"). -->
+        <ul class="signup__perks">
+          <li>Worked from first principles</li>
+          <li>A LaTeX handout to keep</li>
+          <li>No prerequisites — drop in any time</li>
+          <li>Snacks at every meeting</li>
+        </ul>
+      </div>
+
+      <!-- ── SUPPORTING CONTEXT ─────────────────────────────────────────────
+           Two calm, steel-toned cards, clearly subordinate to the signup: the
+           live countdown with when/where on the left, how to reach us on the
+           right. The countdown keeps every hook initNextMeeting() drives. -->
+      <div class="join__support">
+
         <!-- The countdown is driven entirely off data-when — an ISO instant WITH an
-             explicit offset (-07:00 = PDT), so the target is a fixed moment in time
-             rather than "12:55 wherever you happen to be". To roll the card to the
-             next session, change this one attribute and the three visible strings
-             below; initNextMeeting() does the rest. -->
-        <div class="nextmeet" id="nextMeeting" data-when="2026-09-09T12:55:00-07:00">
+             explicit offset (-07:00 = PDT), so the target is a fixed moment rather
+             than "12:55 wherever you happen to be". To roll the card to the next
+             session, change this attribute plus the visible strings below; the WHEN
+             row states the recurring cadence, so it stays put. -->
+        <div class="nextmeet reveal" id="nextMeeting" data-when="2026-09-09T12:55:00-07:00" style="--i:1">
           <div class="nextmeet__top">
             <span class="nextmeet__k">§ Next meeting</span>
             <span class="nextmeet__status" data-nm-status>T–minus</span>
           </div>
 
           <p class="nextmeet__topic">Introduction to Astrophysics Club</p>
-          <!-- No room here on purpose: "When & Where" states it a few lines above, and
-               repeating it read as a stray orphan once it wrapped on a phone. -->
           <p class="nextmeet__when">
             <time datetime="2026-09-09T12:55:00-07:00">Wednesday, September 9 · 12:55 PM</time>
           </p>
@@ -455,63 +468,32 @@
             <li class="nmu"><span class="nmu__v" data-nm-unit="mins">--</span><span class="nmu__l">Min</span></li>
             <li class="nmu"><span class="nmu__v" data-nm-unit="secs">--</span><span class="nmu__l">Sec</span></li>
           </ul>
-        </div>
-      </div>
 
-      <div class="join__col join__col--form reveal">
-        <form class="signup" id="emailSignup" method="get" action="https://docs.google.com/forms/d/e/1FAIpQLSdN1lY5leFFF1xiokBPWNjmFCU14EdVnXaPRvGqAHnIF_3uSw/viewform" target="_blank" rel="noopener">
-          <span class="signup__eyebrow">↗ Get on the meeting list</span>
-          <h3 class="signup__title">Meeting reminders by email.</h3>
-          <p class="signup__desc">We email a few days before each meeting with the room, the topic and what food there is.</p>
-          <div class="signup__row">
-            <input class="signup__input" type="email" name="entry.624766096" placeholder="you@student.fuhsd.org" aria-label="Your email address" autocomplete="email" required />
-            <button class="signup__btn" type="submit">
-              <span>Sign up</span>
-              <span class="signup__btn-arw" aria-hidden="true">→</span>
+          <dl class="nextmeet__meta">
+            <div class="nextmeet__metarow">
+              <dt>When</dt>
+              <dd>Every other Wednesday, during lunch</dd>
+            </div>
+            <div class="nextmeet__metarow">
+              <dt>Where</dt>
+              <dd>Room 153 <span>· Mr. Bob's room, engineering building</span></dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside class="joincard joincard--reach reveal" style="--i:2">
+          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Reach us</h2></div>
+
+          <div class="joincard__mailrow">
+            <a class="field__mail js-copy" href="mailto:fhsastrophysics@gmail.com" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+            <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
             </button>
           </div>
-        </form>
 
-        <!-- Pushed to the bottom of the form column (margin-top:auto) so Saanvi's row
-             lands level with the bottom of the Next-meeting card on the left. -->
-        <div class="join__foot">
-        <div class="field join__foot-cell">
-          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Contact</h2></div>
-          <ul class="contacts">
-            <li class="contact">
-              <span class="contact__role">Club</span>
-              <a class="ulink field__mail js-copy" href="mailto:fhsastrophysics@gmail.com" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
-              <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-              </button>
-            </li>
-            <li class="contact">
-              <span class="contact__role">Abir</span>
-              <a class="ulink field__mail js-copy" href="mailto:amehta251@student.fuhsd.org" data-copy="amehta251@student.fuhsd.org">amehta251@student.fuhsd.org</a>
-              <button class="field__copy js-copy-btn" data-copy="amehta251@student.fuhsd.org" aria-label="Copy Abir's email address" title="Copy email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-              </button>
-            </li>
-            <li class="contact">
-              <span class="contact__role">Dhruv</span>
-              <a class="ulink field__mail js-copy" href="mailto:dlagu234@student.fuhsd.org" data-copy="dlagu234@student.fuhsd.org">dlagu234@student.fuhsd.org</a>
-              <button class="field__copy js-copy-btn" data-copy="dlagu234@student.fuhsd.org" aria-label="Copy Dhruv's email address" title="Copy email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-              </button>
-            </li>
-            <li class="contact">
-              <span class="contact__role">Saanvi</span>
-              <a class="ulink field__mail js-copy" href="mailto:sdoshi468@student.fuhsd.org" data-copy="sdoshi468@student.fuhsd.org">sdoshi468@student.fuhsd.org</a>
-              <button class="field__copy js-copy-btn" data-copy="sdoshi468@student.fuhsd.org" aria-label="Copy Saanvi's email address" title="Copy email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-              </button>
-            </li>
-          </ul>
-        </div>
+          <p class="joincard__note">One inbox for the whole club — questions, ideas, or offering to help run a meeting all land with the officers. <a class="ulink joincard__team" href="#/team" data-route="/team">Meet the officers →</a></p>
 
-        <div class="field join__foot-cell">
-          <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Elsewhere</h2></div>
-          <div class="socials">
+          <div class="joincard__social">
             <a class="slink slink--ig" href="https://www.instagram.com/fhs.astrophysicsclub/" target="_blank" rel="noopener" aria-label="Follow the club on Instagram at fhs.astrophysicsclub">
               <span class="slink__ico" aria-hidden="true">
                 <svg class="ig-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>
@@ -527,8 +509,7 @@
               <span class="slink__arw" aria-hidden="true">↗</span>
             </a>
           </div>
-        </div>
-        </div>
+        </aside>
       </div>
     </div>
 
