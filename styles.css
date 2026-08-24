@@ -1,25 +1,17 @@
 /* =====================================================================
    Astrophysics Club — Fremont High School
-   Realistic deep space · Instrument Serif display · Söhne body · grain
+   Deep-space photographic sky · Fraunces display · Hanken Grotesk body ·
+   IBM Plex Mono labels · warm-sodium editorial accent
    ===================================================================== */
 
 /* -----------------------------------------------------------------
-   Söhne (Klim Type Foundry) — drop the licensed .woff2 files into
-   assets/fonts/ and these @font-face rules pick them up. Until then
-   the site falls back to Helvetica Neue / a system mono cleanly.
+   TYPE — one coherent editorial system, all served from Google Fonts
+   (the <link> in index.html). No local @font-face, no font downloads:
+     Fraunces       high-contrast display serif (opsz axis) — masthead + titles
+     Hanken Grotesk humanist grotesque — body / UI
+     IBM Plex Mono  technical mono — eyebrows / kickers / meta
+   The families load via <link>; the tokens below point every rule at them.
    ----------------------------------------------------------------- */
-@font-face{
-  font-family:"Söhne"; font-style:normal; font-weight:400; font-display:swap;
-  src:url("assets/fonts/soehne-buch.woff2") format("woff2");
-}
-@font-face{
-  font-family:"Söhne"; font-style:normal; font-weight:600; font-display:swap;
-  src:url("assets/fonts/soehne-halbfett.woff2") format("woff2");
-}
-@font-face{
-  font-family:"Söhne Mono"; font-style:normal; font-weight:700; font-display:swap;
-  src:url("assets/fonts/soehne-mono-halbfett.woff2") format("woff2");
-}
 
 :root{
   --bg:        #04070F;
@@ -29,13 +21,24 @@
 
   --ink:       #EEF3FF;
   --ink-soft:  #A6B2CC;
-  --ink-mute:  #6A748C;
+  /* Was #6A748C (~3.9:1 on card surfaces — fails AA on muted numerals/roles).
+     Lifted to clear 4.5:1 for micro-text while staying clearly "muted". */
+  --ink-mute:  #8B94A8;
 
-  /* Realistic ice-blue accent (no teal, no violet) */
-  --accent:    #BCD7FF;
-  --accent-2:  #7FB0FF;
-  --accent-3:  #3F82F0;
-  --earth:     #4FA0FF;
+  /* TWO accents, not one ice-blue-for-everything.
+     COOL (periwinkle-steel) is the everyday interactive/hover/link/focus voice —
+     desaturated off the old #BCD7FF so it reads as refined starlight, not a
+     saturated UI blue. WARM (muted sodium/gold, an observatory instrument light)
+     is the identity signature, spent SPARINGLY: section eyebrows, § marks, the
+     active nav underline, and the one primary action. Saturation is reserved for
+     that single decisive CTA (the bone button); everything else stays calm. */
+  --accent:    #AEBED9;   /* cool — everyday interactive, links, hovers, focus */
+  --accent-2:  #8FA3C4;   /* cool, deeper — secondary steel */
+  --accent-3:  #5D79AC;   /* cool, deepest — subtle rings / hairline tints */
+  --warm:      #E9C79A;   /* sodium gold — eyebrows, § marks, active nav, accents */
+  --warm-deep: #D3A870;   /* deeper gold — warm underlines / borders */
+  --bone:      #F1E6D3;   /* warm parchment — the single primary CTA surface */
+  --earth:     #4FA0FF;   /* the planet, not UI — left cool */
   --earth-hi:  #A6D2FF;
 
   --glass:     rgba(13,19,38,0.52);   /* dark frosted glass — reads over the bold sky photo (was a 5% white wash, invisible over bright nebula) */
@@ -47,16 +50,21 @@
   --glass-flat: rgba(15,22,42,0.80);
   --glass-2:   rgba(255,255,255,0.075);
   --glass-brd: rgba(255,255,255,0.10);
-  --glass-brd-hover: rgba(188,215,255,0.42);
+  /* Hover edge WARMS — a card catching a little sodium light, never emitting blue. */
+  --glass-brd-hover: rgba(233,199,154,0.34);
   --glass-blur: 20px;
   --glass-glow: 0 8px 40px rgba(4,10,26,.5), inset 0 1px 0 rgba(255,255,255,.12), inset 0 -22px 44px rgba(10,20,45,.28);
+  /* Weighted, NEUTRAL hover lift — a real contact shadow (object rising off the
+     page) instead of a blue glow-bloom. Shared by every card hover on desktop,
+     the same honest physical language the touch --glass-glow already uses. */
+  --hover-lift: 0 12px 30px rgba(2,6,18,.55), inset 0 1px 0 rgba(255,255,255,.05);
 
   --line:      rgba(230, 238, 255, 0.08);
   --line-2:    rgba(230, 238, 255, 0.16);
 
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-sans:  "Söhne", "Helvetica Neue", Arial, sans-serif;
-  --font-mono:  "Söhne Mono", ui-monospace, "SFMono-Regular", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-sans:  "Hanken Grotesk", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
+  --font-mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
@@ -101,9 +109,10 @@ body{
    handled by a vignette scrim baked into that one layer + a small top scrim on inner
    routes -- deliberately NOT a global dim, so the bold centre stays bold. */
 
-/* Instrument Serif ships a single weight — use 400 everywhere and lean on
-   size for hierarchy so the browser never fakes a bold. */
-h1,h2,h3,h4{ color: var(--ink); font-family: var(--font-display); font-weight:400; margin:0; line-height:1.05; letter-spacing:-.01em; }
+/* Fraunces is a real variable family — hierarchy comes from weight + optical
+   size (opsz tracks the font-size automatically), never a faked bold. 450 is a
+   restrained book-display weight that still reads as high-contrast editorial. */
+h1,h2,h3,h4{ color: var(--ink); font-family: var(--font-display); font-weight:450; font-optical-sizing:auto; margin:0; line-height:1.05; letter-spacing:-.01em; }
 p{ margin:0 0 1em; }
 a{ color:inherit; text-decoration:none; }
 img,svg,canvas{ display:block; max-width:100%; }
@@ -114,7 +123,8 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .skip-link{ position:fixed; top:-100px; left:16px; z-index:600; background:var(--accent); color:#031024; padding:.55rem 1rem; border-radius:8px; font-weight:600; transition:top .2s var(--ease); }
 .skip-link:focus{ top:14px; }
 
-/* All-caps metadata labels — Söhne Mono Bold, ~11px, spaced editorial caps */
+/* All-caps metadata labels — IBM Plex Mono, ~11px, spaced editorial caps. Cool
+   by default (functional labels); true section eyebrows opt into --warm below. */
 .mono{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .dim{ color: var(--ink-mute); }
 
@@ -215,11 +225,11 @@ main, .nav, .footer{ position:relative; z-index:3; }
 
 .brand{ display:inline-flex; align-items:center; gap:.65rem; }
 .brand__mark{ width:30px; height:30px; color:var(--accent); flex:none; }
-.brand__title{ font-family:var(--font-display); font-weight:400; font-size:1.35rem; color:var(--ink); letter-spacing:-.01em; }
+.brand__title{ font-family:var(--font-display); font-weight:520; font-optical-sizing:auto; font-size:1.35rem; color:var(--ink); letter-spacing:-.01em; }
 
 .nav__links{ display:flex; align-items:center; gap:.2rem; }
 .nav__links a{ padding:.55rem .95rem; font-size:.95rem; font-weight:500; color:var(--ink-soft); position:relative; transition:color .25s var(--ease); }
-.nav__links a:not(.nav__cta)::after{ content:""; position:absolute; left:.95rem; right:.95rem; bottom:.35rem; height:1.5px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .3s var(--ease); }
+.nav__links a:not(.nav__cta)::after{ content:""; position:absolute; left:.95rem; right:.95rem; bottom:.35rem; height:1.5px; background:var(--warm); transform:scaleX(0); transform-origin:left; transition:transform .3s var(--ease); }
 .nav__links a:not(.nav__cta):hover{ color:var(--ink); }
 .nav__links a:not(.nav__cta):hover::after,
 .nav__links a.active:not(.nav__cta)::after{ transform:scaleX(1); }
@@ -392,7 +402,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
 .chapter__lede .dim{ color:var(--ink-mute); }
 .chapter__rule{ display:flex; align-items:center; gap:1rem; }
 .chapter__rule span{ height:1.5px; background:var(--line-2); }
-.chapter__rule span:nth-child(1){ width:110px; background:var(--accent); }
+.chapter__rule span:nth-child(1){ width:110px; background:var(--warm); }
 .chapter__rule span:nth-child(2){ width:20px; }
 .chapter__rule span:nth-child(3){ flex:1; }
 
@@ -420,26 +430,33 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
     linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 18%, transparent 46%, rgba(1,3,10,.55) 80%, rgba(1,3,10,.97) 100%);
 }
 
-/* Editorial eyebrow label — Söhne Mono Bold */
-.home__eyebrow{ position:relative; z-index:6; margin:1.9rem 0 .3rem; font-family:var(--font-mono); font-weight:700; font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); opacity:.78; text-align:center; }
+/* Editorial eyebrow label — IBM Plex Mono. Deliberately kept near-white (not the
+   warm accent): it sits dead-centre over the brightest part of the sky, the one
+   place a sodium tint would both clash with the nebula and risk contrast. */
+.home__eyebrow{ position:relative; z-index:6; margin:1.9rem 0 .3rem; font-family:var(--font-mono); font-weight:600; font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); opacity:.82; text-align:center; }
 
-/* Big serif wordmark spanning the viewport, sitting BEHIND the astronaut */
+/* THE MASTHEAD — a high-contrast Fraunces wordmark spanning the viewport, behind
+   the astronaut. opsz tracks the size automatically, so at ~12rem it renders at
+   the family's most dramatic optical size (thick stems, fine hairlines) — a
+   nameplate, not a heavy grotesque. Weight 600 + a whisker of negative tracking
+   keeps it majestic without the serifs colliding. */
 .home__stage{ position:relative; z-index:2; width:100%; display:flex; align-items:center; justify-content:center; padding:0; min-height:46vmin; transform:translateY(-1vh); }
 .home__title{
   position:relative; z-index:2;
   width:100vw; margin-inline:calc(50% - 50vw);   /* full-bleed so the wordmark can go edge-to-edge + bigger */
   margin-block:0;
   padding:0 .4rem;
-  font-family:"Söhne Breit", var(--font-sans);
-  font-weight:800;
-  line-height:.9;
-  letter-spacing:-.05em;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-optical-sizing:auto;
+  line-height:.92;
+  letter-spacing:-.018em;
   font-size:clamp(2.6rem, 9.7vw, 12rem);
   text-align:center;
   color:#fff;
   white-space:nowrap;
   user-select:none;
-  text-shadow: 0 4px 60px rgba(30, 70, 150, .5), 0 2px 14px rgba(0,0,0,.35);
+  text-shadow: 0 2px 44px rgba(2,6,18,.55), 0 2px 14px rgba(0,0,0,.4);
 }
 .home__title span{ display:inline; }
 /* Astronaut layered IN FRONT of the wordmark.
@@ -714,8 +731,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* year arc */
 .arc{ margin-bottom:4rem; }
 .arc__head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:1.6rem; gap:1rem; flex-wrap:wrap; }
-/* Punchy display sans (Söhne Breit Bold when present, heavy sans fallback) */
-.arc__title{ font-family:"Söhne Breit", var(--font-sans); font-weight:700; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.02em; color:var(--ink); line-height:1; }
+/* Fraunces display, section-title weight (the big-display block below governs the
+   final family/tracking; kept here so the rule stands on its own too). */
+.arc__title{ font-family:var(--font-display); font-weight:600; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.015em; color:var(--ink); line-height:1.02; }
 /* Horizontal scroller with a right-edge fade cue (no debug text) */
 .arc__scroller{ position:relative; }
 .arc__scroller::after{ content:""; position:absolute; top:0; right:0; bottom:1rem; width:72px; background:linear-gradient(90deg, rgba(1,3,10,0), var(--void)); pointer-events:none; z-index:2; }
@@ -730,10 +748,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* what we do */
 .goals__head{ margin-bottom:1.9rem; }
-.goals__title{ font-family:"Söhne Breit", var(--font-sans); font-weight:700; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.02em; color:var(--ink); line-height:1; }
+.goals__title{ font-family:var(--font-display); font-weight:600; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.015em; color:var(--ink); line-height:1.02; }
 .goal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
 .goal{ padding:2rem 1.9rem 2.2rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .35s var(--ease); contain:layout paint; }
-.goal:hover{ transform:translateY(-6px); border-color:var(--glass-brd-hover); box-shadow:0 12px 40px rgba(63,130,240,.14); }
+.goal:hover{ transform:translateY(-6px); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
 /* No 01/02/03 counter above the title — these are three formats, not three steps. */
 .goal__t{ font-family:var(--font-display); font-weight:400; font-size:1.75rem; color:var(--ink); margin:0 0 .5rem; letter-spacing:-.01em; }
 .goal p{ margin:0; color:var(--ink-soft); font-size:1rem; max-width:34ch; }
@@ -780,7 +798,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .mcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); overflow:hidden; transition:transform .22s var(--ease-calm), border-color .22s var(--ease-calm), box-shadow .22s var(--ease-calm); cursor:pointer; contain:layout paint; }
 /* A believable shadow, not a blue bloom — the card is lifting off the page, it
    isn't emitting light. */
-.mcard:hover{ transform:translateY(-2px); border-color:rgba(188,215,255,.26); box-shadow:0 10px 26px rgba(2,6,18,.5), inset 0 1px 0 rgba(255,255,255,.06); }
+.mcard:hover{ transform:translateY(-2px); border-color:var(--glass-brd-hover); box-shadow:0 10px 26px rgba(2,6,18,.5), inset 0 1px 0 rgba(255,255,255,.06); }
 .mcard > .mcard__head, .mcard > .mcard__body{ position:relative; z-index:2; }
 .mcard__head{ display:flex; align-items:flex-start; justify-content:space-between; padding:1.5rem 1.6rem 1.2rem; gap:1rem; }
 .mcard__no{ font-family:var(--font-display); font-size:3rem; font-weight:400; color:var(--ink); opacity:0.14; line-height:.85; letter-spacing:-.03em; user-select:none; transition:opacity .22s var(--ease-calm); }
@@ -788,7 +806,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    numeral pulled the eye away from the slide itself. A small lift in opacity is
    enough to say the card woke up. */
 .mcard:hover .mcard__no{ opacity:.3; }
-.mcard__kind{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); padding-top:.5rem; }
+.mcard__kind{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--warm); padding-top:.5rem; }
 
 .mcard__thumb{ position:relative; aspect-ratio:16/10; overflow:hidden; background:#0a0e18; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
 /* The plate comes to colour. No delay — the old .12s existed to let the scan-line
@@ -821,13 +839,13 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   background:linear-gradient(180deg, #0A1024 0%, #060B18 100%);
   border:1px solid var(--glass-brd); border-radius:20px;
   padding:2rem clamp(1.4rem,3vw,2.2rem);
-  box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(188,215,255,.06) inset;
+  box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset;
   animation:panelIn .45s var(--ease-out);
 }
 @keyframes panelIn{ from{ opacity:0; transform:translateY(20px) scale(.98); } to{ opacity:1; transform:none; } }
 .modal__close{ position:absolute; top:1.1rem; right:1.1rem; width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.04); border:1px solid var(--line-2); color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; line-height:1; transition:background .2s var(--ease), border-color .2s var(--ease); }
 .modal__close:hover{ background:rgba(255,255,255,.08); border-color:var(--accent); color:var(--accent); }
-.modal__eyebrow{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:.6rem; }
+.modal__eyebrow{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--warm); margin-bottom:.6rem; }
 .modal__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.8rem, 3.4vw, 2.6rem); letter-spacing:-.02em; color:var(--ink); margin:0 0 .8rem; }
 .modal__sum{ color:var(--ink-soft); margin:0 0 1.4rem; font-size:1rem; line-height:1.55; max-width:56ch; }
 .modal__topics{ display:flex; flex-wrap:wrap; gap:.45rem; margin-bottom:1.6rem; }
@@ -838,8 +856,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .modal__thumbs .mt img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
 .modal__thumbs .mt__n{ position:absolute; top:.5rem; left:.5rem; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); padding:.28rem .55rem; border-radius:6px; z-index:2; }
 .modal__actions{ display:flex; flex-wrap:wrap; gap:.8rem; padding-top:1.2rem; border-top:1px solid var(--line); }
-.modal__primary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:100px; background:#fff; color:#031024; font-weight:600; font-size:.95rem; border:1px solid #fff; transition:transform .2s var(--ease), background .2s var(--ease); }
-.modal__primary:hover{ background:var(--accent); border-color:var(--accent); transform:translateY(-1px); }
+.modal__primary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:100px; background:var(--bone); color:#231a0d; font-weight:600; font-size:.95rem; border:1px solid #F7EFE0; transition:transform .2s var(--ease), background .2s var(--ease); }
+.modal__primary:hover{ background:var(--warm); border-color:var(--warm); transform:translateY(-1px); }
 .modal__secondary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:100px; background:transparent; color:var(--ink); font-weight:500; font-size:.95rem; border:1px solid var(--line-2); transition:border-color .2s var(--ease), color .2s var(--ease); }
 .modal__secondary:hover{ border-color:var(--accent); color:var(--accent); }
 
@@ -849,16 +867,19 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .notes-filter{ display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:3rem; }
 .fbtn{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; padding:.62rem 1.15rem; background:var(--glass); color:var(--ink-soft); border:1px solid var(--glass-brd); border-radius:100px; cursor:pointer; transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease); }
 .fbtn:hover{ color:var(--ink); border-color:var(--line-2); }
-.fbtn.active{ background:transparent; color:var(--ink); border-color:var(--accent); box-shadow:0 0 0 3px rgba(188,215,255,.10), 0 0 24px rgba(188,215,255,.22); }
+/* Active filter: a SOLID surface + a warm sodium edge, not a blue glow-bloom.
+   The solid fill also restores contrast — a transparent active chip left near-
+   white text sitting straight on the bright sky (1.7:1 on phone). */
+.fbtn.active{ background:var(--glass-flat); color:var(--ink); border-color:var(--warm); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
 
 .notes-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
 .ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
-.ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:rgba(188,215,255,0.35); box-shadow:0 12px 40px rgba(63,130,240,.12), inset 0 1px 0 rgba(255,255,255,.08); }
+.ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
 .ncard__thumb{ aspect-ratio:8.5/11; overflow:hidden; background:#0b0e17; position:relative; border-bottom:1px solid var(--line); }
 .ncard__thumb img{ width:100%; height:100%; object-fit:cover; object-position:top center; filter:grayscale(1) brightness(.86) contrast(1.05); transition:filter .5s var(--ease), transform .7s var(--ease); }
 .ncard:hover .ncard__thumb img{ filter:grayscale(0) brightness(1) contrast(1); transform:scale(1.03); }
 .ncard__mbadge{ position:absolute; top:.7rem; left:.7rem; padding:.5rem .7rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:10px; display:flex; flex-direction:column; gap:.05rem; z-index:3; }
-.ncard__mbadge-k{ font-family:var(--font-mono); font-size:.55rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
+.ncard__mbadge-k{ font-family:var(--font-mono); font-size:.55rem; letter-spacing:.16em; text-transform:uppercase; color:var(--warm); }
 .ncard__mbadge-v{ font-family:var(--font-mono); font-size:1.4rem; font-weight:500; color:var(--ink); line-height:1; letter-spacing:-.02em; }
 .ncard__type{ position:absolute; top:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
 .ncard__type[data-type="Lecture Notes"]{ color:var(--accent); }
@@ -894,17 +915,20 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* Gradient carried the card WITH a blur behind it; without one it needs to be
    opaque enough to hold its own over the starfield. */
 .tcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(20,32,60,.74), rgba(9,14,30,.86)); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
+/* Two quiet lights instead of one saturated blue bloom: a desaturated steel from
+   the top-left and a whisper of warm sodium from the lower-right, so the portrait
+   card reads as an object catching light rather than glowing ice-blue. */
 .tcard::before{ content:""; position:absolute; inset:0; z-index:0;
   background:
-    radial-gradient(70% 60% at 30% 20%, rgba(127, 176, 255, .18), transparent 55%),
-    radial-gradient(60% 50% at 80% 90%, rgba(63, 130, 240, .16), transparent 60%);
+    radial-gradient(70% 60% at 30% 20%, rgba(150, 168, 205, .13), transparent 55%),
+    radial-gradient(60% 50% at 80% 90%, rgba(211, 168, 114, .10), transparent 62%);
   pointer-events:none;
 }
-.tcard:hover{ border-color:rgba(188,215,255,0.30); box-shadow:0 12px 40px rgba(63,130,240,.12), inset 0 1px 0 rgba(255,255,255,.08); }
+.tcard:hover{ border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
 .tcard__portrait{ position:relative; z-index:1; aspect-ratio:4/3; overflow:hidden; background:#050914; border-bottom:1px solid var(--line-2); display:flex; align-items:center; justify-content:center; }
 .tcard__portrait img{ width:100%; height:100%; object-fit:cover; filter:grayscale(.6) contrast(1.02) brightness(.94); transition:filter .5s var(--ease), transform .8s var(--ease); }
 .tcard:hover .tcard__portrait img{ filter:grayscale(0) contrast(1) brightness(1); transform:scale(1.04); }
-.tcard__initials{ font-family:var(--font-display); font-weight:800; font-size:3rem; color:rgba(188,215,255,.6); letter-spacing:-.03em; }
+.tcard__initials{ font-family:var(--font-display); font-weight:620; font-size:3rem; color:rgba(174,190,217,.55); letter-spacing:-.02em; }
 .tcard__body{ position:relative; z-index:1; padding:1.5rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
 .tcard__badge{ align-self:flex-start; padding:.3rem .7rem; border:1px solid var(--line-2); border-radius:100px; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:rgba(188,215,255,.05); }
 .tcard__name{ font-family:var(--font-display); font-weight:400; font-size:1.85rem; color:var(--ink); letter-spacing:-.01em; margin:.4rem 0 .1rem; }
@@ -957,23 +981,23 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 .join__benefits{ margin:.4rem 0 1.6rem; padding:0; display:grid; gap:.55rem; }
 .join__benefits li{ display:grid; grid-template-columns:22px 1fr; gap:.7rem; align-items:baseline; color:var(--ink); font-size:1.02rem; line-height:1.5; }
-.join__benefits li::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px rgba(188,215,255,.14); transform:translateY(-2px); grid-column:1; }
+.join__benefits li::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--warm); box-shadow:0 0 0 3px rgba(233,199,154,.12); transform:translateY(-2px); grid-column:1; }
 .join__benefits li span{ grid-column:2; }
 .join__benefits li b{ font-weight:600; color:#fff; }
 
 .field{ padding:1.6rem 0; border-top:1px solid var(--line); }
 .field:first-of-type{ border-top:1px solid var(--line-2); }
-.field__k{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:.9rem; }
-/* Editorial section header: mono § mark + Instrument Serif title */
+.field__k{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--warm); display:block; margin-bottom:.9rem; }
+/* Editorial section header: mono § mark + Fraunces title */
 .field__head{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:1rem; }
-.field__mark{ font-family:var(--font-display); font-weight:400; font-size:1.7rem; letter-spacing:0; color:var(--accent); line-height:.8; align-self:center; text-shadow:0 0 18px rgba(188,215,255,.4); }
+.field__mark{ font-family:var(--font-display); font-weight:500; font-size:1.7rem; letter-spacing:0; color:var(--warm); line-height:.8; align-self:center; text-shadow:0 0 16px rgba(233,199,154,.30); }
 .field__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.75rem, 2.6vw, 2rem); line-height:1; letter-spacing:-.02em; color:var(--ink); margin:0; }
 /* Contact + Elsewhere share a row on desktop, stack on mobile */
 .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.5rem, 3vw, 2.5rem); }
 .field-row .field{ padding-top:1.6rem; }
 .field-row .field:first-of-type{ border-top:1px solid var(--line); }
 .field__v{ font-size:1.15rem; color:var(--ink); margin:0 0 .3rem; }
-/* Emails in Söhne at a calmer size */
+/* Emails in Hanken Grotesk at a calmer size */
 .field-row .field__v{ font-size:1rem; }
 .field-row .field__mail{ font-size:1rem; }
 .field__sub{ color:var(--ink-soft); font-size:.98rem; margin:.2rem 0 0; }
@@ -989,7 +1013,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    pill, then the topic as the headline, then when/where, then the clock. */
 .nextmeet{ margin-top:1.4rem; padding:1.4rem 1.5rem 1.5rem; border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }
 .nextmeet__top{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
-.nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:-.01em; text-transform:uppercase; color:var(--accent); }
+.nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:-.01em; text-transform:uppercase; color:var(--warm); }
 /* State pill. The dot pulses only while the meeting is actually live. */
 .nextmeet__status{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--line); border-radius:999px; padding:.3rem .6rem; white-space:nowrap; }
 .nextmeet__status::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--ink-mute); flex:0 0 auto; }
@@ -1047,7 +1071,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   background:radial-gradient(circle, rgba(127,176,255,.16), transparent 60%);
   pointer-events:none;
 }
-.signup__eyebrow{ font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:.9rem; display:block; }
+.signup__eyebrow{ font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--warm); margin-bottom:.9rem; display:block; }
 .signup__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.8rem, 3vw, 2.5rem); letter-spacing:-.02em; margin:0 0 .8rem; color:var(--ink); }
 .signup__desc{ color:var(--ink-soft); margin:0 0 1.6rem; font-size:1rem; line-height:1.5; max-width:38ch; }
 .signup__row{ display:flex; gap:.5rem; margin-bottom:1rem; flex-wrap:wrap; }
@@ -1064,20 +1088,21 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 }
 .signup__input::placeholder{ color:var(--ink-mute); }
 .signup__input:focus{ outline:none; border-color:var(--accent); background:rgba(255,255,255,.06); }
-/* CTA — subtle white->ice-blue gradient (no purple, no aggressive gradient) */
+/* THE primary action — a warm bone (parchment) pill, the one saturated surface on
+   the page. Its weight comes from a real contact shadow, not a blue glow-bloom. */
 .signup__btn{
   display:inline-flex; align-items:center; gap:.55rem;
   padding:.95rem 1.6rem;
-  background: linear-gradient(180deg, #FFFFFF 0%, #DFE9FF 100%);
-  color:#031024;
-  border:1px solid #FFFFFF;
+  background: linear-gradient(180deg, #F6EEDF 0%, var(--bone) 100%);
+  color:#231a0d;
+  border:1px solid #F7EFE0;
   border-radius:100px;
   font-weight:600; font-size:.95rem;
   cursor:pointer;
   transition:transform .2s var(--ease), box-shadow .3s var(--ease);
-  box-shadow: 0 8px 30px -6px rgba(188,215,255,.4);
+  box-shadow: 0 8px 22px -8px rgba(0,0,0,.6);
 }
-.signup__btn:hover{ transform:translateY(-1px); box-shadow: 0 12px 36px -6px rgba(188,215,255,.5); }
+.signup__btn:hover{ transform:translateY(-1px); box-shadow: 0 12px 28px -8px rgba(0,0,0,.65); }
 .signup__btn-arw{ font-family:var(--font-mono); }
 .signup__meta{ display:block; margin-top:.7rem; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; color:var(--ink-mute); text-transform:uppercase; }
 .signup__fine{ margin-top:1.6rem; padding-top:1.2rem; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:.65rem; color:var(--ink-mute); letter-spacing:.06em; }
@@ -1127,10 +1152,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   z-index:400;
   padding:.85rem 1.2rem;
   background:rgba(6,10,24,.92); backdrop-filter:blur(12px);
-  border:1px solid var(--accent);
+  border:1px solid var(--warm);
   border-radius:100px;
   color:var(--ink); font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
-  box-shadow: 0 12px 40px rgba(63,130,240,.28);
+  box-shadow: 0 12px 34px rgba(0,0,0,.5);
   opacity:0; pointer-events:none;
   transition:opacity .3s var(--ease), transform .3s var(--ease-out);
 }
@@ -1156,9 +1181,11 @@ body[data-route="/"] .footer{ margin-top:0; }
 .footer__legal{ margin:0; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.02em; color:var(--ink-mute); text-align:right; text-transform:none; }
 
 /* =====================================================================
-   HEAVY DISPLAY SANS — the hero wordmark face carried across section and
-   card titles for a bolder, more consistent hierarchy (overrides the serif
-   defaults; placed after all component rules so it wins the cascade).
+   DISPLAY TITLE SET — one family (Fraunces) carried across every section and
+   card title. Hierarchy is weight + optical size, not a second typeface: cards
+   sit at a semibold display weight, the per-route chapter title heavier still,
+   and the hero wordmark heaviest/largest of all. Placed after all component
+   rules so it wins the cascade over the serif-400 defaults.
    ===================================================================== */
 .chapter__title,
 .field__title,
@@ -1169,11 +1196,12 @@ body[data-route="/"] .footer{ margin-top:0; }
 .ncard__title,
 .tcard__name,
 .arc__title{
-  font-family:"Söhne Breit", var(--font-sans);
-  font-weight:700;
-  letter-spacing:-.025em;
+  font-family:var(--font-display);
+  font-weight:560;
+  font-optical-sizing:auto;
+  letter-spacing:-.012em;
 }
-.chapter__title{ font-weight:800; font-size:clamp(2.5rem,7vw,5.4rem); line-height:1; }
+.chapter__title{ font-weight:640; font-size:clamp(2.5rem,7vw,5.4rem); line-height:1.02; letter-spacing:-.018em; }
 .mcard__title, .tcard__name, .ncard__title{ line-height:1.12; }
 
 /* =====================================================================
@@ -1599,7 +1627,7 @@ body[data-route="/"] .footer{ margin-top:0; }
   border:1px solid var(--glass-brd); border-radius:var(--r); background:#070B16; cursor:pointer;
   transition:border-color .35s var(--ease), box-shadow .4s var(--ease), transform .5s var(--ease-out);
   contain:layout paint; }
-.acard:hover{ border-color:rgba(188,215,255,.4); box-shadow:0 16px 50px rgba(63,130,240,.16), inset 0 1px 0 rgba(255,255,255,.08); }
+.acard:hover{ border-color:var(--glass-brd-hover); box-shadow:0 16px 40px rgba(2,6,18,.6), inset 0 1px 0 rgba(255,255,255,.05); }
 .acard:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 .acard__media{ position:absolute; inset:0; display:block; }
 .acard__media img{ width:100%; height:100%; object-fit:cover;
@@ -1611,7 +1639,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 .acard__idx{ font-family:var(--font-display); font-size:1.7rem; color:#fff; opacity:.5; line-height:1; text-shadow:0 1px 10px rgba(1,3,10,.9); transition:opacity .3s var(--ease); }
 .acard:hover .acard__idx{ opacity:.95; }
 .acard__cat{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--accent); padding:.34rem .6rem; border:1px solid rgba(188,215,255,.28); border-radius:8px; background:rgba(4,7,15,.55); }
+  color:var(--warm); padding:.34rem .6rem; border:1px solid rgba(233,199,154,.30); border-radius:8px; background:rgba(4,7,15,.55); }
 .acard__info{ position:absolute; left:0; right:0; bottom:0; z-index:2; display:flex; flex-direction:column; gap:.3rem;
   padding:2.4rem 1.05rem 1rem;
   background:linear-gradient(180deg, transparent 0%, rgba(3,6,14,.72) 55%, rgba(3,6,14,.92) 100%); }

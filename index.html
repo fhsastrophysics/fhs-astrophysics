@@ -15,9 +15,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-<!-- Instrument Serif (display) from Google Fonts. Söhne (body) + Söhne Mono (labels)
-     load from local assets/fonts/*.woff2 via @font-face in styles.css. -->
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<!-- Editorial type system, all Google-Fonts-served (no local files):
+       Fraunces      — high-contrast display serif (opsz axis) → wordmark, titles, § marks, numerals
+       Hanken Grotesk — humanist grotesque → body copy, nav, buttons, inputs
+       IBM Plex Mono  — technical mono → all-caps eyebrows, kickers, meta labels
+     Only the weights/axes actually used are requested; display=swap; preconnect above. -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Hanken+Grotesk:wght@400..800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <!-- KaTeX (which typesets the drifting hero equations) is NOT loaded here. It's a
      ~280KB library used only for decorative background math, so app.js fetches it
      lazily during idle time — see initHeroEquations. Every pointer type gets the
