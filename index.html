@@ -538,7 +538,25 @@
   </div>
 
   <div class="wrap">
-    <div class="faq reveal">
+    <div class="faq-layout">
+      <!-- Left rail (sticky on desktop, collapses under the list on mobile).
+           Uses the site's steel-glass card language, and lifts the "still have
+           a question" callout up here so the empty desktop margin becomes real
+           editorial furniture instead of dead space. -->
+      <aside class="faq-side reveal">
+        <span class="faq-side__eyebrow">§ Ask us</span>
+        <h2 class="faq-side__title">Anything not covered here?</h2>
+        <p class="faq-side__desc">These are the questions we hear before a first meeting. If yours isn't answered, one line to us and we'll write back.</p>
+        <div class="faq-side__actions">
+          <a class="faq-side__mail" href="mailto:fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+          <a class="faq-side__discord" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener">
+            <span>Or ask on Discord</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </aside>
+
+      <div class="faq reveal">
       <details class="faq-item">
         <summary class="faq-q">What makes the Astrophysics Club different from other clubs at Fremont?</summary>
         <div class="faq-a"><p>Unlike other clubs on campus, we are the only one that focuses solely on space and exploring how and why the universe is the way it is. This is the place where you get to not only explore the mysteries of our cosmos but also to understand the physics and science behind them.</p></div>
@@ -591,9 +609,8 @@
         <summary class="faq-q">How do I contact the officers?</summary>
         <div class="faq-a"><p>You can email us at <a class="ulink" href="mailto:fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a> or send a message via <a class="ulink" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener">Discord</a>. If you want to reach out to individual officers, we have our emails listed in the <a class="ulink" href="#/team" data-route="/team">team</a> section of our website.</p></div>
       </details>
+      </div>
     </div>
-
-    <p class="faq-foot">Something not covered here? Email <a class="ulink" href="mailto:fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>.</p>
 
     <div class="route__next reveal">
       <a class="route__next-link magnetic" href="#/" data-route="/">
