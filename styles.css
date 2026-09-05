@@ -72,7 +72,12 @@
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
   --font-sans:  "IBM Plex Sans", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
-  --font-mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  /* No monospace anywhere on the site (Abir: remove the "AI-generated looking" mono
+     completely). --font-mono is kept as a token name only so the ~40 label rules that
+     reference it need no churn — it now resolves to the body sans. Every former mono
+     label (eyebrows, kickers, badges, emails, countdown units, ticker) renders in
+     IBM Plex Sans, still bold + uppercase + tracked, just not monospaced. */
+  --font-mono:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
@@ -709,16 +714,19 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   /* Nudge the baked marble toward the photographic sky: a touch more contrast and
      a hair less brightness so the matte "illustration" flatness reads as a lit
      sphere against the deep field. */
-  filter:contrast(1.06) saturate(1.04) brightness(.97); }
+  filter:contrast(1.05) saturate(1.06) brightness(1.05); }
 /* Atmospheric limb + day/night shading, drawn as CSS over the webp so the globe
    blends into the starfield instead of sitting on top of it as a flat cut-out.
    ::before = terminator shadow + limb darkening (the sphere's own shading);
    ::after  = a crisp blue atmosphere rim hugging the lit limb. Both are masked to
    the circle by border-radius + the contain sizing of the parent square. */
+/* The webp already BAKES the day/night terminator + limb darkening (same renderer,
+   sun upper-left). So this overlay is now just a gentle edge-darkening to seat the
+   sphere against the sky — much lighter than before (which double-shaded North
+   America into the dark). No hard terminator line here anymore. */
 .home__earth::before{ content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none;
   background:
-    radial-gradient(circle at 34% 30%, transparent 44%, rgba(2,6,20,.16) 66%, rgba(1,3,12,.5) 84%, rgba(0,1,6,.72) 100%),
-    linear-gradient(118deg, transparent 40%, rgba(1,4,14,.28) 72%, rgba(0,1,7,.62) 100%);
+    radial-gradient(circle at 40% 34%, transparent 62%, rgba(2,6,20,.08) 80%, rgba(1,3,12,.26) 93%, rgba(0,1,6,.42) 100%);
   mix-blend-mode:multiply; }
 .home__earth::after{ content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none;
   background:radial-gradient(circle at 50% 50%, transparent 80%, rgba(150,196,255,.16) 88%, rgba(120,175,255,.34) 93%, rgba(94,150,240,.14) 97%, transparent 100%);
@@ -748,6 +756,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* Fraunces display, section-title weight (the big-display block below governs the
    final family/tracking; kept here so the rule stands on its own too). */
 .arc__title{ font-family:var(--font-display); font-weight:600; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.015em; color:var(--ink); line-height:1.02; }
+/* Season switch — a compact segmented control (square-ish corners, NOT a pill).
+   '25–'26 shows the 13-meeting arc; '26–'27 shows the empty placeholder. */
+.arc__years{ align-self:center; display:inline-flex; background:var(--glass-flat); border:1px solid var(--line-2); border-radius:9px; overflow:hidden; flex:0 0 auto; }
+.arc__year{ appearance:none; border:0; background:transparent; color:var(--ink-soft); font-family:var(--font-sans); font-weight:600; font-size:.82rem; letter-spacing:.01em; padding:.52rem .9rem; cursor:pointer; transition:background .18s var(--ease), color .18s var(--ease); }
+.arc__year + .arc__year{ border-left:1px solid var(--line-2); }
+.arc__year:not(.is-active):hover{ color:var(--ink); background:rgba(255,255,255,.05); }
+.arc__year.is-active{ background:var(--accent); color:#04122e; }
+.arc__year:active{ transform:none; }
+.arc__empty{ margin:.4rem 0 1rem; padding:1.6rem 1.7rem; border:1px solid var(--line-2); border-radius:14px; background:var(--glass-flat); color:var(--ink-soft); font-size:1.05rem; line-height:1.55; max-width:60ch; }
 /* Horizontal scroller with a right-edge fade cue (no debug text) */
 .arc__scroller{ position:relative; }
 .arc__scroller::after{ content:""; position:absolute; top:0; right:0; bottom:1rem; width:72px; background:linear-gradient(90deg, rgba(1,3,10,0), var(--void)); pointer-events:none; z-index:2; }
@@ -1030,7 +1047,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .signup__perks li::before{ content:""; position:absolute; left:0; top:.55em; width:7px; height:7px; border-radius:2px; background:var(--accent); }
 
 /* ---- TIER 2 — supporting cards ----------------------------------------- */
-.join__support{ display:grid; grid-template-columns:1.12fr .88fr; gap:clamp(1.25rem,2.5vw,1.8rem); align-items:stretch; }
+/* align-items:start so each support card is its natural height (like the FAQ "Ask
+   us" card). stretch forced them equal-height, which left dead space at the bottom
+   of the shorter Next-meeting card once Reach-us grew to three officers. */
+.join__support{ display:grid; grid-template-columns:1.12fr .88fr; gap:clamp(1.25rem,2.5vw,1.8rem); align-items:start; }
 /* Shared neutral (steel) surface. --glass reads as glass over the dark sky on
    desktop; the touch block swaps it for an opaque fill (no backdrop buffers). */
 .joincard{ display:flex; flex-direction:column; padding:clamp(1.5rem,2.4vw,1.9rem) clamp(1.4rem,2.2vw,1.7rem); border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }

@@ -13,7 +13,10 @@
   // canvas, NO canvas light-speed warp, NO full-page blur. Those were the
   // memory/GPU hogs that crashed mobile Safari.
   const COARSE = window.matchMedia("(any-pointer: coarse)").matches;
-  const SLIDES = (id) => `https://docs.google.com/presentation/d/${id}/export/pdf`;
+  // Open the deck in Google Slides (presentation view) in a new tab — NOT the PDF
+  // export, which forces a download. Used by the About "arc" boxes and the meeting
+  // modal's deck button; both are target="_blank" so no SPA/warp transition fires.
+  const SLIDES = (id) => `https://docs.google.com/presentation/d/${id}/present`;
 
   /* -------------------------------------------------------------------
      DATA (factual, extracted from decks & handouts)
@@ -499,6 +502,31 @@
       a.setAttribute("aria-label", `Meeting ${m.n}: ${m.short} — open the slide deck`);
       t.appendChild(a);
     });
+  }
+
+  /* Season switch on the About "arc": '25–'26 shows the 13-meeting scroller;
+     '26–'27 swaps in a short placeholder and updates the heading. */
+  function initArcYears() {
+    const btns = $$(".arc__year");
+    if (!btns.length) return;
+    const title = $("#arcTitle"), scroller = $("#arcScroller"), empty = $("#arcEmpty");
+    const COPY = {
+      "25": { title: "The ’25–’26 Year", empty: false },
+      "26": { title: "The ’26–’27 Year", empty: true },
+    };
+    const select = (btn) => {
+      const y = btn.dataset.year, c = COPY[y];
+      if (!c) return;
+      btns.forEach((x) => {
+        const on = x === btn;
+        x.classList.toggle("is-active", on);
+        x.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      if (title) title.textContent = c.title;
+      if (scroller) scroller.hidden = c.empty;
+      if (empty) empty.hidden = !c.empty;
+    };
+    btns.forEach((b) => b.addEventListener("click", () => select(b)));
   }
 
   /* -------------------------------------------------------------------
@@ -1492,6 +1520,7 @@
       setTimeout(() => document.body.classList.remove("intro"), 2400);
     }
     renderArc();
+    initArcYears();
     renderMeetings();
     renderNotes();
     renderTeam();

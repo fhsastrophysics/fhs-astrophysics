@@ -16,10 +16,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <!-- Type system, all Google-Fonts-served (no local files):
        Bricolage Grotesque — distinctive contemporary grotesque (opsz axis) → wordmark, titles, § marks, numerals
-       IBM Plex Sans       — technical humanist sans → body copy, nav, buttons, inputs
-       IBM Plex Mono       — technical mono → all-caps eyebrows, kickers, meta labels
+       IBM Plex Sans       — technical humanist sans → body copy, nav, buttons, inputs, AND all
+                             all-caps eyebrows/kickers/meta labels (no monospace anywhere on the site)
      A deliberate, non-default pairing (no Inter/Helvetica/Arial as a display face). -->
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -188,11 +188,16 @@
 
     <div class="arc reveal section-in">
       <div class="arc__head">
-        <h2 class="arc__title">The ’25–’26 Year</h2>
+        <h2 class="arc__title" id="arcTitle">The ’25–’26 Year</h2>
+        <div class="arc__years" role="tablist" aria-label="Choose a season">
+          <button type="button" class="arc__year is-active" data-year="25" role="tab" aria-selected="true">’25–’26</button>
+          <button type="button" class="arc__year" data-year="26" role="tab" aria-selected="false">’26–’27</button>
+        </div>
       </div>
-      <div class="arc__scroller">
+      <div class="arc__scroller" id="arcScroller">
         <div class="arc__track" id="arcTrack"></div>
       </div>
+      <p class="arc__empty" id="arcEmpty" hidden>The ’26–’27 season kicks off this fall. Meetings will show up here as we go.</p>
     </div>
 
     <div class="goals section-in">
@@ -577,8 +582,8 @@
         <span aria-hidden="true">↗</span>
       </a>
       <a class="modal__secondary" id="modalSecondary" href="#" target="_blank" rel="noopener">
-        <span>Download slide deck</span>
-        <span aria-hidden="true">↓</span>
+        <span>Open slide deck</span>
+        <span aria-hidden="true">↗</span>
       </a>
     </div>
   </div>
