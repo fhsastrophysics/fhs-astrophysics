@@ -485,8 +485,8 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    itself stays pointer-events:none so it never becomes a drag-ghost. */
 .home__astro-wrap{
   position:absolute; z-index:3;
-  left:50%; top:50%;
-  width:clamp(260px, 42vw, 560px);
+  left:39%; top:70%;
+  width:clamp(210px, 30vw, 400px);
   transform:translate(-50%, -48%);
   pointer-events:auto;
   touch-action:none;          /* no scroll-jank while dragging on touch */
@@ -754,7 +754,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .arc__track{ display:flex; gap:1rem; overflow-x:auto; padding-bottom:1rem; scroll-snap-type:x proximity; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; }
 .arc__track::-webkit-scrollbar{ height:5px; }
 .arc__track::-webkit-scrollbar-thumb{ background:var(--line-2); border-radius:3px; }
-.arc-node{ scroll-snap-align:start; flex:0 0 auto; width:190px; min-height:118px; padding:1.3rem 1.4rem 1.5rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; transition:transform .35s var(--ease-out), border-color .35s var(--ease); contain:layout paint; }
+.arc-node{ scroll-snap-align:start; flex:0 0 auto; width:190px; min-height:118px; padding:1.3rem 1.4rem 1.5rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; transition:transform .35s var(--ease-out), border-color .35s var(--ease); contain:layout paint; text-decoration:none; color:inherit; cursor:pointer; display:block; }
 .arc-node:hover{ transform:translateY(-5px); border-color:var(--glass-brd-hover); }
 .arc-node__n{ font-family:var(--font-display); font-size:1.5rem; color:var(--ink); opacity:.5; line-height:1; transition:opacity .3s var(--ease), color .3s var(--ease); }
 .arc-node:hover .arc-node__n{ opacity:1; color:var(--accent); }
@@ -1045,8 +1045,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .joincard__mailrow{ display:flex; align-items:center; gap:.5rem; }
 .joincard__mail{ min-width:0; font-size:1.05rem; color:var(--accent); overflow-wrap:anywhere; border-bottom:1px solid transparent; transition:border-color .2s var(--ease); }
 .joincard__mail:hover{ border-bottom-color:var(--accent); }
-.joincard__note{ margin:.9rem 0 1.35rem; color:var(--ink-soft); font-size:.96rem; line-height:1.55; }
+.joincard__note{ margin:.9rem 0 1rem; color:var(--ink-soft); font-size:.96rem; line-height:1.55; }
 .joincard__note .ulink{ white-space:nowrap; }
+/* Direct officer contacts — one row each, President first. */
+.joincard__officers{ list-style:none; margin:0 0 1.35rem; padding:0; display:flex; flex-direction:column; gap:.5rem; }
+.joincard__officers a{ display:flex; flex-direction:column; gap:.1rem; padding:.7rem .85rem; border:1px solid var(--line-2); border-radius:10px; background:rgba(255,255,255,.02); transition:border-color .2s var(--ease), background .2s var(--ease); }
+.joincard__officers a:hover{ border-color:var(--glass-brd-hover); background:rgba(106,164,255,.06); }
+.jo__name{ font-family:var(--font-display); font-weight:600; font-size:1rem; color:var(--ink); }
+.jo__role{ font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); }
+.jo__mail{ font-family:var(--font-mono); font-size:.74rem; color:var(--accent); overflow-wrap:anywhere; margin-top:.15rem; }
 .joincard__social{ display:flex; flex-wrap:wrap; gap:.8rem 1.6rem; margin-top:auto; padding-top:1.35rem; border-top:1px solid var(--line); }
 
 /* Ghost copy button on the club email — subtle, reveals on row hover / focus */
@@ -1233,7 +1240,7 @@ body[data-route="/"] .footer{ margin-top:0; }
      as one clean line with only the boots grazing the letters. */
   .home__title{ width:auto; max-width:100%; margin-inline:0; white-space:normal;
     font-size:clamp(2rem, 8.4vw, 4.6rem); line-height:1.05; padding:0 1rem; }
-  .home__astro-wrap{ top:34%;
+  .home__astro-wrap{ top:64%; left:41%;
     filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
 
   /* GPU BUDGET — trim the heaviest hero layers on every touch device. These
@@ -1497,7 +1504,7 @@ body[data-route="/"] .footer{ margin-top:0; }
      the transform so it works whether the JS ragdoll or the CSS float drives it)
      so the wordmark reads as one clean, centred line with only the boots grazing
      the letters — and it's smaller, so much lighter for the GPU. */
-  .home__astro-wrap{ top:35%; width:min(52vw, 214px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
+  .home__astro-wrap{ top:60%; left:40%; width:min(46vw, 190px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
   /* Make the wordmark centring bulletproof: normal centred block (no full-bleed
      100vw + negative-margin trick, which can drift), flex-centred in the stage. */
   .home__title{ width:auto; max-width:100%; margin-inline:0; }

@@ -492,8 +492,12 @@
     const t = $("#arcTrack");
     if (!t) return;
     MEETINGS.forEach((m) => {
-      t.appendChild(el("div", "arc-node",
-        `<span class="arc-node__n">${pad(m.n)}</span><span class="arc-node__t">${m.short}</span>`));
+      const a = el("a", "arc-node",
+        `<span class="arc-node__n">${pad(m.n)}</span><span class="arc-node__t">${m.short}</span>`);
+      a.href = SLIDES(m.slides);
+      a.target = "_blank"; a.rel = "noopener";
+      a.setAttribute("aria-label", `Meeting ${m.n}: ${m.short} — open the slide deck`);
+      t.appendChild(a);
     });
   }
 
@@ -651,14 +655,14 @@
           <div class="ncard__mbadge"><span class="ncard__mbadge-k">Meeting</span><span class="ncard__mbadge-v">${pad(nd.meeting)}</span></div>
           <span class="ncard__type" data-type="${nd.type}">${nd.type}</span>
           <img src="${noteThumb(id)}" alt="First page of ${nd.title}" loading="lazy" decoding="async" width="340" height="440">
-          <div class="ncard__cloud" aria-hidden="true">
-            <span class="ncard__cloud-k">Topics inside</span>
-            <div class="ncard__cloud-list">${topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
-          </div>
         </div>
         <div class="ncard__body">
           <h3 class="ncard__title">${nd.title}</h3>
           <p class="ncard__meta"><span>${nd.pages} pg · LaTeX</span><span class="ncard__open">Open ${IC_OPEN}</span></p>
+        </div>
+        <div class="ncard__cloud" aria-hidden="true">
+          <span class="ncard__cloud-k">Topics inside</span>
+          <div class="ncard__cloud-list">${topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
         </div>`;
       grid.appendChild(a);
     });
