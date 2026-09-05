@@ -76,7 +76,7 @@
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
-  --r: 20px;
+  --r: 13px;
 
   --ease: cubic-bezier(.4, 0, .1, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
@@ -247,7 +247,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 .nav__links a.active:not(.nav__cta)::after{ transform:scaleX(1); }
 .nav__links a.active:not(.nav__cta){ color:var(--ink); }
 /* Login-style outlined pill (matches the inspiration) */
-.nav__cta{ margin-left:.5rem; background:transparent; color:var(--ink) !important; border:1px solid rgba(255,255,255,.55); border-radius:100px; padding:.62rem 1.5rem !important; font-weight:500; transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease); }
+.nav__cta{ margin-left:.5rem; background:transparent; color:var(--ink) !important; border:1px solid rgba(255,255,255,.55); border-radius:10px; padding:.62rem 1.5rem !important; font-weight:500; transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease); }
 .nav__cta:hover{ background:rgba(255,255,255,.08); border-color:#fff; transform:translateY(-1px); }
 
 /* Brand-colored social icons, top-right */
@@ -281,7 +281,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 /* =====================================================================
    BUTTONS — no AI gradients, clean pills
    ===================================================================== */
-.btn{ display:inline-flex; align-items:center; gap:.65rem; padding:1rem 1.9rem; border-radius:100px; font-family:var(--font-sans); font-weight:500; font-size:.98rem; border:1px solid transparent; cursor:pointer; position:relative; will-change:transform; transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease); }
+.btn{ display:inline-flex; align-items:center; gap:.65rem; padding:1rem 1.9rem; border-radius:10px; font-family:var(--font-sans); font-weight:500; font-size:.98rem; border:1px solid transparent; cursor:pointer; position:relative; will-change:transform; transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease); }
 /* Primary → warm bone pill, matching the site's other primary action (the Join
    "Sign up" button). A single light, solid CTA reads clearly against the dark
    ghost secondary, so the two hero buttons stop looking like an identical pair. */
@@ -289,9 +289,9 @@ main, .nav, .footer{ position:relative; z-index:3; }
   background: linear-gradient(180deg, #5C9DFF 0%, #3D74E6 100%);
   color:#fff;
   border:1px solid rgba(160,196,255,.55);
-  box-shadow: 0 14px 30px -10px rgba(40,90,220,.55), inset 0 1px 0 rgba(255,255,255,.3);
+  box-shadow: 0 2px 0 rgba(16,34,78,.8), 0 6px 14px -6px rgba(0,0,0,.5);
 }
-.btn--solid:hover{ background: linear-gradient(180deg, #6EABFF 0%, #4A82F0 100%); border-color:rgba(190,216,255,.8); transform:translateY(-1px); }
+.btn--solid:hover{ background: linear-gradient(180deg, #6EABFF 0%, #4A82F0 100%); border-color:rgba(190,216,255,.8); transform:translateY(-1px); box-shadow: 0 3px 0 rgba(16,34,78,.8), 0 8px 16px -6px rgba(0,0,0,.5); }
 .btn--ghost{ border:1px solid rgba(122,162,236,.55); color:#fff; background:rgba(16,24,48,.5); backdrop-filter:blur(8px); }
 .btn--ghost:hover{ border-color:var(--accent); background:rgba(26,38,72,.7); color:#fff; }
 .btn__arw{ font-family:var(--font-mono); transition:transform .3s var(--ease); }
@@ -417,7 +417,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    a thick rounded electric-blue segment leading a hairline that runs out to the edge. */
 .chapter__rule{ display:flex; align-items:center; gap:.85rem; }
 .chapter__rule span{ height:1.5px; background:var(--line-2); }
-.chapter__rule span:nth-child(1){ width:84px; height:5px; border-radius:100px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow:0 0 16px rgba(106,164,255,.45); }
+.chapter__rule span:nth-child(1){ width:72px; height:4px; border-radius:2px; background:var(--accent); }
 .chapter__rule span:nth-child(2){ width:16px; }
 .chapter__rule span:nth-child(3){ flex:1; }
 
@@ -833,7 +833,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .mcard__title{ font-family:var(--font-display); font-weight:400; font-size:1.85rem; letter-spacing:-.01em; line-height:1.05; margin:0; }
 .mcard__sum{ font-size:.96rem; color:var(--ink-soft); line-height:1.6; margin:0; }
 .mcard__topics{ display:flex; flex-wrap:wrap; gap:.45rem; }
-.chip{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.02em; color:var(--ink-soft); border:1px solid var(--line-2); padding:.32rem .6rem; border-radius:100px; }
+.chip{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.02em; color:var(--ink-soft); border:1px solid var(--line-2); padding:.32rem .6rem; border-radius:10px; }
 .mcard__cta{ margin-top:auto; padding-top:1.2rem; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
 /* Replaces the pulsing "ACQUIRE" lock ring. An arrow that moves a couple of
    pixels toward where the click will take you — the smallest honest signal, and
@@ -870,16 +870,16 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .modal__thumbs .mt img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
 .modal__thumbs .mt__n{ position:absolute; top:.5rem; left:.5rem; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); padding:.28rem .55rem; border-radius:6px; z-index:2; }
 .modal__actions{ display:flex; flex-wrap:wrap; gap:.8rem; padding-top:1.2rem; border-top:1px solid var(--line); }
-.modal__primary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:100px; background:var(--bone); color:#231a0d; font-weight:600; font-size:.95rem; border:1px solid #F7EFE0; transition:transform .2s var(--ease), background .2s var(--ease); }
+.modal__primary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:10px; background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); color:#fff; font-weight:600; font-size:.95rem; border:1px solid rgba(160,196,255,.55); box-shadow:0 2px 0 rgba(16,34,78,.8); transition:transform .2s var(--ease), background .2s var(--ease); }
 .modal__primary:hover{ background:var(--warm); border-color:var(--warm); transform:translateY(-1px); }
-.modal__secondary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:100px; background:transparent; color:var(--ink); font-weight:500; font-size:.95rem; border:1px solid var(--line-2); transition:border-color .2s var(--ease), color .2s var(--ease); }
+.modal__secondary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:10px; background:transparent; color:var(--ink); font-weight:500; font-size:.95rem; border:1px solid var(--line-2); transition:border-color .2s var(--ease), color .2s var(--ease); }
 .modal__secondary:hover{ border-color:var(--accent); color:var(--accent); }
 
 /* =====================================================================
    NOTES
    ===================================================================== */
 .notes-filter{ display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:3rem; }
-.fbtn{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; padding:.62rem 1.15rem; background:var(--glass); color:var(--ink-soft); border:1px solid var(--glass-brd); border-radius:100px; cursor:pointer; transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease); }
+.fbtn{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; padding:.62rem 1.15rem; background:var(--glass); color:var(--ink-soft); border:1px solid var(--glass-brd); border-radius:10px; cursor:pointer; transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease); }
 .fbtn:hover{ color:var(--ink); border-color:var(--line-2); }
 /* Active filter: a SOLID surface + a warm sodium edge, not a blue glow-bloom.
    The solid fill also restores contrast — a transparent active chip left near-
@@ -954,7 +954,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .tcard:hover .tcard__portrait img{ filter:grayscale(0) contrast(1) brightness(1); transform:scale(1.04); }
 .tcard__initials{ font-family:var(--font-display); font-weight:620; font-size:3rem; color:rgba(174,190,217,.55); letter-spacing:-.02em; }
 .tcard__body{ position:relative; z-index:1; padding:1.5rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
-.tcard__badge{ align-self:flex-start; padding:.3rem .7rem; border:1px solid var(--line-2); border-radius:100px; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:rgba(188,215,255,.05); }
+.tcard__badge{ align-self:flex-start; padding:.3rem .7rem; border:1px solid var(--line-2); border-radius:10px; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:rgba(188,215,255,.05); }
 .tcard__name{ font-family:var(--font-display); font-weight:400; font-size:1.85rem; color:var(--ink); letter-spacing:-.01em; margin:.4rem 0 .1rem; }
 .tcard__role{ font-family:var(--font-mono); font-weight:700; font-size:.66rem; letter-spacing:-.01em; color:var(--ink-mute); text-transform:uppercase; }
 /* Bios stay visible — no hover pop-out reveal (per request). */
@@ -1006,14 +1006,14 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    directly under a modest headline — size + position, not just the warm colour. */
 .signup__form{ min-width:0; }
 .signup__row{ display:flex; gap:.7rem; flex-wrap:wrap; }
-.signup__input{ flex:1 1 340px; min-width:0; padding:1.2rem 1.5rem; background:rgba(255,255,255,.05); border:1px solid var(--line-2); border-radius:100px; color:var(--ink); font-family:var(--font-sans); font-size:1.08rem; transition:border-color .2s var(--ease), background .2s var(--ease); }
+.signup__input{ flex:1 1 340px; min-width:0; padding:1.2rem 1.5rem; background:rgba(255,255,255,.05); border:1px solid var(--line-2); border-radius:10px; color:var(--ink); font-family:var(--font-sans); font-size:1.08rem; transition:border-color .2s var(--ease), background .2s var(--ease); }
 .signup__input::placeholder{ color:var(--ink-mute); }
 .signup__input:focus{ outline:none; border-color:var(--warm); background:rgba(255,255,255,.07); }
 /* THE primary action — a warm bone (parchment) pill, the one saturated surface
    on the page. Its weight comes from a real contact shadow, not a blue bloom. */
 .signup__btn{ display:inline-flex; align-items:center; gap:.55rem; padding:1.2rem 2.4rem;
   background:linear-gradient(180deg, #5C9DFF 0%, #3D74E6 100%); color:#fff;
-  border:1px solid rgba(160,196,255,.55); border-radius:100px; font-weight:600; font-size:1.05rem; white-space:nowrap;
+  border:1px solid rgba(160,196,255,.55); border-radius:10px; font-weight:600; font-size:1.05rem; white-space:nowrap;
   cursor:pointer; transition:transform .2s var(--ease), box-shadow .3s var(--ease);
   box-shadow:0 10px 26px -10px rgba(0,0,0,.6); }
 .signup__btn:hover{ transform:translateY(-1px); box-shadow:0 14px 30px -10px rgba(0,0,0,.66); }
@@ -1026,7 +1026,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   border-top:1px solid var(--line-2);
   display:grid; grid-template-columns:repeat(4,1fr); gap:.55rem clamp(1.2rem,2.5vw,2rem); }
 .signup__perks li{ position:relative; padding-left:1.15rem; color:var(--ink); font-size:.92rem; line-height:1.35; }
-.signup__perks li::before{ content:""; position:absolute; left:0; top:.5em; width:6px; height:6px; border-radius:50%; background:var(--warm); box-shadow:0 0 0 3px rgba(233,199,154,.14); }
+.signup__perks li::before{ content:""; position:absolute; left:0; top:.55em; width:7px; height:7px; border-radius:2px; background:var(--accent); }
 
 /* ---- TIER 2 — supporting cards ----------------------------------------- */
 .join__support{ display:grid; grid-template-columns:1.12fr .88fr; gap:clamp(1.25rem,2.5vw,1.8rem); align-items:stretch; }
@@ -1062,12 +1062,12 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .nextmeet__top{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
 .nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.02em; text-transform:uppercase; color:var(--warm); }
 /* State pill. The dot pulses only while the meeting is actually live. */
-.nextmeet__status{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--line); border-radius:999px; padding:.3rem .6rem; white-space:nowrap; }
+.nextmeet__status{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--line); border-radius:8px; padding:.3rem .6rem; white-space:nowrap; }
 .nextmeet__status::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--ink-mute); flex:0 0 auto; }
 .nextmeet[data-nm-state="counting"] .nextmeet__status{ color:var(--accent); border-color:rgba(174,190,217,.34); }
-.nextmeet[data-nm-state="counting"] .nextmeet__status::before{ background:var(--accent); box-shadow:0 0 8px rgba(174,190,217,.7); }
+.nextmeet[data-nm-state="counting"] .nextmeet__status::before{ background:var(--accent); }
 .nextmeet[data-nm-state="now"] .nextmeet__status{ color:#8FE9B0; border-color:rgba(143,233,176,.38); }
-.nextmeet[data-nm-state="now"] .nextmeet__status::before{ background:#8FE9B0; box-shadow:0 0 8px rgba(143,233,176,.8); animation:nmPulse 1.8s var(--ease) infinite; }
+.nextmeet[data-nm-state="now"] .nextmeet__status::before{ background:#8FE9B0; animation:nmPulse 1.8s var(--ease) infinite; }
 @keyframes nmPulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.45; transform:scale(.72); } }
 
 .nextmeet__topic{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.4rem,2vw,1.75rem); line-height:1.12; letter-spacing:-.01em; color:var(--ink); margin:0; text-wrap:balance; }
@@ -1163,7 +1163,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   padding:.85rem 1.2rem;
   background:rgba(6,10,24,.92); backdrop-filter:blur(12px);
   border:1px solid var(--warm);
-  border-radius:100px;
+  border-radius:10px;
   color:var(--ink); font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
   box-shadow: 0 12px 34px rgba(0,0,0,.5);
   opacity:0; pointer-events:none;
