@@ -925,7 +925,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .ncard__type{ position:absolute; bottom:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
 .ncard__type[data-type="Lecture Notes"]{ color:var(--accent); }
 .ncard__type[data-type="Answer Key"]{ color:#9BE7A8; }
-.ncard__type[data-type="Worksheet"], .ncard__type[data-type="Activity"]{ color:#FFC97A; }
+.ncard__type[data-type="Worksheet"], .ncard__type[data-type="Activity"]{ color:var(--accent); }
 .ncard__body{ padding:1.2rem 1.25rem 1.3rem; display:flex; flex-direction:column; gap:.7rem; flex:1; }
 .ncard__title{ font-family:var(--font-display); font-weight:400; font-size:1.3rem; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
 .ncard__meta{ margin-top:auto; padding-top:.8rem; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.05em; color:var(--ink-mute); }
@@ -960,10 +960,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* Two quiet lights instead of one saturated blue bloom: a desaturated steel from
    the top-left and a whisper of warm sodium from the lower-right, so the portrait
    card reads as an object catching light rather than glowing ice-blue. */
+/* Flat: no interior glow blooms (§4). The card is a solid navy object; the old
+   steel + sodium radials are removed. */
 .tcard::before{ content:""; position:absolute; inset:0; z-index:0;
-  background:
-    radial-gradient(70% 60% at 30% 20%, rgba(150, 168, 205, .13), transparent 55%),
-    radial-gradient(60% 50% at 80% 90%, rgba(211, 168, 114, .10), transparent 62%);
+  background:none;
   pointer-events:none;
 }
 .tcard:hover{ border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
@@ -997,14 +997,12 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   gap:clamp(1.4rem,3vw,1.9rem);
   align-items:start;
   padding:clamp(1.9rem,3vw,2.9rem) clamp(1.5rem,3vw,2.9rem);
-  border:1px solid rgba(233,199,154,.26);
-  border-radius:22px;
-  /* Dark, opaque-enough base with a single warm bloom in the top corner —
-     the reserved sodium-gold, spent here because this is the one primary
-     action. Replaces the old COOL blue glow (foundation: no blue blooms). */
-  background:
-    radial-gradient(135% 120% at 92% -18%, rgba(233,199,154,.13), transparent 46%),
-    linear-gradient(180deg, rgba(22,27,46,.66), rgba(7,11,22,.75));
+  border:1px solid rgba(106,164,255,.34);   /* electric-blue primary border (was beige) */
+  border-radius:16px;
+  /* Solid navy base, no glow bloom (§4). The signup reads as the primary action
+     via its blue border + blue top hairline + the solid blue Sign-up button —
+     not a coloured halo. */
+  background:linear-gradient(180deg, rgba(22,27,46,.72), rgba(9,13,26,.82));
   backdrop-filter:blur(var(--glass-blur)) saturate(1.35);
   -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.35);
   box-shadow:0 18px 50px -20px rgba(3,7,18,.72), inset 0 1px 0 rgba(255,255,255,.10);
@@ -1057,7 +1055,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* Editorial section header: mono § mark + Fraunces title (reused by Reach us) */
 .field__head{ display:flex; align-items:baseline; gap:.55rem; margin-bottom:1.15rem; }
-.field__mark{ font-family:var(--font-display); font-weight:500; font-size:1.55rem; color:var(--warm); line-height:.8; align-self:center; text-shadow:0 0 16px rgba(233,199,154,.30); }
+.field__mark{ font-family:var(--font-display); font-weight:500; font-size:1.55rem; color:var(--warm); line-height:.8; align-self:center; }
 .field__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.4rem,2.2vw,1.7rem); line-height:1; letter-spacing:-.02em; color:var(--ink); margin:0; }
 
 /* Reach us — one club inbox, a quiet link to the Team page (was a four-officer
@@ -1293,11 +1291,8 @@ body[data-route="/"] .footer{ margin-top:0; }
   .back-top, .toast, .modal__scrim, .modal__thumbs .mt__n{
     backdrop-filter:none; -webkit-backdrop-filter:none; }
   .nextmeet, .joincard{ background:var(--glass-flat); }
-  /* The signup is the primary action — keep it warm and distinct on touch too.
-     --glass-flat is opaque here, so the warm bloom layers over a solid base. */
-  .signup{ background:
-    radial-gradient(140% 120% at 92% -12%, rgba(233,199,154,.15), transparent 48%),
-    var(--glass-flat); }
+  /* Signup stays a solid navy card on touch too — no bloom (§4). */
+  .signup{ background:var(--glass-flat); }
   .nav.scrolled{ background:rgba(4,7,15,.94); }
 
   /* ------------------------------------------------------------------
@@ -1686,7 +1681,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 .acard__idx{ font-family:var(--font-display); font-size:1.7rem; color:#fff; opacity:.5; line-height:1; text-shadow:0 1px 10px rgba(1,3,10,.9); transition:opacity .3s var(--ease); }
 .acard:hover .acard__idx{ opacity:.95; }
 .acard__cat{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--warm); padding:.34rem .6rem; border:1px solid rgba(233,199,154,.30); border-radius:8px; background:rgba(4,7,15,.55); }
+  color:var(--warm); padding:.34rem .6rem; border:1px solid rgba(106,164,255,.34); border-radius:8px; background:rgba(4,7,15,.55); }
 .acard__info{ position:absolute; left:0; right:0; bottom:0; z-index:2; display:flex; flex-direction:column; gap:.3rem;
   padding:2.4rem 1.05rem 1rem;
   background:linear-gradient(180deg, transparent 0%, rgba(3,6,14,.72) 55%, rgba(3,6,14,.92) 100%); }
