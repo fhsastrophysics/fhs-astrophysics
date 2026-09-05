@@ -916,12 +916,13 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* Topic cloud — appears on hover */
 .ncard__cloud{
-  position:absolute; inset:auto .7rem .7rem .7rem;
-  background:rgba(4,7,15,.95);
+  position:absolute; inset:.6rem;              /* fill the whole card so every topic fits, none clipped */
+  background:rgba(4,7,15,.96);
   border:1px solid var(--line-2);
-  border-radius:12px;
-  padding:.9rem .95rem;
-  display:flex; flex-direction:column; gap:.5rem;
+  border-radius:10px;
+  padding:.95rem 1rem;
+  display:flex; flex-direction:column; gap:.5rem; justify-content:center;
+  overflow:auto;                                /* safety for very long topic lists */
   opacity:0; transform:translateY(10px);
   transition:opacity .3s var(--ease), transform .3s var(--ease-out);
   pointer-events:none;
