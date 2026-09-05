@@ -1,15 +1,16 @@
 /* =====================================================================
    Astrophysics Club — Fremont High School
-   Deep-space photographic sky · Fraunces display · Hanken Grotesk body ·
-   IBM Plex Mono labels · warm-sodium editorial accent
+   Deep-space photographic sky · Bricolage Grotesque display · IBM Plex Sans body
+   AND labels (no monospace anywhere) · single electric-blue accent (no gold)
    ===================================================================== */
 
 /* -----------------------------------------------------------------
    TYPE — one coherent editorial system, all served from Google Fonts
    (the <link> in index.html). No local @font-face, no font downloads:
-     Fraunces       high-contrast display serif (opsz axis) — masthead + titles
-     Hanken Grotesk humanist grotesque — body / UI
-     IBM Plex Mono  technical mono — eyebrows / kickers / meta
+     Bricolage Grotesque  distinctive grotesque (opsz axis) — masthead + titles
+     IBM Plex Sans        humanist sans — body / UI, AND all-caps eyebrows/kickers/
+                          meta labels (the --font-mono token is aliased to it; there
+                          is NO monospace font on the site).
    The families load via <link>; the tokens below point every rule at them.
    ----------------------------------------------------------------- */
 
@@ -25,13 +26,6 @@
      Lifted to clear 4.5:1 for micro-text while staying clearly "muted". */
   --ink-mute:  #8B94A8;
 
-  /* TWO accents, not one ice-blue-for-everything.
-     COOL (periwinkle-steel) is the everyday interactive/hover/link/focus voice —
-     desaturated off the old #BCD7FF so it reads as refined starlight, not a
-     saturated UI blue. WARM (muted sodium/gold, an observatory instrument light)
-     is the identity signature, spent SPARINGLY: section eyebrows, § marks, the
-     active nav underline, and the one primary action. Saturation is reserved for
-     that single decisive CTA (the bone button); everything else stays calm. */
   /* Bold single-accent identity — a vivid electric blue that reads as energy against
      the deep field (matches the blue stars + Earth). Used confidently: primary
      buttons, active nav, links, eyebrows, § marks, heading underlines, dots. This is
@@ -136,7 +130,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .skip-link{ position:fixed; top:-100px; left:16px; z-index:600; background:var(--accent); color:#031024; padding:.55rem 1rem; border-radius:8px; font-weight:600; transition:top .2s var(--ease); }
 .skip-link:focus{ top:14px; }
 
-/* All-caps metadata labels — IBM Plex Mono, ~11px, spaced editorial caps. Cool
+/* All-caps metadata labels — IBM Plex Sans, ~11px, spaced editorial caps. Cool
    by default (functional labels); true section eyebrows opt into --warm below. */
 .mono{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .dim{ color: var(--ink-mute); }
@@ -453,7 +447,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
     linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 18%, transparent 46%, rgba(1,3,10,.55) 80%, rgba(1,3,10,.97) 100%);
 }
 
-/* Editorial eyebrow label — IBM Plex Mono. Deliberately kept near-white (not the
+/* Editorial eyebrow label — IBM Plex Sans. Deliberately kept near-white (not the
    warm accent): it sits dead-centre over the brightest part of the sky, the one
    place a sodium tint would both clash with the nebula and risk contrast. */
 .home__eyebrow{ position:relative; z-index:6; margin:1.9rem 0 .3rem; font-family:var(--font-mono); font-weight:600; font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); opacity:.82; text-align:center; }
