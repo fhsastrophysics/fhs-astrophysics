@@ -472,8 +472,8 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    itself stays pointer-events:none so it never becomes a drag-ghost. */
 .home__astro-wrap{
   position:absolute; z-index:3;
-  left:53%; top:38%;
-  width:clamp(230px, 34vw, 470px);
+  left:50%; top:50%;
+  width:clamp(260px, 42vw, 560px);
   transform:translate(-50%, -48%);
   pointer-events:auto;
   touch-action:none;          /* no scroll-jank while dragging on touch */
