@@ -14,18 +14,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <!-- Editorial type system, all Google-Fonts-served (no local files):
        Fraunces      — high-contrast display serif (opsz axis) → wordmark, titles, § marks, numerals
        Hanken Grotesk — humanist grotesque → body copy, nav, buttons, inputs
        IBM Plex Mono  — technical mono → all-caps eyebrows, kickers, meta labels
      Only the weights/axes actually used are requested; display=swap; preconnect above. -->
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..40,0..1&family=Hanken+Grotesk:wght@400..800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<!-- KaTeX (which typesets the drifting hero equations) is NOT loaded here. It's a
-     ~280KB library used only for decorative background math, so app.js fetches it
-     lazily during idle time — see initHeroEquations. Every pointer type gets the
-     equations; the responsive CSS thins the field to 7–10 on phones and tablets.
-     Reduced-motion is the only case that skips the download entirely. -->
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -127,57 +121,6 @@
 
     <div class="home__glow" aria-hidden="true"></div>
 
-    <!-- Animated cosmic backdrop: a black hole with a spinning accretion disk, a
-         dying star (periodic supernova flash), and pulsar points. Subtle and slow
-         so it stays alive without being busy. Parallaxes with the cursor. -->
-    <div class="home__cosmos" aria-hidden="true">
-      <span class="cosmo cosmo--blackhole"></span>
-      <span class="cosmo cosmo--supernova"></span>
-      <span class="cosmo cosmo--pulsar cosmo--pulsar-a"></span>
-      <span class="cosmo cosmo--pulsar cosmo--pulsar-b"></span>
-    </div>
-
-    <!-- Drifting astrophysics equations that fade in and out behind the wordmark.
-         Rendered as real LaTeX by KaTeX on load (see initHeroEquations in app.js).
-         `data-tex` is the source; the fallback text inside is what shows if KaTeX
-         hasn't loaded yet, and gets overwritten the moment it does. Positions +
-         durations + negative delays are deliberately spread so the whole grid is
-         always mid-fade, one continuous seamless loop, no visible "reset". -->
-    <div class="home__equations" aria-hidden="true">
-      <span class="eqn" data-tex="E = mc^2"                                                                                     style="--x:6%;  --y:14%; --dur:15s; --delay:-1s;"></span>
-      <span class="eqn" data-tex="R_s = \tfrac{2GM}{c^2}"                                                                        style="--x:78%; --y:11%; --dur:19s; --delay:-4s;"></span>
-      <span class="eqn" data-tex="F = \tfrac{G m_1 m_2}{r^2}"                                                                    style="--x:16%; --y:62%; --dur:21s; --delay:-8s;"></span>
-      <span class="eqn" data-tex="\lambda = \tfrac{h}{p}"                                                                        style="--x:86%; --y:56%; --dur:17s; --delay:-2s;"></span>
-      <span class="eqn" data-tex="\Omega_m + \Omega_\Lambda = 1"                                                                 style="--x:52%; --y:78%; --dur:23s; --delay:-11s;"></span>
-      <span class="eqn" data-tex="\Delta t' = \tfrac{\Delta t}{\sqrt{1 - v^2/c^2}}"                                              style="--x:32%; --y:32%; --dur:18s; --delay:-6s;"></span>
-      <span class="eqn" data-tex="L = 4\pi R^2 \sigma T^4"                                                                       style="--x:63%; --y:38%; --dur:20s; --delay:-14s;"></span>
-      <span class="eqn" data-tex="\rho_c = \tfrac{3H^2}{8\pi G}"                                                                 style="--x:4%;  --y:44%; --dur:22s; --delay:-9s;"></span>
-      <span class="eqn" data-tex="G_{\mu\nu} = 8\pi G\, T_{\mu\nu}"                                                              style="--x:90%; --y:82%; --dur:19s; --delay:-16s;"></span>
-      <span class="eqn" data-tex="E^2 = (pc)^2 + (mc^2)^2"                                                                       style="--x:22%; --y:22%; --dur:16s; --delay:-3s;"></span>
-      <span class="eqn" data-tex="H^2 = \tfrac{8\pi G}{3}\rho"                                                                   style="--x:70%; --y:26%; --dur:20s; --delay:-7s;"></span>
-      <span class="eqn" data-tex="\tfrac{1}{\lambda} = R\!\left(\tfrac{1}{n_1^2} - \tfrac{1}{n_2^2}\right)"                       style="--x:11%; --y:82%; --dur:22s; --delay:-5s;"></span>
-      <span class="eqn" data-tex="v_{\text{esc}} = \sqrt{\tfrac{2GM}{R}}"                                                        style="--x:38%; --y:52%; --dur:17s; --delay:-10s;"></span>
-      <span class="eqn" data-tex="T_H = \tfrac{\hbar c^3}{8\pi G M k_B}"                                                         style="--x:82%; --y:38%; --dur:21s; --delay:-15s;"></span>
-      <span class="eqn" data-tex="N(t) = N_0\, e^{-\lambda t}"                                                                   style="--x:5%;  --y:70%; --dur:19s; --delay:-12s;"></span>
-      <!-- \cdot, not a literal "·": KaTeX only defines U+00B7 in MATH mode (as
-           \cdotp), so inside \text{} it threw and rendered the error in red. -->
-      <span class="eqn" data-tex="\lambda_{\max} T = 2.898 \times 10^{-3}\ \text{m}\cdot\text{K}"                                 style="--x:64%; --y:66%; --dur:23s; --delay:-8s;"></span>
-      <span class="eqn" data-tex="v_{\text{orb}} = \sqrt{\tfrac{GM}{r}}"                                                         style="--x:28%; --y:88%; --dur:18s; --delay:-17s;"></span>
-      <span class="eqn" data-tex="M_{\text{Ch}} \approx 1.4\, M_\odot"                                                           style="--x:92%; --y:20%; --dur:20s; --delay:-4s;"></span>
-      <span class="eqn" data-tex="H_0 \approx 70\ \text{km/s/Mpc}"                                                               style="--x:48%; --y:46%; --dur:22s; --delay:-19s;"></span>
-      <span class="eqn" data-tex="\ell_p = \sqrt{\tfrac{\hbar G}{c^3}}"                                                          style="--x:76%; --y:74%; --dur:16s; --delay:-6s;"></span>
-      <span class="eqn" data-tex="B_\nu = \tfrac{2h\nu^3/c^2}{e^{h\nu/kT}-1}"                                                    style="--x:14%; --y:36%; --dur:24s; --delay:-11s;"></span>
-      <span class="eqn" data-tex="\tfrac{L}{L_\odot} = \left(\tfrac{M}{M_\odot}\right)^{3.5}"                                     style="--x:88%; --y:64%; --dur:19s; --delay:-3s;"></span>
-      <span class="eqn" data-tex="\nabla^2 \phi = 4\pi G \rho"                                                                   style="--x:34%; --y:70%; --dur:17s; --delay:-14s;"></span>
-      <span class="eqn" data-tex="p = \tfrac{mv}{\sqrt{1 - v^2/c^2}}"                                                            style="--x:66%; --y:88%; --dur:21s; --delay:-9s;"></span>
-      <span class="eqn" data-tex="S = \tfrac{k_B c^3 A}{4 \hbar G}"                                                              style="--x:8%;  --y:26%; --dur:18s; --delay:-7s;"></span>
-      <span class="eqn" data-tex="\Delta E \Delta t \gtrsim \tfrac{\hbar}{2}"                                                    style="--x:26%; --y:44%; --dur:19s; --delay:-15s;"></span>
-      <span class="eqn" data-tex="\Delta \phi = \tfrac{4GM}{c^2 b}"                                                              style="--x:10%; --y:54%; --dur:23s; --delay:-10s;"></span>
-    </div>
-
-    <!-- Editorial hairline grid columns over the hero (SPACESIS-style). Desktop only. -->
-    <div class="home__gridlines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-
     <p class="home__eyebrow">Fremont High School · Sunnyvale, California</p>
 
     <div class="home__stage">
@@ -197,18 +140,6 @@
       </div>
     </div>
 
-    <!-- Upward atmosphere beam glowing from the Earth into the starfield -->
-    <div class="home__beam" aria-hidden="true"></div>
-
-    <!-- Orbital rings behind the planet -->
-    <svg class="home__rings" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-      <g fill="none" stroke="rgba(150,190,255,.14)">
-        <ellipse cx="800" cy="1120" rx="560" ry="540" stroke-width="1"/>
-        <ellipse cx="800" cy="1120" rx="720" ry="690" stroke-width="1" opacity=".7"/>
-        <ellipse cx="800" cy="1120" rx="880" ry="840" stroke-width="1" opacity=".45"/>
-      </g>
-    </svg>
-
     <!-- Earth curve at bottom -->
     <div class="home__earth-wrap" aria-hidden="true">
       <div class="home__earth-glow"></div>
@@ -222,24 +153,15 @@
     <div class="home__vignette" aria-hidden="true"></div>
 
     <div class="home__foot">
-      <p class="home__tag">From the scale of the universe to the edges of time.</p>
+      <p class="home__tag">The physics of stars, black holes and the cosmos — worked out from first principles, every other Wednesday at lunch.</p>
       <div class="home__actions">
         <a class="btn btn--solid magnetic" href="#/meetings" data-route="/meetings">
-          <span class="btn__label">Enter the archive</span>
+          <span class="btn__label">Browse the meetings</span>
           <span class="btn__arw" aria-hidden="true">↗</span>
         </a>
         <a class="btn btn--ghost magnetic" href="#/join" data-route="/join">Join the club</a>
       </div>
     </div>
-
-    <!-- Circular "Discover" ring (SPACESIS-style), bottom-right -->
-    <a class="home__discover magnetic" href="#/atlas" data-route="/atlas" aria-label="Discover the deep-sky atlas">
-      <svg class="home__discover-ring" viewBox="0 0 100 100" aria-hidden="true">
-        <defs><path id="dcirc" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
-        <text><textPath href="#dcirc">DEEP-SKY ATLAS · TEN OBJECTS · DEEP-SKY ATLAS · </textPath></text>
-      </svg>
-      <span class="home__discover-arw" aria-hidden="true">↓</span>
-    </a>
   </div>
 </section>
 
