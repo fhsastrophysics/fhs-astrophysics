@@ -155,10 +155,14 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .bg-nebula{ position:fixed; inset:0; z-index:0; pointer-events:none; }
 .bg-nebula::before{ content:""; position:absolute; inset:0;
   background:url("assets/bg/jwst-bg.jpg") center center / cover no-repeat; }
-/* ONE light scrim, identical on every route — just enough darkening under the nav
-   band + footer to keep text legible, never enough to haze the sky. */
+/* ONE scrim, identical on every route (so there is never a lighting shift between
+   pages): a strong band under the nav + footer, plus a gentle uniform veil across
+   the middle. The veil tones the brightest galaxies/diffraction spikes just enough
+   that body copy and FAQ rows stay legible wherever they land on the plate, and
+   the busy deep field reads as a calm, deliberate backdrop rather than a loud photo
+   — without hazing the sky's presence. */
 .bg-nebula::after{ content:""; position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(180deg, rgba(3,5,12,.6) 0%, rgba(3,5,12,.34) 9%, transparent 16%, transparent 64%, rgba(3,5,12,.4) 100%); }
+  background:linear-gradient(180deg, rgba(3,5,12,.64) 0%, rgba(3,5,12,.4) 9%, rgba(3,5,12,.24) 18%, rgba(3,5,12,.24) 60%, rgba(3,5,12,.46) 100%); }
 /* Phone, portrait — 1000x1932. 393x852@3x needs 2556 rows from 1932: 1.32x. */
 @media (orientation:portrait) and (max-width:640px){
   .bg-nebula::before{ background-image:url("assets/bg/jwst-bg-p-sm.jpg"); } }
@@ -876,13 +880,23 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .notes-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
 .ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
 .ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
-.ncard__thumb{ aspect-ratio:8.5/11; overflow:hidden; background:#0b0e17; position:relative; border-bottom:1px solid var(--line); }
-.ncard__thumb img{ width:100%; height:100%; object-fit:cover; object-position:top center; filter:grayscale(1) brightness(.86) contrast(1.05); transition:filter .5s var(--ease), transform .7s var(--ease); }
-.ncard:hover .ncard__thumb img{ filter:grayscale(0) brightness(1) contrast(1); transform:scale(1.03); }
-.ncard__mbadge{ position:absolute; top:.7rem; left:.7rem; padding:.5rem .7rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:10px; display:flex; flex-direction:column; gap:.05rem; z-index:3; }
+/* Shorter crop: show the handout masthead (title + authors) rather than a whole
+   white US-letter page, so the card isn't a tall bright rectangle against the dark
+   theme — it reads as a document header. */
+.ncard__thumb{ aspect-ratio:8.5/4.4; overflow:hidden; background:#0b0e17; position:relative; border-bottom:1px solid var(--line); }
+/* Show the handout's typeset masthead (title, authors, opening lines) from the top;
+   the badges move to the BOTTOM of the strip (see below) so they never sit on the
+   title. object-position top keeps the informative header in frame. */
+.ncard__thumb img{ width:100%; height:100%; object-fit:cover; object-position:top center; filter:grayscale(1) brightness(.82) contrast(1.04); transition:filter .5s var(--ease), transform .7s var(--ease); }
+.ncard:hover .ncard__thumb img{ filter:grayscale(0) brightness(.98) contrast(1); transform:scale(1.03); }
+/* Bottom scrim so the MEETING / LECTURE-NOTES badges seat on a dark band and the
+   grayscale page reads into the card body rather than ending on a hard white edge. */
+.ncard__thumb::after{ content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:linear-gradient(0deg, rgba(6,9,17,.94) 0%, rgba(6,9,17,.6) 16%, rgba(6,9,17,0) 34%); }
+.ncard__mbadge{ position:absolute; bottom:.7rem; left:.7rem; padding:.5rem .7rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:10px; display:flex; flex-direction:column; gap:.05rem; z-index:3; }
 .ncard__mbadge-k{ font-family:var(--font-mono); font-size:.55rem; letter-spacing:.16em; text-transform:uppercase; color:var(--warm); }
 .ncard__mbadge-v{ font-family:var(--font-mono); font-size:1.4rem; font-weight:500; color:var(--ink); line-height:1; letter-spacing:-.02em; }
-.ncard__type{ position:absolute; top:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
+.ncard__type{ position:absolute; bottom:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
 .ncard__type[data-type="Lecture Notes"]{ color:var(--accent); }
 .ncard__type[data-type="Answer Key"]{ color:#9BE7A8; }
 .ncard__type[data-type="Worksheet"], .ncard__type[data-type="Activity"]{ color:#FFC97A; }
