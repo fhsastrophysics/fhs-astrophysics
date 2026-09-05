@@ -62,8 +62,8 @@
   --line:      rgba(230, 238, 255, 0.08);
   --line-2:    rgba(230, 238, 255, 0.16);
 
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, "Times New Roman", serif;
-  --font-sans:  "Hanken Grotesk", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
+  --font-sans:  "IBM Plex Sans", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   --font-mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --wrap: 1320px;
@@ -229,7 +229,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 
 .brand{ display:inline-flex; align-items:center; gap:.65rem; }
 .brand__mark{ width:30px; height:30px; color:var(--accent); flex:none; }
-.brand__title{ font-family:var(--font-display); font-weight:520; font-optical-sizing:auto; font-variation-settings:"SOFT" 20, "WONK" 1; font-size:1.35rem; color:var(--ink); letter-spacing:-.01em; }
+.brand__title{ font-family:var(--font-display); font-weight:600; font-optical-sizing:auto; font-size:1.3rem; color:var(--ink); letter-spacing:-.02em; }
 
 .nav__links{ display:flex; align-items:center; gap:.2rem; }
 .nav__links a{ padding:.55rem .95rem; font-size:.95rem; font-weight:500; color:var(--ink-soft); position:relative; transition:color .25s var(--ease); }
@@ -457,7 +457,6 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
   font-family:var(--font-display);
   font-weight:600;
   font-optical-sizing:auto;
-  font-variation-settings:"SOFT" 20, "WONK" 1;   /* Fraunces character on the masthead */
   line-height:.92;
   letter-spacing:-.018em;
   font-size:clamp(2.6rem, 9.7vw, 12rem);
