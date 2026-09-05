@@ -32,35 +32,43 @@
      is the identity signature, spent SPARINGLY: section eyebrows, § marks, the
      active nav underline, and the one primary action. Saturation is reserved for
      that single decisive CTA (the bone button); everything else stays calm. */
-  --accent:    #AEBED9;   /* cool — everyday interactive, links, hovers, focus */
-  --accent-2:  #8FA3C4;   /* cool, deeper — secondary steel */
-  --accent-3:  #5D79AC;   /* cool, deepest — subtle rings / hairline tints */
-  --warm:      #E9C79A;   /* sodium gold — eyebrows, § marks, active nav, accents */
-  --warm-deep: #D3A870;   /* deeper gold — warm underlines / borders */
-  --bone:      #F1E6D3;   /* warm parchment — the single primary CTA surface */
-  --earth:     #4FA0FF;   /* the planet, not UI — left cool */
+  /* Bold single-accent identity — a vivid electric blue that reads as energy against
+     the deep field (matches the blue stars + Earth). Used confidently: primary
+     buttons, active nav, links, eyebrows, § marks, heading underlines, dots. This is
+     the "clear, designed" signature — high-contrast, not muted. */
+  --accent:    #6AA4FF;   /* vivid electric blue — links, interactive, accents */
+  --accent-2:  #4E85F0;   /* deeper */
+  --accent-3:  #2E5FCF;   /* deepest — rings / hairline tints */
+  --warm:      #6AA4FF;   /* same bold accent — eyebrows, § marks, underlines, dots */
+  --warm-deep: #3D74E6;   /* deeper accent — button base / borders */
+  --bone:      #EAF1FF;   /* cool ice-white — light surfaces */
+  --earth:     #4FA0FF;   /* the planet, not UI */
   --earth-hi:  #A6D2FF;
 
-  --glass:     rgba(13,19,38,0.52);   /* dark frosted glass — reads over the bold sky photo (was a 5% white wash, invisible over bright nebula) */
+  --glass:     rgba(17,24,46,0.82);   /* nav glass — more opaque so it reads as a solid bar */
   /* Same surface WITHOUT a backdrop-filter, for anything that repeats. Each
      backdrop-filter needs its own offscreen buffer re-sampled from whatever is
      behind it — fine for one nav bar, ruinous for sixteen cards in a grid over a
      fixed photo: the compositor falls behind and you scroll past half-painted
      cards. This is tuned so a solid fill reads the same over the dark sky. */
-  --glass-flat: rgba(15,22,42,0.80);
-  --glass-2:   rgba(255,255,255,0.075);
-  --glass-brd: rgba(255,255,255,0.10);
-  /* Hover edge WARMS — a card catching a little sodium light, never emitting blue. */
-  --glass-brd-hover: rgba(233,199,154,0.34);
+  /* SOLID card panels — opaque deep-navy so every card reads as a real, designed
+     surface sitting ON the photo, not translucent text floating over it. This is the
+     single biggest lever on the "clear, structured" feel. */
+  --glass-flat: #141C38;
+  --glass-2:   rgba(255,255,255,0.05);
+  --glass-brd: rgba(120,158,232,0.24);   /* visible cool border on every card */
+  /* Hover edge lights up in the accent blue. */
+  --glass-brd-hover: rgba(106,164,255,0.7);
   --glass-blur: 20px;
-  --glass-glow: 0 8px 40px rgba(4,10,26,.5), inset 0 1px 0 rgba(255,255,255,.12), inset 0 -22px 44px rgba(10,20,45,.28);
+  /* A clean contact shadow + a 1px accent-tinted ring — solid-card language, not a glow bloom. */
+  --glass-glow: 0 14px 34px -10px rgba(2,6,22,.7), inset 0 1px 0 rgba(255,255,255,.06);
   /* Weighted, NEUTRAL hover lift — a real contact shadow (object rising off the
      page) instead of a blue glow-bloom. Shared by every card hover on desktop,
      the same honest physical language the touch --glass-glow already uses. */
-  --hover-lift: 0 12px 30px rgba(2,6,18,.55), inset 0 1px 0 rgba(255,255,255,.05);
+  --hover-lift: 0 20px 40px -12px rgba(2,6,22,.7), inset 0 1px 0 rgba(255,255,255,.06);
 
-  --line:      rgba(230, 238, 255, 0.08);
-  --line-2:    rgba(230, 238, 255, 0.16);
+  --line:      rgba(150, 175, 235, 0.14);
+  --line-2:    rgba(150, 175, 235, 0.26);
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
   --font-sans:  "IBM Plex Sans", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
@@ -68,7 +76,7 @@
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
-  --r: 16px;
+  --r: 20px;
 
   --ease: cubic-bezier(.4, 0, .1, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
@@ -228,7 +236,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
 .nav__social{ justify-self:end; }
 
 .brand{ display:inline-flex; align-items:center; gap:.65rem; }
-.brand__mark{ width:30px; height:30px; color:var(--accent); flex:none; }
+.brand__mark{ width:38px; height:38px; object-fit:contain; flex:none; }
 .brand__title{ font-family:var(--font-display); font-weight:600; font-optical-sizing:auto; font-size:1.3rem; color:var(--ink); letter-spacing:-.02em; }
 
 .nav__links{ display:flex; align-items:center; gap:.2rem; }
@@ -278,14 +286,14 @@ main, .nav, .footer{ position:relative; z-index:3; }
    "Sign up" button). A single light, solid CTA reads clearly against the dark
    ghost secondary, so the two hero buttons stop looking like an identical pair. */
 .btn--solid{
-  background: linear-gradient(180deg, #F8F1E4 0%, var(--bone) 100%);
-  color:#231a0d;
-  border:1px solid #F7EFE0;
-  box-shadow: 0 12px 34px -12px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.5);
+  background: linear-gradient(180deg, #5C9DFF 0%, #3D74E6 100%);
+  color:#fff;
+  border:1px solid rgba(160,196,255,.55);
+  box-shadow: 0 14px 30px -10px rgba(40,90,220,.55), inset 0 1px 0 rgba(255,255,255,.3);
 }
-.btn--solid:hover{ background: linear-gradient(180deg, #FFFBF3 0%, #F3E9D6 100%); border-color:#FFFDF8; transform:translateY(-1px); }
-.btn--ghost{ border-color:rgba(255,255,255,.42); color:#fff; background:rgba(8,12,26,.28); backdrop-filter:blur(8px); }
-.btn--ghost:hover{ border-color:#fff; background:rgba(12,18,36,.42); }
+.btn--solid:hover{ background: linear-gradient(180deg, #6EABFF 0%, #4A82F0 100%); border-color:rgba(190,216,255,.8); transform:translateY(-1px); }
+.btn--ghost{ border:1px solid rgba(122,162,236,.55); color:#fff; background:rgba(16,24,48,.5); backdrop-filter:blur(8px); }
+.btn--ghost:hover{ border-color:var(--accent); background:rgba(26,38,72,.7); color:#fff; }
 .btn__arw{ font-family:var(--font-mono); transition:transform .3s var(--ease); }
 .btn:hover .btn__arw{ transform:translate(4px,-4px); }
 .magnetic{ transition: transform .55s cubic-bezier(.16,1,.3,1), background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), box-shadow .3s var(--ease); }
@@ -405,10 +413,12 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
 .chapter__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(3rem,9vw,6.5rem); line-height:1.02; letter-spacing:-.02em; padding-bottom:.05em; }
 .chapter__lede{ margin:1.8rem 0 2.4rem; font-family:var(--font-sans); font-size:clamp(1.15rem,2.2vw,1.5rem); font-weight:400; color:var(--ink-soft); line-height:1.45; max-width:52ch; text-shadow:0 1px 12px rgba(1,3,10,.7); }
 .chapter__lede .dim{ color:var(--ink-mute); }
-.chapter__rule{ display:flex; align-items:center; gap:1rem; }
+/* Bold accent underline — a confident "highlighter" bar (like the Firebird look):
+   a thick rounded electric-blue segment leading a hairline that runs out to the edge. */
+.chapter__rule{ display:flex; align-items:center; gap:.85rem; }
 .chapter__rule span{ height:1.5px; background:var(--line-2); }
-.chapter__rule span:nth-child(1){ width:110px; background:var(--warm); }
-.chapter__rule span:nth-child(2){ width:20px; }
+.chapter__rule span:nth-child(1){ width:84px; height:5px; border-radius:100px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow:0 0 16px rgba(106,164,255,.45); }
+.chapter__rule span:nth-child(2){ width:16px; }
 .chapter__rule span:nth-child(3){ flex:1; }
 
 /* Split-text (chapter titles) — no clipping */
@@ -1002,8 +1012,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* THE primary action — a warm bone (parchment) pill, the one saturated surface
    on the page. Its weight comes from a real contact shadow, not a blue bloom. */
 .signup__btn{ display:inline-flex; align-items:center; gap:.55rem; padding:1.2rem 2.4rem;
-  background:linear-gradient(180deg, #F8F1E4 0%, var(--bone) 100%); color:#231a0d;
-  border:1px solid #F7EFE0; border-radius:100px; font-weight:600; font-size:1.05rem; white-space:nowrap;
+  background:linear-gradient(180deg, #5C9DFF 0%, #3D74E6 100%); color:#fff;
+  border:1px solid rgba(160,196,255,.55); border-radius:100px; font-weight:600; font-size:1.05rem; white-space:nowrap;
   cursor:pointer; transition:transform .2s var(--ease), box-shadow .3s var(--ease);
   box-shadow:0 10px 26px -10px rgba(0,0,0,.6); }
 .signup__btn:hover{ transform:translateY(-1px); box-shadow:0 14px 30px -10px rgba(0,0,0,.66); }
@@ -1284,8 +1294,8 @@ body[data-route="/"] .footer{ margin-top:0; }
   }
   /* Buttons become objects: solid fill, defined edge, and a hard bottom shadow
      that reads as thickness. */
-  .btn--solid{ background:linear-gradient(180deg,#F8F1E4 0%, var(--bone) 100%); color:#231a0d; border-color:#F7EFE0;
-    box-shadow:0 2px 0 rgba(0,0,0,.32), 0 8px 18px rgba(0,0,0,.34); }
+  .btn--solid{ background:linear-gradient(180deg,#5C9DFF 0%, #3D74E6 100%); color:#fff; border-color:rgba(160,196,255,.55);
+    box-shadow:0 2px 0 rgba(20,50,140,.5), 0 8px 18px rgba(0,0,0,.34); }
   .btn--ghost{ background:rgba(10,15,30,.92); border-color:rgba(255,255,255,.3); }
   .signup__btn, .modal__primary{ box-shadow:0 2px 0 rgba(0,0,0,.4); }
 
