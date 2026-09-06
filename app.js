@@ -98,7 +98,7 @@
   const OFFICERS = [
     { name: "Abir Mehta",   role: "Co-Founder & President",       photo: "assets/abir.jpeg", focus: "50% 64%", email: "amehta251@student.fuhsd.org",
       bio: "Founded the Astrophysics Club with Dhruv in September 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
-    { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/dhruv.jpeg", email: "dlagu234@student.fuhsd.org",
+    { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/dhruv.jpeg", avatar: true, email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
     { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: "assets/saanvi.jpeg", email: "sdoshi468@student.fuhsd.org",
       bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
@@ -740,7 +740,7 @@
   /* -------------------------------------------------------------------
      Render - Team (polished grid)
      ------------------------------------------------------------------- */
-  const PHOTO_V = "7";   // bump when any assets/*.jpeg portrait changes
+  const PHOTO_V = "8";   // bump when any assets/*.jpeg portrait changes
   function renderTeam() {
     const grid = $("#teamGrid");
     if (grid) {
@@ -756,7 +756,7 @@
           ? `<img src="${src}" alt="Portrait of ${o.name}" loading="lazy" decoding="async"${o.focus ? ` style="object-position:${o.focus}"` : ""}>`
           : initialsTile;
         li.innerHTML = `
-          <div class="tcard__portrait">${portrait}</div>
+          <div class="tcard__portrait${o.avatar ? " tcard__portrait--avatar" : ""}">${portrait}</div>
           <div class="tcard__body">
             <h3 class="tcard__name">${o.name}</h3>
             <span class="tcard__role">${o.role}</span>
