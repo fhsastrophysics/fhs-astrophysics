@@ -509,7 +509,9 @@
   /* Season switch on the About "arc": '25–'26 shows the 13-meeting scroller;
      '26–'27 swaps in a short placeholder and updates the heading. */
   function initArcYears() {
-    const btns = $$(".arc__year");
+    // Only the About arc's own toggle — NOT the Meetings/Notes .season-switch
+    // buttons, which reuse the .arc__year class for styling but are wired separately.
+    const btns = $$(".arc__years:not(.season-switch) .arc__year");
     if (!btns.length) return;
     const title = $("#arcTitle"), scroller = $("#arcScroller"), empty = $("#arcEmpty");
     const COPY = {

@@ -900,6 +900,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .fbtn.active{ background:var(--glass-flat); color:var(--ink); border-color:var(--warm); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
 
 .notes-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem; }   /* 3-up so each LaTeX preview is bigger */
+/* Season toggle uses the [hidden] attribute to swap between the '25–'26 grids and
+   the '26–'27 placeholder. These grids set an explicit display, which would beat
+   the UA [hidden]{display:none}, so force it here. */
+.meetings[hidden], .notes-grid[hidden], .notes-filter[hidden]{ display:none !important; }
 .ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
 .ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
 /* Shorter crop: show the handout masthead (title + authors) rather than a whole
