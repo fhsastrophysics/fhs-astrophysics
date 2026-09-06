@@ -98,7 +98,7 @@
   const OFFICERS = [
     { name: "Abir Mehta",   role: "Co-Founder & President",       photo: null, email: "amehta251@student.fuhsd.org",
       bio: "Founded the Astrophysics Club with Dhruv in September 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
-    { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: null, email: "dlagu234@student.fuhsd.org",
+    { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/team/dhruv.jpg", email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
     { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: null, email: "sdoshi468@student.fuhsd.org",
       bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
@@ -144,7 +144,7 @@
   const noteThumb = (id) => `assets/thumbs/note-${id}.jpg`;
   const deckThumb = (n) => `assets/thumbs/deck-${n}.jpg`;
   const dlName = (id) => { const m = NOTES[id]; return `FHS Astrophysics - M${m.meeting} - ${m.title}.pdf`; };
-  const pad = (n) => String(n).padStart(2, "0");
+  const pad = (n) => String(n);   /* single digit: 1,2,3 not 01,02,03 (per Abir) */
 
   const IC_OPEN = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
@@ -497,9 +497,11 @@
     MEETINGS.forEach((m) => {
       const a = el("a", "arc-node",
         `<span class="arc-node__n">${pad(m.n)}</span><span class="arc-node__t">${m.short}</span>`);
-      a.href = SLIDES(m.slides);
-      a.target = "_blank"; a.rel = "noopener";
-      a.setAttribute("aria-label", `Meeting ${m.n}: ${m.short} — open the slide deck`);
+      // Open the in-site deck preview modal (same as clicking a card on /meetings),
+      // for EVERY meeting — not an external Slides tab.
+      a.href = "#";
+      a.setAttribute("aria-label", `Meeting ${m.n}: ${m.short} — open the deck preview`);
+      a.addEventListener("click", (e) => { e.preventDefault(); openMeetingModal(m.n); });
       t.appendChild(a);
     });
   }

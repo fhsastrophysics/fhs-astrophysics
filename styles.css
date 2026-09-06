@@ -1,6 +1,6 @@
 /* =====================================================================
    Astrophysics Club — Fremont High School
-   Deep-space photographic sky · Bricolage Grotesque display · IBM Plex Sans body
+   Deep-space photographic sky · Bricolage Grotesque display · Hanken Grotesk body
    AND labels (no monospace anywhere) · single electric-blue accent (no gold)
    ===================================================================== */
 
@@ -8,7 +8,7 @@
    TYPE — one coherent editorial system, all served from Google Fonts
    (the <link> in index.html). No local @font-face, no font downloads:
      Bricolage Grotesque  distinctive grotesque (opsz axis) — masthead + titles
-     IBM Plex Sans        humanist sans — body / UI, AND all-caps eyebrows/kickers/
+     Hanken Grotesk        humanist sans — body / UI, AND all-caps eyebrows/kickers/
                           meta labels (the --font-mono token is aliased to it; there
                           is NO monospace font on the site).
    The families load via <link>; the tokens below point every rule at them.
@@ -65,13 +65,13 @@
   --line-2:    rgba(150, 175, 235, 0.26);
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
-  --font-sans:  "IBM Plex Sans", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:  "Hanken Grotesk", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   /* No monospace anywhere on the site (Abir: remove the "AI-generated looking" mono
      completely). --font-mono is kept as a token name only so the ~40 label rules that
      reference it need no churn — it now resolves to the body sans. Every former mono
      label (eyebrows, kickers, badges, emails, countdown units, ticker) renders in
-     IBM Plex Sans, still bold + uppercase + tracked, just not monospaced. */
-  --font-mono:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+     Hanken Grotesk, still bold + uppercase + tracked, just not monospaced. */
+  --font-mono:  "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
@@ -130,7 +130,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .skip-link{ position:fixed; top:-100px; left:16px; z-index:600; background:var(--accent); color:#031024; padding:.55rem 1rem; border-radius:8px; font-weight:600; transition:top .2s var(--ease); }
 .skip-link:focus{ top:14px; }
 
-/* All-caps metadata labels — IBM Plex Sans, ~11px, spaced editorial caps. Cool
+/* All-caps metadata labels — Hanken Grotesk, ~11px, spaced editorial caps. Cool
    by default (functional labels); true section eyebrows opt into --warm below. */
 .mono{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .dim{ color: var(--ink-mute); }
@@ -447,7 +447,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
     linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 18%, transparent 46%, rgba(1,3,10,.55) 80%, rgba(1,3,10,.97) 100%);
 }
 
-/* Editorial eyebrow label — IBM Plex Sans. Deliberately kept near-white (not the
+/* Editorial eyebrow label — Hanken Grotesk. Deliberately kept near-white (not the
    warm accent): it sits dead-centre over the brightest part of the sky, the one
    place a sodium tint would both clash with the nebula and risk contrast. */
 .home__eyebrow{ position:relative; z-index:6; margin:1.9rem 0 .3rem; font-family:var(--font-mono); font-weight:600; font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); opacity:.82; text-align:center; }
@@ -484,8 +484,8 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    itself stays pointer-events:none so it never becomes a drag-ghost. */
 .home__astro-wrap{
   position:absolute; z-index:3;
-  left:50%; top:70%;                        /* centred over the wordmark */
-  width:clamp(340px, 44vw, 640px);          /* big + prominent, not a small side prop */
+  left:50%; top:70%;                        /* centred over the wordmark (matches reference) */
+  width:clamp(300px, 34vw, 520px);          /* centred + prominent, matched to the reference size */
   transform:translate(-50%, -48%);
   pointer-events:auto;
   touch-action:none;          /* no scroll-jank while dragging on touch */
@@ -897,13 +897,13 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    white text sitting straight on the bright sky (1.7:1 on phone). */
 .fbtn.active{ background:var(--glass-flat); color:var(--ink); border-color:var(--warm); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
 
-.notes-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
+.notes-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem; }   /* 3-up so each LaTeX preview is bigger */
 .ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
 .ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
 /* Shorter crop: show the handout masthead (title + authors) rather than a whole
    white US-letter page, so the card isn't a tall bright rectangle against the dark
    theme — it reads as a document header. */
-.ncard__thumb{ aspect-ratio:8.5/4.4; overflow:hidden; background:#0b0e17; position:relative; border-bottom:1px solid var(--line); }
+.ncard__thumb{ aspect-ratio:8.5/8; overflow:hidden; background:#0b0e17; position:relative; border-bottom:1px solid var(--line); }   /* taller: show more of the LaTeX handout */
 /* Show the handout's typeset masthead (title, authors, opening lines) from the top;
    the badges move to the BOTTOM of the strip (see below) so they never sit on the
    title. object-position top keeps the informative header in frame. */
@@ -927,13 +927,15 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* Topic cloud — appears on hover */
 .ncard__cloud{
-  position:absolute; inset:.6rem;              /* fill the whole card so every topic fits, none clipped */
-  background:rgba(4,7,15,.96);
-  border:1px solid var(--line-2);
-  border-radius:10px;
-  padding:.95rem 1rem;
-  display:flex; flex-direction:column; gap:.5rem; justify-content:center;
-  overflow:auto;                                /* safety for very long topic lists */
+  /* Bottom sheet, not a full black box: topics slide up over a gradient so the
+     bigger LaTeX preview stays visible above them. */
+  position:absolute; inset:auto 0 0 0;
+  background:linear-gradient(180deg, rgba(4,7,15,0) 0%, rgba(4,7,15,.9) 26%, rgba(4,7,15,.97) 55%);
+  border:0; border-top:1px solid var(--line-2);
+  border-radius:0 0 14px 14px;
+  padding:2.4rem 1rem 1rem;
+  display:flex; flex-direction:column; gap:.55rem; justify-content:flex-end;
+  max-height:82%; overflow:auto;
   opacity:0; transform:translateY(10px);
   transition:opacity .3s var(--ease), transform .3s var(--ease-out);
   pointer-events:none;
@@ -1486,7 +1488,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 }
 @media (max-width:980px){
   .goal-grid{ grid-template-columns:1fr; }
-  .home__astro-wrap{ width:min(64vw, 560px); }
+  .home__astro-wrap{ width:min(48vw, 440px); }
   .modal__thumbs{ grid-template-columns:repeat(2, 1fr); }
   .join__pair{ grid-template-columns:1fr; }
 }
@@ -1513,7 +1515,7 @@ body[data-route="/"] .footer{ margin-top:0; }
      the transform so it works whether the JS ragdoll or the CSS float drives it)
      so the wordmark reads as one clean, centred line with only the boots grazing
      the letters — and it's smaller, so much lighter for the GPU. */
-  .home__astro-wrap{ top:60%; left:50%; width:min(66vw, 300px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
+  .home__astro-wrap{ top:60%; left:50%; width:min(58vw, 270px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
   /* Make the wordmark centring bulletproof: normal centred block (no full-bleed
      100vw + negative-margin trick, which can drift), flex-centred in the stage. */
   .home__title{ width:auto; max-width:100%; margin-inline:0; }
