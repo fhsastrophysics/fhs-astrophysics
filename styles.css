@@ -1,6 +1,6 @@
 /* =====================================================================
    Astrophysics Club — Fremont High School
-   Deep-space photographic sky · Bricolage Grotesque display · Schibsted Grotesk body
+   Deep-space photographic sky · Bricolage Grotesque display · Bricolage Grotesque body
    AND labels (no monospace anywhere) · single electric-blue accent (no gold)
    ===================================================================== */
 
@@ -8,7 +8,7 @@
    TYPE — one coherent editorial system, all served from Google Fonts
    (the <link> in index.html). No local @font-face, no font downloads:
      Bricolage Grotesque  distinctive grotesque (opsz axis) — masthead + titles
-     Schibsted Grotesk        humanist sans — body / UI, AND all-caps eyebrows/kickers/
+     Bricolage Grotesque        humanist sans — body / UI, AND all-caps eyebrows/kickers/
                           meta labels (the --font-mono token is aliased to it; there
                           is NO monospace font on the site).
    The families load via <link>; the tokens below point every rule at them.
@@ -65,13 +65,13 @@
   --line-2:    rgba(150, 175, 235, 0.26);
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
-  --font-sans:  "Schibsted Grotesk", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:  "Bricolage Grotesque", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   /* No monospace anywhere on the site (Abir: remove the "AI-generated looking" mono
      completely). --font-mono is kept as a token name only so the ~40 label rules that
      reference it need no churn — it now resolves to the body sans. Every former mono
      label (eyebrows, kickers, badges, emails, countdown units, ticker) renders in
-     Schibsted Grotesk, still bold + uppercase + tracked, just not monospaced. */
-  --font-mono:  "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+     Bricolage Grotesque, still bold + uppercase + tracked, just not monospaced. */
+  --font-mono:  "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
@@ -130,7 +130,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .skip-link{ position:fixed; top:-100px; left:16px; z-index:600; background:var(--accent); color:#031024; padding:.55rem 1rem; border-radius:8px; font-weight:600; transition:top .2s var(--ease); }
 .skip-link:focus{ top:14px; }
 
-/* All-caps metadata labels — Schibsted Grotesk, ~11px, spaced editorial caps. Cool
+/* All-caps metadata labels — Bricolage Grotesque, ~11px, spaced editorial caps. Cool
    by default (functional labels); true section eyebrows opt into --warm below. */
 .mono{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .dim{ color: var(--ink-mute); }
@@ -447,7 +447,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
     linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 18%, transparent 46%, rgba(1,3,10,.55) 80%, rgba(1,3,10,.97) 100%);
 }
 
-/* Editorial eyebrow label — Schibsted Grotesk. Deliberately kept near-white (not the
+/* Editorial eyebrow label — Bricolage Grotesque. Deliberately kept near-white (not the
    warm accent): it sits dead-centre over the brightest part of the sky, the one
    place a sodium tint would both clash with the nebula and risk contrast. */
 .home__eyebrow{ position:relative; z-index:6; margin:1.9rem 0 .3rem; font-family:var(--font-mono); font-weight:600; font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); opacity:.82; text-align:center; }
@@ -1066,11 +1066,12 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .joincard__note .ulink{ white-space:nowrap; }
 /* Direct officer contacts — one row each, President first. */
 .joincard__officers{ list-style:none; margin:0 0 1rem; padding:0; display:flex; flex-direction:column; gap:.45rem; }
-.joincard__officers a{ display:flex; flex-direction:column; gap:.08rem; padding:.6rem .8rem; border:1px solid var(--line-2); border-radius:10px; background:rgba(255,255,255,.02); transition:border-color .2s var(--ease), background .2s var(--ease); }
+/* Compact 2-line contact: name + role share one line, email below — keeps Reach-us short. */
+.joincard__officers a{ display:block; padding:.7rem .9rem; border:1px solid var(--line-2); border-radius:10px; background:rgba(255,255,255,.02); transition:border-color .2s var(--ease), background .2s var(--ease); }
 .joincard__officers a:hover{ border-color:var(--glass-brd-hover); background:rgba(106,164,255,.06); }
 .jo__name{ font-family:var(--font-display); font-weight:600; font-size:1rem; color:var(--ink); }
-.jo__role{ font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); }
-.jo__mail{ font-family:var(--font-mono); font-size:.74rem; color:var(--accent); overflow-wrap:anywhere; margin-top:.15rem; }
+.jo__role{ display:inline; margin-left:.55rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); }
+.jo__mail{ display:block; font-family:var(--font-mono); font-size:.78rem; color:var(--accent); overflow-wrap:anywhere; margin-top:.3rem; }
 .joincard__social{ display:flex; flex-wrap:wrap; gap:.8rem 1.6rem; margin-top:auto; padding-top:1.35rem; border-top:1px solid var(--line); }
 
 /* Ghost copy button on the club email — subtle, reveals on row hover / focus */
@@ -1100,18 +1101,21 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* The clock — four columns split by hairlines, tabular figures so the seconds
    ticking over never nudges the layout. */
-.nextmeet__clock{ display:grid; grid-template-columns:repeat(4,1fr); margin-top:1.9rem; padding-top:1.6rem; border-top:1px solid var(--line); list-style:none; padding-left:0; }
+/* The clock GROWS to absorb any height difference between the two cards, with its
+   numbers vertically centred — so equal height never leaves a gap, the clock just
+   gets more breathing room. */
+.nextmeet__clock{ display:grid; grid-template-columns:repeat(4,1fr); align-content:center; flex:1 1 auto; margin-top:1.9rem; padding-top:1.6rem; border-top:1px solid var(--line); list-style:none; padding-left:0; }
 .nmu{ display:flex; flex-direction:column; align-items:center; gap:.6rem; text-align:center; padding:1.4rem 0; }
 .nmu + .nmu{ border-left:1px solid var(--line); }
 .nmu + .nmu{ border-left:1px solid var(--line); }
-.nmu__v{ font-family:var(--font-display); font-weight:500; font-size:clamp(2.4rem,4.2vw,3.4rem); line-height:1; letter-spacing:-.02em; color:var(--ink); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+.nmu__v{ font-family:var(--font-display); font-weight:500; font-size:clamp(2.8rem,4.8vw,3.9rem); line-height:1; letter-spacing:-.02em; color:var(--ink); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 .nmu__l{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-mute); }
 .nmu__v.is-tick{ animation:nmTick .42s var(--ease-out); }
 @keyframes nmTick{ 0%{ transform:translateY(-.16em); opacity:.35; } 100%{ transform:translateY(0); opacity:1; } }
 .nextmeet[data-nm-state="past"] .nmu__v{ color:var(--ink-mute); opacity:.5; }
 
 /* When / Where ledger, folded into the meeting card (was naked text over the sky) */
-.nextmeet__meta{ margin:1.2rem 0 0; margin-top:auto; padding-top:1.15rem; border-top:1px solid var(--line); display:grid; gap:.7rem; }
+.nextmeet__meta{ margin:1.2rem 0 0; padding-top:1.15rem; border-top:1px solid var(--line); display:grid; gap:.7rem; }
 .nextmeet__metarow{ display:grid; grid-template-columns:3.4rem 1fr; gap:1rem; align-items:baseline; }
 .nextmeet__meta dt{ font-family:var(--font-mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .nextmeet__meta dd{ margin:0; font-size:1rem; color:var(--ink); line-height:1.4; }
