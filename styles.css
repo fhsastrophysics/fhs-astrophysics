@@ -964,8 +964,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 }
 .tcard:hover{ border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
 .tcard__portrait{ position:relative; z-index:1; aspect-ratio:4/3; overflow:hidden; background:#050914; border-bottom:1px solid var(--line-2); display:flex; align-items:center; justify-content:center; }
-.tcard__portrait img{ width:100%; height:100%; object-fit:cover; filter:grayscale(.6) contrast(1.02) brightness(.94); transition:filter .5s var(--ease), transform .8s var(--ease); }
-.tcard:hover .tcard__portrait img{ filter:grayscale(0) contrast(1) brightness(1); transform:scale(1.04); }
+.tcard__portrait img{ width:100%; height:100%; object-fit:cover; filter:none; transition:transform .8s var(--ease); }   /* full original colour — no grayscale */
+.tcard:hover .tcard__portrait img{ transform:scale(1.04); }
 .tcard__initials{ font-family:var(--font-display); font-weight:620; font-size:3rem; color:rgba(174,190,217,.55); letter-spacing:-.02em; }
 .tcard__body{ position:relative; z-index:1; padding:1.5rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
 .tcard__badge{ align-self:flex-start; padding:.3rem .7rem; border:1px solid var(--line-2); border-radius:10px; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:rgba(188,215,255,.05); }
@@ -1065,8 +1065,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .joincard__note{ margin:.9rem 0 1rem; color:var(--ink-soft); font-size:.96rem; line-height:1.55; }
 .joincard__note .ulink{ white-space:nowrap; }
 /* Direct officer contacts — one row each, President first. */
-.joincard__officers{ list-style:none; margin:0 0 1.35rem; padding:0; display:flex; flex-direction:column; gap:.5rem; }
-.joincard__officers a{ display:flex; flex-direction:column; gap:.1rem; padding:.7rem .85rem; border:1px solid var(--line-2); border-radius:10px; background:rgba(255,255,255,.02); transition:border-color .2s var(--ease), background .2s var(--ease); }
+.joincard__officers{ list-style:none; margin:0 0 1rem; padding:0; display:flex; flex-direction:column; gap:.45rem; }
+.joincard__officers a{ display:flex; flex-direction:column; gap:.08rem; padding:.6rem .8rem; border:1px solid var(--line-2); border-radius:10px; background:rgba(255,255,255,.02); transition:border-color .2s var(--ease), background .2s var(--ease); }
 .joincard__officers a:hover{ border-color:var(--glass-brd-hover); background:rgba(106,164,255,.06); }
 .jo__name{ font-family:var(--font-display); font-weight:600; font-size:1rem; color:var(--ink); }
 .jo__role{ font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); }
@@ -1100,10 +1100,11 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* The clock — four columns split by hairlines, tabular figures so the seconds
    ticking over never nudges the layout. */
-.nextmeet__clock{ display:grid; grid-template-columns:repeat(4,1fr); margin-top:1.25rem; padding-top:1.15rem; border-top:1px solid var(--line); list-style:none; padding-left:0; }
-.nmu{ display:flex; flex-direction:column; align-items:center; gap:.4rem; text-align:center; }
+.nextmeet__clock{ display:grid; grid-template-columns:repeat(4,1fr); margin-top:1.9rem; padding-top:1.6rem; border-top:1px solid var(--line); list-style:none; padding-left:0; }
+.nmu{ display:flex; flex-direction:column; align-items:center; gap:.6rem; text-align:center; padding:1.4rem 0; }
 .nmu + .nmu{ border-left:1px solid var(--line); }
-.nmu__v{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.6rem,2.6vw,2.05rem); line-height:1; letter-spacing:-.01em; color:var(--ink); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+.nmu + .nmu{ border-left:1px solid var(--line); }
+.nmu__v{ font-family:var(--font-display); font-weight:500; font-size:clamp(2.4rem,4.2vw,3.4rem); line-height:1; letter-spacing:-.02em; color:var(--ink); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 .nmu__l{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-mute); }
 .nmu__v.is-tick{ animation:nmTick .42s var(--ease-out); }
 @keyframes nmTick{ 0%{ transform:translateY(-.16em); opacity:.35; } 100%{ transform:translateY(0); opacity:1; } }
