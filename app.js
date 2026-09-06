@@ -96,11 +96,11 @@
   ];
 
   const OFFICERS = [
-    { name: "Abir Mehta",   role: "Co-Founder & President",       photo: null, email: "amehta251@student.fuhsd.org",
+    { name: "Abir Mehta",   role: "Co-Founder & President",       photo: "assets/abir.jpeg", email: "amehta251@student.fuhsd.org",
       bio: "Founded the Astrophysics Club with Dhruv in September 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
     { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/dhruv.jpeg", email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
-    { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: null, email: "sdoshi468@student.fuhsd.org",
+    { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: "assets/saanvi.jpeg", focus: "50% 22%", email: "sdoshi468@student.fuhsd.org",
       bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
   ];
 
@@ -747,18 +747,22 @@
         const initials = o.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
         const li = el("article", "tcard reveal");
         li.style.setProperty("--i", i);
+        const initialsTile = `<span class="tcard__initials" aria-hidden="true">${initials}</span>`;
         const portrait = o.photo
-          ? `<img src="${o.photo}" alt="Portrait of ${o.name}" loading="lazy" decoding="async">`
-          : `<span class="tcard__initials" aria-hidden="true">${initials}</span>`;
+          ? `<img src="${o.photo}" alt="Portrait of ${o.name}" loading="lazy" decoding="async"${o.focus ? ` style="object-position:${o.focus}"` : ""}>`
+          : initialsTile;
         li.innerHTML = `
           <div class="tcard__portrait">${portrait}</div>
           <div class="tcard__body">
-            <span class="tcard__badge">Officer · ${pad(i + 1)}</span>
             <h3 class="tcard__name">${o.name}</h3>
             <span class="tcard__role">${o.role}</span>
             <p class="tcard__bio">${o.bio || ""}</p>
             ${o.email ? `<a class="tcard__mail js-copy" href="mailto:${o.email}" data-copy="${o.email}">${o.email}</a>` : ""}
           </div>`;
+        // If the photo file is missing, gracefully fall back to the initials tile
+        // instead of showing a broken-image icon.
+        const img = li.querySelector(".tcard__portrait img");
+        if (img) img.addEventListener("error", () => { img.outerHTML = initialsTile; });
         grid.appendChild(li);
       });
     }
@@ -1264,12 +1268,23 @@
       scrolled = next;
       nav.classList.toggle("scrolled", next);
     });
-    const close = () => { links.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Open menu"); };
-    toggle.addEventListener("click", () => {
-      const open = links.classList.toggle("open");
+    // Tap-outside-to-dismiss scrim. It MUST live inside <nav> (not <body>): .nav has
+    // z-index:100, which forms a stacking context, so a body-level scrim would paint
+    // above the whole nav — drawer included — and swallow every tap. As a child of
+    // .nav it shares that context and sits correctly below the drawer (105) but above
+    // the page.
+    let scrim = $(".nav__scrim");
+    if (!scrim) { scrim = document.createElement("div"); scrim.className = "nav__scrim"; nav.appendChild(scrim); }
+    const setOpen = (open) => {
+      links.classList.toggle("open", open);
+      scrim.classList.toggle("open", open);
+      document.body.classList.toggle("nav-open", open);
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    });
+    };
+    const close = () => setOpen(false);
+    toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+    scrim.addEventListener("click", close);
     links.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
   }
