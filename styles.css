@@ -1,6 +1,6 @@
 /* =====================================================================
    Astrophysics Club — Fremont High School
-   Deep-space photographic sky · Bricolage Grotesque display · Hanken Grotesk body
+   Deep-space photographic sky · Bricolage Grotesque display · Schibsted Grotesk body
    AND labels (no monospace anywhere) · single electric-blue accent (no gold)
    ===================================================================== */
 
@@ -8,7 +8,7 @@
    TYPE — one coherent editorial system, all served from Google Fonts
    (the <link> in index.html). No local @font-face, no font downloads:
      Bricolage Grotesque  distinctive grotesque (opsz axis) — masthead + titles
-     Hanken Grotesk        humanist sans — body / UI, AND all-caps eyebrows/kickers/
+     Schibsted Grotesk        humanist sans — body / UI, AND all-caps eyebrows/kickers/
                           meta labels (the --font-mono token is aliased to it; there
                           is NO monospace font on the site).
    The families load via <link>; the tokens below point every rule at them.
@@ -65,13 +65,13 @@
   --line-2:    rgba(150, 175, 235, 0.26);
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
-  --font-sans:  "Hanken Grotesk", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:  "Schibsted Grotesk", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   /* No monospace anywhere on the site (Abir: remove the "AI-generated looking" mono
      completely). --font-mono is kept as a token name only so the ~40 label rules that
      reference it need no churn — it now resolves to the body sans. Every former mono
      label (eyebrows, kickers, badges, emails, countdown units, ticker) renders in
-     Hanken Grotesk, still bold + uppercase + tracked, just not monospaced. */
-  --font-mono:  "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+     Schibsted Grotesk, still bold + uppercase + tracked, just not monospaced. */
+  --font-mono:  "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
@@ -130,7 +130,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .skip-link{ position:fixed; top:-100px; left:16px; z-index:600; background:var(--accent); color:#031024; padding:.55rem 1rem; border-radius:8px; font-weight:600; transition:top .2s var(--ease); }
 .skip-link:focus{ top:14px; }
 
-/* All-caps metadata labels — Hanken Grotesk, ~11px, spaced editorial caps. Cool
+/* All-caps metadata labels — Schibsted Grotesk, ~11px, spaced editorial caps. Cool
    by default (functional labels); true section eyebrows opt into --warm below. */
 .mono{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .dim{ color: var(--ink-mute); }
@@ -447,7 +447,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
     linear-gradient(180deg, rgba(1,3,10,.35) 0%, transparent 18%, transparent 46%, rgba(1,3,10,.55) 80%, rgba(1,3,10,.97) 100%);
 }
 
-/* Editorial eyebrow label — Hanken Grotesk. Deliberately kept near-white (not the
+/* Editorial eyebrow label — Schibsted Grotesk. Deliberately kept near-white (not the
    warm accent): it sits dead-centre over the brightest part of the sky, the one
    place a sodium tint would both clash with the nebula and risk contrast. */
 .home__eyebrow{ position:relative; z-index:6; margin:1.9rem 0 .3rem; font-family:var(--font-mono); font-weight:600; font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); opacity:.82; text-align:center; }
@@ -484,8 +484,8 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    itself stays pointer-events:none so it never becomes a drag-ghost. */
 .home__astro-wrap{
   position:absolute; z-index:3;
-  left:50%; top:70%;                        /* centred over the wordmark (matches reference) */
-  width:clamp(300px, 34vw, 520px);          /* centred + prominent, matched to the reference size */
+  left:50%; top:50%;                        /* higher — helmet over the top of the letters (matches reference) */
+  width:clamp(300px, 42vw, 560px);          /* bigger — covers the wordmark (matches the original de-ai hero) */
   transform:translate(-50%, -48%);
   pointer-events:auto;
   touch-action:none;          /* no scroll-jank while dragging on touch */
@@ -1044,7 +1044,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* align-items:start so each support card is its natural height (like the FAQ "Ask
    us" card). stretch forced them equal-height, which left dead space at the bottom
    of the shorter Next-meeting card once Reach-us grew to three officers. */
-.join__support{ display:grid; grid-template-columns:1.12fr .88fr; gap:clamp(1.25rem,2.5vw,1.8rem); align-items:start; }
+/* Both cards the same height. The Next-meeting card fills the extra height by
+   pushing its When/Where block to the bottom (like Reach-us pushes its socials),
+   so equal height reads intentional, not as dead space. */
+.join__support{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.25rem,2.5vw,1.8rem); align-items:stretch; }
 /* Shared neutral (steel) surface. --glass reads as glass over the dark sky on
    desktop; the touch block swaps it for an opaque fill (no backdrop buffers). */
 .joincard{ display:flex; flex-direction:column; padding:clamp(1.5rem,2.4vw,1.9rem) clamp(1.4rem,2.2vw,1.7rem); border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }
@@ -1080,7 +1083,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* Next meeting — the live countdown, now carrying when/where on the same
    surface. Hierarchy: eyebrow + state pill, topic headline, date, clock, then
    the when/where ledger. Every [data-nm-*] hook is preserved for the JS. */
-.nextmeet{ padding:clamp(1.5rem,2.4vw,1.9rem) clamp(1.4rem,2.2vw,1.7rem); border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }
+.nextmeet{ display:flex; flex-direction:column; padding:clamp(1.5rem,2.4vw,1.9rem) clamp(1.4rem,2.2vw,1.7rem); border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }
 .nextmeet__top{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
 .nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.02em; text-transform:uppercase; color:var(--warm); }
 /* State pill. The dot pulses only while the meeting is actually live. */
@@ -1107,7 +1110,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .nextmeet[data-nm-state="past"] .nmu__v{ color:var(--ink-mute); opacity:.5; }
 
 /* When / Where ledger, folded into the meeting card (was naked text over the sky) */
-.nextmeet__meta{ margin:1.2rem 0 0; padding-top:1.15rem; border-top:1px solid var(--line); display:grid; gap:.7rem; }
+.nextmeet__meta{ margin:1.2rem 0 0; margin-top:auto; padding-top:1.15rem; border-top:1px solid var(--line); display:grid; gap:.7rem; }
 .nextmeet__metarow{ display:grid; grid-template-columns:3.4rem 1fr; gap:1rem; align-items:baseline; }
 .nextmeet__meta dt{ font-family:var(--font-mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
 .nextmeet__meta dd{ margin:0; font-size:1rem; color:var(--ink); line-height:1.4; }
