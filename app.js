@@ -531,6 +531,29 @@
     btns.forEach((b) => b.addEventListener("click", () => select(b)));
   }
 
+  /* Season toggle for Meetings + Notes (same control as the About arc). '25–'26
+     shows the grid; '26–'27 hides it and shows a short placeholder. Each switch
+     toggles the grids/filters that sit in its own .wrap. */
+  function initSeasonToggles() {
+    $$(".season-switch").forEach((sw) => {
+      const wrap = sw.closest(".wrap");
+      if (!wrap) return;
+      const empty = wrap.querySelector(".season-empty");
+      const content = $$(".meetings, .notes-grid, .notes-filter", wrap);
+      const btns = $$(".arc__year", sw);
+      btns.forEach((b) => b.addEventListener("click", () => {
+        const is26 = b.dataset.season === "26";
+        btns.forEach((x) => {
+          const on = x === b;
+          x.classList.toggle("is-active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        content.forEach((c) => { c.hidden = is26; });
+        if (empty) empty.hidden = !is26;
+      }));
+    });
+  }
+
   /* -------------------------------------------------------------------
      Render - Meetings (index + grid). Whole card opens the modal.
      ------------------------------------------------------------------- */
@@ -1523,6 +1546,7 @@
     }
     renderArc();
     initArcYears();
+    initSeasonToggles();
     renderMeetings();
     renderNotes();
     renderTeam();

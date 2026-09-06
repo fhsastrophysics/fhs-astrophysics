@@ -229,7 +229,12 @@
   </div>
 
   <div class="wrap">
+    <div class="arc__years season-switch" role="tablist" aria-label="Choose a season">
+      <button type="button" class="arc__year is-active" data-season="25" role="tab" aria-selected="true">’25–’26</button>
+      <button type="button" class="arc__year" data-season="26" role="tab" aria-selected="false">’26–’27</button>
+    </div>
     <div class="meetings" id="meetingsGrid"></div>
+    <p class="arc__empty season-empty" id="meetingsEmpty" hidden>The ’26–’27 season kicks off this fall. Meeting decks will show up here as we go.</p>
     <noscript><p class="dim">Enable JavaScript to browse the archive.</p></noscript>
 
     <div class="route__next reveal">
@@ -253,8 +258,13 @@
   </div>
 
   <div class="wrap">
+    <div class="arc__years season-switch" role="tablist" aria-label="Choose a season">
+      <button type="button" class="arc__year is-active" data-season="25" role="tab" aria-selected="true">’25–’26</button>
+      <button type="button" class="arc__year" data-season="26" role="tab" aria-selected="false">’26–’27</button>
+    </div>
     <div class="notes-filter reveal" id="notesFilter"></div>
     <div class="notes-grid" id="notesGrid"></div>
+    <p class="arc__empty season-empty" id="notesEmpty" hidden>The ’26–’27 season kicks off this fall. Handouts will show up here as we go.</p>
 
     <div class="route__next reveal">
       <a class="route__next-link magnetic" href="#/atlas" data-route="/atlas">
