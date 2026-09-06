@@ -740,7 +740,7 @@
   /* -------------------------------------------------------------------
      Render - Team (polished grid)
      ------------------------------------------------------------------- */
-  const PHOTO_V = "8";   // bump when any assets/*.jpeg portrait changes
+  const PHOTO_V = "9";   // bump when any assets/*.jpeg portrait changes
   function renderTeam() {
     const grid = $("#teamGrid");
     if (grid) {
