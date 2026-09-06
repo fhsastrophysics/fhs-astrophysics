@@ -484,7 +484,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    itself stays pointer-events:none so it never becomes a drag-ghost. */
 .home__astro-wrap{
   position:absolute; z-index:3;
-  left:50%; top:50%;                        /* higher — helmet over the top of the letters (matches reference) */
+  left:47%; top:50%;                        /* higher + slightly left so it covers the "p" like the reference */
   width:clamp(300px, 42vw, 560px);          /* bigger — covers the wordmark (matches the original de-ai hero) */
   transform:translate(-50%, -48%);
   pointer-events:auto;
