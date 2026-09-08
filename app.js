@@ -17,6 +17,20 @@
   // export, which forces a download. Used by the About "arc" boxes and the meeting
   // modal's deck button; both are target="_blank" so no SPA/warp transition fires.
   const SLIDES = (id) => `https://docs.google.com/presentation/d/${id}/present`;
+  // Season-scoped meeting links: year + that season's own number, so numbering
+  // does not carry over across years (2026-27 meeting 1 is meeting-2627-1, not -14).
+  const seasonCode = (yr) => { const a = parseInt(yr || "25", 10); return String(a).padStart(2, "0") + String((a + 1) % 100).padStart(2, "0"); };
+  const meetingSlug = (m) => `meeting-${seasonCode(m.yr)}-${m.disp || m.n}`;
+  function meetingFromSlug(raw) {
+    const rest = raw.slice("meeting-".length);
+    const parts = rest.split("-");
+    if (parts.length >= 2) {
+      const season = parts[0], num = String(parts[1]);
+      return MEETINGS.find((x) => seasonCode(x.yr) === season && String(x.disp || x.n) === num);
+    }
+    const n = parseInt(rest, 10);            // legacy #meeting-<globalN>
+    return MEETINGS.find((x) => x.n === n);
+  }
 
   /* -------------------------------------------------------------------
      DATA (factual, extracted from decks & handouts)
@@ -564,7 +578,7 @@
     if (idx) {
       MEETINGS.forEach((m) => {
         const a = el("a", "mi-item");
-        a.href = `#meeting-${m.n}`;
+        a.href = "#" + meetingSlug(m);
         a.innerHTML = `<span class="mi-item__n">${pad(m.n)}</span><span class="mi-item__t">${m.short}</span>`;
         idx.appendChild(a);
       });
@@ -573,7 +587,7 @@
     if (!grid) return;
     MEETINGS.forEach((m, i) => {
       const card = el("article", "mcard reveal");
-      card.id = `meeting-${m.n}`;
+      card.id = meetingSlug(m);
       card.style.setProperty("--i", Math.min(i, 3));
       card.dataset.mn = String(m.n);
       card.setAttribute("tabindex", "0");
@@ -655,7 +669,7 @@
     primary.querySelector("span").textContent = m.notes.length > 1 ? `Open lecture notes · ${m.notes.length} files` : "Open lecture notes";
     secondary.href = m.deckUrl || SLIDES(m.slides);
     // Each opened meeting gets its own shareable link; replaceState avoids re-firing the router.
-    try { history.replaceState(null, "", "#meeting-" + n); } catch (e) {}
+    try { history.replaceState(null, "", "#" + meetingSlug(m)); } catch (e) {}
 
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
@@ -1117,8 +1131,17 @@
     playChapter(target);
     const raw = (location.hash || "").replace(/^#/, "");
     if (raw.startsWith("meeting-")) {
-      const idEl = document.getElementById(raw);
-      if (idEl) setTimeout(() => idEl.scrollIntoView({ behavior: "smooth", block: "start" }), 350);
+      const mm = meetingFromSlug(raw);
+      setTimeout(() => {
+        if (mm) {
+          const yr = mm.yr || "25";
+          const msw = document.querySelector('.route[data-route="/meetings"] .season-switch');
+          if (msw) { const b = $$(".arc__year", msw).find((x) => x.dataset.season === yr); if (b) b.click(); }
+        }
+        const idEl = document.getElementById(mm ? meetingSlug(mm) : raw);
+        if (idEl) idEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (mm) openMeetingModal(mm.n);
+      }, 400);
     }
   }
 
