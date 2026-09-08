@@ -1,0 +1,31 @@
+name: Discord Scheduler
+# Device-free scheduled posting for the Astrophysics Club.
+# Posts any message in schedule/queue.json whose sendAtUTC has passed, then
+# marks it sent. Runs on GitHub's servers, so it needs no laptop and works for
+# every future meeting. Add entries with the /astro-meeting pipeline.
+on:
+  schedule:
+    - cron: '*/5 19-22 * * 3'   # every 5 min, Wed 19:00-22:59 UTC (covers 1:35 PM PT year-round)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  outbox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post due messages
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python3 .github/scripts/discord_outbox.py
+      - name: Commit sent-state
+        run: |
+          if ! git diff --quiet -- schedule/queue.json; then
+            git config user.name "astro-scheduler"
+            git config user.email "actions@users.noreply.github.com"
+            git add schedule/queue.json
+            git commit -m "Discord scheduler: mark sent [skip ci]"
+            git push
+          else
+            echo "no queue changes"
+          fi
