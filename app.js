@@ -653,7 +653,9 @@
     primary.href = notePath(primaryNoteId);
     primary.setAttribute("download", dlName(primaryNoteId));
     primary.querySelector("span").textContent = m.notes.length > 1 ? `Open lecture notes · ${m.notes.length} files` : "Open lecture notes";
-    secondary.href = SLIDES(m.slides);
+    secondary.href = m.deckUrl || SLIDES(m.slides);
+    // Each opened meeting gets its own shareable link; replaceState avoids re-firing the router.
+    try { history.replaceState(null, "", "#meeting-" + n); } catch (e) {}
 
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
@@ -667,6 +669,7 @@
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
     if (lastFocus && lastFocus.focus) lastFocus.focus();
+    try { if ((location.hash || "").slice(1).indexOf("meeting-") === 0) history.replaceState(null, "", "#/meetings"); } catch (e) {}
   }
   function initModal() {
     const modal = $("#meetingModal"); if (!modal) return;
