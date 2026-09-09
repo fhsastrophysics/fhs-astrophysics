@@ -52,6 +52,7 @@
     19: { title: "Workstation Activity: Answer Key",      meeting: 11, type: "Answer Key",    cat: "keys",     pages: 2 },
     20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8 },
     21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7 },
+    22: { title: "The Roman Space Telescope",            meeting: 14, type: "Lecture Notes", cat: "notes",    pages: 4 },
   };
 
   const MEETINGS = [
@@ -107,6 +108,10 @@
       slides: "1gmeTct4YE0DMttYldYFBaxQ6JZDJlKBi", notes: [21],
       summary: "The finale. What may have come before the Big Bang (eternal inflation, cyclic and no-boundary models) and how the universe might end (Freeze, Rip, Crunch, vacuum decay).",
       topics: ["Before the Big Bang", "Fate of the Universe", "DESI 2024", "Cosmology"] },
+    { n: 14, disp: "1", yr: "26", kind: "Lecture", short: "The Roman Space Telescope", title: "Introduction & The Roman Space Telescope",
+      slides: "", deckUrl: "https://www.canva.com/design/DAHUKzB3cZ8/JMwqYkgMRNDiVMfknYK85A/view?embed", notes: [22],
+      summary: "Kicking off 2026-27: how we measure cosmic distance, then NASA's newly launched Nancy Grace Roman Space Telescope. Its wide-field camera, gravitational microlensing, and the hunt for dark energy.",
+      topics: ["Cosmic Distances", "Roman Space Telescope", "Microlensing", "Dark Energy"] },
   ];
 
   const OFFICERS = [
