@@ -1,0 +1,31 @@
+name: Site Publish
+# Device-free scheduled go-live for a prepared meeting. At the due time it merges
+# the site-launch branch (current main + the new meeting, additive) into main,
+# which triggers the Pages deploy. Runs on GitHub's servers, no laptop.
+on:
+  schedule:
+    - cron: '*/5 19-22 * * 3'   # every 5 min, Wed 19:00-22:59 UTC (covers 1:35 PM PT)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Promote site-launch to main when due
+        env:
+          PUBLISH_AT: "2026-09-09T20:35:00Z"
+        run: |
+          now=$(date -u +%s); due=$(date -u -d "$PUBLISH_AT" +%s)
+          if [ "$now" -lt "$due" ]; then echo "not due yet (due $PUBLISH_AT)"; exit 0; fi
+          git fetch origin site-launch
+          if git merge-base --is-ancestor origin/site-launch HEAD; then echo "already published"; exit 0; fi
+          git config user.name "astro-scheduler"
+          git config user.email "actions@users.noreply.github.com"
+          git merge --no-edit -X theirs origin/site-launch
+          git push origin HEAD:main
+          echo "published site-launch to main"
