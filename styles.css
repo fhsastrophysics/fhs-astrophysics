@@ -1,16 +1,19 @@
 /* =====================================================================
    Astrophysics Club — Fremont High School
-   Deep-space photographic sky · Bricolage Grotesque display · Bricolage Grotesque body
-   AND labels (no monospace anywhere) · single electric-blue accent (no gold)
+   Deep-space photographic sky · Bricolage Grotesque display + body + most labels ·
+   Libre Franklin (medium) for small Meetings/Notes labels · single electric-blue accent
    ===================================================================== */
 
 /* -----------------------------------------------------------------
    TYPE — one coherent editorial system, all served from Google Fonts
    (the <link> in index.html). No local @font-face, no font downloads:
-     Bricolage Grotesque  distinctive grotesque (opsz axis) — masthead + titles
-     Bricolage Grotesque        humanist sans — body / UI, AND all-caps eyebrows/kickers/
-                          meta labels (the --font-mono token is aliased to it; there
-                          is NO monospace font on the site).
+     Bricolage Grotesque  the primary family — masthead + titles, body / UI,
+                          header subtext, AND most all-caps eyebrows/kickers/meta
+                          labels (the --font-mono token is aliased to it; there is
+                          NO monospace font on the site).
+     Libre Franklin       used ONLY via --font-ui for the small labels in the
+                          Meetings + Notes sections, set medium (500/600). See the
+                          label-face override block after the display-title set.
    The families load via <link>; the tokens below point every rule at them.
    ----------------------------------------------------------------- */
 
@@ -68,10 +71,16 @@
   --font-sans:  "Bricolage Grotesque", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   /* No monospace anywhere on the site (Abir: remove the "AI-generated looking" mono
      completely). --font-mono is kept as a token name only so the ~40 label rules that
-     reference it need no churn — it now resolves to the body sans. Every former mono
+     reference it need no churn — it resolves to the body sans (Bricolage). Every mono
      label (eyebrows, kickers, badges, emails, countdown units, ticker) renders in
      Bricolage Grotesque, still bold + uppercase + tracked, just not monospaced. */
   --font-mono:  "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Label face used ONLY for the small labels in the Meetings and Notes sections
+     (kinds, type badges, meta, filter chips, topic chips, the meeting number +
+     eyebrow). Everything else stays Bricolage. Libre Franklin is a well-proportioned
+     editorial gothic (Franklin Gothic lineage); set at a medium weight (500) so the
+     labels read intentional without being thin or over-bold. */
+  --font-ui:  "Libre Franklin", "Franklin Gothic Medium", "Segoe UI", system-ui, Arial, sans-serif;
 
   --wrap: 1320px;
   --gutter: clamp(1.15rem, 4.2vw, 3rem);
@@ -116,9 +125,8 @@ body{
    handled by a vignette scrim baked into that one layer + a small top scrim on inner
    routes -- deliberately NOT a global dim, so the bold centre stays bold. */
 
-/* Fraunces is a real variable family — hierarchy comes from weight + optical
-   size (opsz tracks the font-size automatically), never a faked bold. 450 is a
-   restrained book-display weight that still reads as high-contrast editorial. */
+/* Hierarchy comes from weight — 450 rounds to a restrained medium display weight
+   that reads as high-contrast without a faked bold. */
 h1,h2,h3,h4{ color: var(--ink); font-family: var(--font-display); font-weight:450; font-optical-sizing:auto; margin:0; line-height:1.05; letter-spacing:-.01em; }
 p{ margin:0 0 1em; }
 a{ color:inherit; text-decoration:none; }
@@ -764,7 +772,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 /* Horizontal scroller with a right-edge fade cue (no debug text) */
 .arc__scroller{ position:relative; }
 .arc__scroller::after{ content:""; position:absolute; top:0; right:0; bottom:1rem; width:72px; background:linear-gradient(90deg, rgba(1,3,10,0), var(--void)); pointer-events:none; z-index:2; }
-.arc__track{ display:flex; gap:1rem; overflow-x:auto; padding-bottom:1rem; scroll-snap-type:x proximity; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; }
+/* Vertical padding gives the hover-lift + card shadow room inside the scroller —
+   an overflow-x:auto container also clips the Y axis, which sliced the raised
+   card's top edge on hover. */
+.arc__track{ display:flex; gap:1rem; overflow-x:auto; padding:1.15rem 0 1.35rem; scroll-snap-type:x proximity; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; }
 .arc__track::-webkit-scrollbar{ height:5px; }
 .arc__track::-webkit-scrollbar-thumb{ background:var(--line-2); border-radius:3px; }
 .arc-node{ scroll-snap-align:start; flex:0 0 auto; width:190px; min-height:118px; padding:1.3rem 1.4rem 1.5rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; transition:transform .35s var(--ease-out), border-color .35s var(--ease); contain:layout paint; text-decoration:none; color:inherit; cursor:pointer; display:block; }
@@ -919,10 +930,12 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    grayscale page reads into the card body rather than ending on a hard white edge. */
 .ncard__thumb::after{ content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
   background:linear-gradient(0deg, rgba(6,9,17,.94) 0%, rgba(6,9,17,.6) 16%, rgba(6,9,17,0) 34%); }
-.ncard__mbadge{ position:absolute; bottom:.7rem; left:.7rem; padding:.5rem .7rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:10px; display:flex; flex-direction:column; gap:.05rem; z-index:3; }
-.ncard__mbadge-k{ font-family:var(--font-mono); font-size:.55rem; letter-spacing:.16em; text-transform:uppercase; color:var(--warm); }
-.ncard__mbadge-v{ font-family:var(--font-mono); font-size:1.4rem; font-weight:500; color:var(--ink); line-height:1; letter-spacing:-.02em; }
-.ncard__type{ position:absolute; bottom:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; }
+/* Meeting number — a compact numeral pill in the TOP-LEFT corner of the thumb
+   (just the number, no "Meeting" label). Sits over the handout masthead. */
+.ncard__mbadge{ position:absolute; top:.6rem; left:.6rem; min-width:1.65rem; padding:.24rem .45rem; z-index:3;
+  background:rgba(4,7,15,.9); border:1px solid var(--line-2); border-radius:8px;
+  font-size:.92rem; font-weight:600; line-height:1; letter-spacing:-.01em; color:var(--ink); text-align:center; }
+.ncard__type{ position:absolute; bottom:.7rem; right:.7rem; font-family:var(--font-mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.34rem .55rem; background:rgba(4,7,15,.92); border:1px solid var(--line-2); border-radius:8px; color:var(--ink-soft); z-index:3; transition:opacity .25s var(--ease); }
 .ncard__type[data-type="Lecture Notes"]{ color:var(--accent); }
 .ncard__type[data-type="Answer Key"]{ color:#9BE7A8; }
 .ncard__type[data-type="Worksheet"], .ncard__type[data-type="Activity"]{ color:var(--accent); }
@@ -931,23 +944,24 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .ncard__meta{ margin-top:auto; padding-top:.8rem; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.05em; color:var(--ink-mute); }
 .ncard__open{ color:var(--accent); display:inline-flex; align-items:center; gap:.3rem; text-transform:uppercase; letter-spacing:.1em; }
 
-/* Topic cloud — appears on hover */
+/* Topic cloud — reveals on hover just above the title (the bottom of the preview).
+   A soft upward scrim + slight blur keeps the chips legible without blacking the
+   handout out; no divider line above it. */
 .ncard__cloud{
-  /* Bottom sheet, not a full black box: topics slide up over a gradient so the
-     bigger LaTeX preview stays visible above them. */
   position:absolute; inset:auto 0 0 0;
-  background:linear-gradient(180deg, rgba(4,7,15,0) 0%, rgba(4,7,15,.9) 26%, rgba(4,7,15,.97) 55%);
-  border:0; border-top:1px solid var(--line-2);
-  border-radius:0 0 14px 14px;
-  padding:2.4rem 1rem 1rem;
-  display:flex; flex-direction:column; gap:.55rem; justify-content:flex-end;
-  max-height:82%; overflow:auto;
-  opacity:0; transform:translateY(10px);
+  background:linear-gradient(0deg, rgba(4,7,15,.82) 0%, rgba(4,7,15,.6) 52%, rgba(4,7,15,0) 100%);
+  backdrop-filter:blur(2px);
+  border:0;
+  padding:1.6rem .9rem .85rem;
+  display:flex; flex-direction:column; gap:.45rem; justify-content:flex-end;
+  opacity:0; transform:translateY(8px);
   transition:opacity .3s var(--ease), transform .3s var(--ease-out);
   pointer-events:none;
   z-index:4;
 }
 .ncard:hover .ncard__cloud, .ncard:focus-within .ncard__cloud{ opacity:1; transform:translateY(0); }
+/* The type badge sits in the same bottom strip; hand it to the topics on hover. */
+.ncard:hover .ncard__type, .ncard:focus-within .ncard__type{ opacity:0; }
 .ncard__cloud-k{ font-family:var(--font-mono); font-size:.58rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
 .ncard__cloud-list{ display:flex; flex-wrap:wrap; gap:.35rem; }
 .ncard__cloud-list .chip{ background:rgba(188,215,255,.05); border-color:rgba(188,215,255,.14); color:var(--ink); font-size:.62rem; }
@@ -976,7 +990,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    (Dhruv). border-radius clips the baked-in black corners, and a soft accent halo
    fills the surround so it reads as a deliberate avatar, not dead space. */
 .tcard__portrait--avatar{ aspect-ratio:1/1; background:radial-gradient(circle at 50% 46%, rgba(106,164,255,.16), rgba(106,164,255,.04) 48%, transparent 68%), #070C1A; }
-.tcard__portrait--avatar img{ width:98%; height:auto; aspect-ratio:1; border-radius:50%; object-fit:cover; border:1px solid var(--glass-brd); box-shadow:0 10px 34px -10px rgba(0,0,0,.65); }
+.tcard__portrait--avatar img{ width:100%; height:auto; aspect-ratio:1; border-radius:50%; object-fit:cover; border:1px solid var(--glass-brd); box-shadow:0 10px 34px -10px rgba(0,0,0,.65); }
 .tcard:hover .tcard__portrait--avatar img{ transform:scale(1.035); }
 .tcard__initials{ font-family:var(--font-display); font-weight:620; font-size:3rem; color:rgba(174,190,217,.55); letter-spacing:-.02em; }
 .tcard__body{ position:relative; z-index:1; padding:1.5rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
@@ -1258,6 +1272,24 @@ body[data-route="/"] .footer{ margin-top:0; }
 }
 .chapter__title{ font-weight:640; font-size:clamp(2.5rem,7vw,5.4rem); line-height:1.02; letter-spacing:-.018em; }
 .mcard__title, .tcard__name, .ncard__title{ line-height:1.12; }
+
+/* =====================================================================
+   LABEL FACE — the small blue/gray labels + filler text in the Meetings
+   and Notes sections (and the meeting preview modal) use IBM Plex Sans
+   instead of Bricolage. Titles, header subtext, big numbers, and every
+   OTHER section's labels stay Bricolage. Placed after the component rules
+   so it wins the cascade on font-family only (size/tracking untouched).
+   ===================================================================== */
+.mcard__kind, .mcard__cta,
+.chip,
+.fbtn,
+.ncard__mbadge, .ncard__type, .ncard__meta, .ncard__cloud-k,
+#meetingModal .modal__eyebrow, .modal__thumbs .mt__n{
+  font-family:var(--font-ui);
+  font-weight:600;   /* semibold — sturdier so the labels read as deliberate, not filler */
+}
+/* The meeting number is a standalone numeral — heavier still so it reads as a marker. */
+.ncard__mbadge{ font-weight:700; }
 
 /* =====================================================================
    TOUCH DEVICES — calm, GPU-light treatment for EVERY touchscreen (phones and

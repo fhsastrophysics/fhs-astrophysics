@@ -510,11 +510,10 @@
     if (!t) return;
     MEETINGS.forEach((m) => {
       const a = el("a", "arc-node",
-        `<span class="arc-node__n">${pad(m.n)}</span><span class="arc-node__t">${m.short}</span>`);
-      // Open the in-site deck preview modal (same as clicking a card on /meetings),
-      // for EVERY meeting — not an external Slides tab.
+        `<span class="arc-node__n">${m.disp || pad(m.n)}</span><span class="arc-node__t">${m.short}</span>`);
       a.href = "#";
-      a.setAttribute("aria-label", `Meeting ${m.n}: ${m.short} — open the deck preview`);
+      a.dataset.yr = m.yr || "25";
+      a.setAttribute("aria-label", `Meeting ${m.disp || m.n}: ${m.short}, open the deck preview`);
       a.addEventListener("click", (e) => { e.preventDefault(); openMeetingModal(m.n); });
       t.appendChild(a);
     });
@@ -528,23 +527,24 @@
     const btns = $$(".arc__years:not(.season-switch) .arc__year");
     if (!btns.length) return;
     const title = $("#arcTitle"), scroller = $("#arcScroller"), empty = $("#arcEmpty");
-    const COPY = {
-      "25": { title: "The ’25–’26 Year", empty: false },
-      "26": { title: "The ’26–’27 Year", empty: true },
-    };
+    const TITLES = { "25": "The ’25–’26 Year", "26": "The ’26–’27 Year" };
     const select = (btn) => {
-      const y = btn.dataset.year, c = COPY[y];
-      if (!c) return;
+      const y = btn.dataset.year;
       btns.forEach((x) => {
         const on = x === btn;
         x.classList.toggle("is-active", on);
         x.setAttribute("aria-selected", on ? "true" : "false");
       });
-      if (title) title.textContent = c.title;
-      if (scroller) scroller.hidden = c.empty;
-      if (empty) empty.hidden = !c.empty;
+      if (title) title.textContent = TITLES[y] || title.textContent;
+      const nodes = $$("#arcTrack .arc-node");
+      let shown = 0;
+      nodes.forEach((n) => { const on = (n.dataset.yr || "25") === y; n.style.display = on ? "" : "none"; if (on) shown++; });
+      if (scroller) scroller.hidden = shown === 0;
+      if (empty) empty.hidden = shown > 0;
     };
     btns.forEach((b) => b.addEventListener("click", () => select(b)));
+    const arcActive = btns.find((b) => b.classList.contains("is-active")) || btns[0];
+    if (arcActive) select(arcActive);
   }
 
   /* Season toggle for Meetings + Notes (same control as the About arc). '25–'26
@@ -555,18 +555,30 @@
       const wrap = sw.closest(".wrap");
       if (!wrap) return;
       const empty = wrap.querySelector(".season-empty");
-      const content = $$(".meetings, .notes-grid, .notes-filter", wrap);
       const btns = $$(".arc__year", sw);
+      const isNotes = !!wrap.querySelector("#notesGrid");
+      const apply = (season) => {
+        if (isNotes && typeof notesFilterApply === "function") { notesFilterApply(); return; }
+        const cards = $$(".mcard, .mi-item", wrap);
+        let shown = 0;
+        cards.forEach((c) => {
+          const on = (c.dataset.yr || "25") === season;
+          c.style.display = on ? "" : "none";
+          if (on) { c.classList.add("is-visible"); shown++; }
+        });
+        if (empty) empty.hidden = shown > 0;
+      };
       btns.forEach((b) => b.addEventListener("click", () => {
-        const is26 = b.dataset.season === "26";
+        const season = b.dataset.season === "26" ? "26" : "25";
         btns.forEach((x) => {
           const on = x === b;
           x.classList.toggle("is-active", on);
           x.setAttribute("aria-selected", on ? "true" : "false");
         });
-        content.forEach((c) => { c.hidden = is26; });
-        if (empty) empty.hidden = !is26;
+        apply(season);
       }));
+      const active = btns.find((b) => b.classList.contains("is-active")) || btns[0];
+      apply(active && active.dataset.season === "26" ? "26" : "25");
     });
   }
 
@@ -579,7 +591,8 @@
       MEETINGS.forEach((m) => {
         const a = el("a", "mi-item");
         a.href = "#" + meetingSlug(m);
-        a.innerHTML = `<span class="mi-item__n">${pad(m.n)}</span><span class="mi-item__t">${m.short}</span>`;
+        a.dataset.yr = m.yr || "25";
+        a.innerHTML = `<span class="mi-item__n">${m.disp || pad(m.n)}</span><span class="mi-item__t">${m.short}</span>`;
         idx.appendChild(a);
       });
     }
@@ -590,12 +603,13 @@
       card.id = meetingSlug(m);
       card.style.setProperty("--i", Math.min(i, 3));
       card.dataset.mn = String(m.n);
+      card.dataset.yr = m.yr || "25";
       card.setAttribute("tabindex", "0");
       card.setAttribute("role", "button");
       card.setAttribute("aria-label", `Preview Meeting ${m.n}: ${m.title}`);
       card.innerHTML = `
         <div class="mcard__head">
-          <span class="mcard__no">${pad(m.n)}</span>
+          <span class="mcard__no">${m.disp || pad(m.n)}</span>
           <span class="mcard__kind">${m.kind}</span>
         </div>
         <div class="mcard__thumb">
@@ -634,7 +648,7 @@
     const modal = $("#meetingModal"); if (!modal) return;
     lastFocus = document.activeElement;
 
-    $("#modalEyebrow").textContent = `Meeting № ${pad(m.n)} · ${m.kind}`;
+    $("#modalEyebrow").textContent = `Meeting ${m.disp || pad(m.n)} · ${m.kind}`;
     $("#modalTitle").textContent = m.title;
     $("#modalSum").textContent = m.summary;
 
@@ -646,7 +660,7 @@
     thumbs.innerHTML = "";
     const heroWrap = el("div", "mt mt--hero");
     heroWrap.innerHTML = `
-      <span class="mt__n">Deck cover</span>
+      <span class="mt__n">Slidedeck</span>
       <img src="${deckThumb(m.n)}" alt="Cover slide, Meeting ${m.n}: ${m.title}" loading="lazy" decoding="async" />
     `;
     thumbs.appendChild(heroWrap);
@@ -655,20 +669,25 @@
     if (noteId) {
       const nWrap = el("div", "mt");
       nWrap.innerHTML = `
-        <span class="mt__n">Handout · pg 1</span>
+        <span class="mt__n">Handout</span>
         <img src="${noteThumb(noteId)}" alt="First page of the meeting handout" loading="lazy" decoding="async" />
       `;
       thumbs.appendChild(nWrap);
     }
 
-    const primary = $("#modalPrimary");
-    const secondary = $("#modalSecondary");
+    const primary = $("#modalPrimary");     // slide deck (accent, leads)
+    const secondary = $("#modalSecondary");  // lecture notes
     const primaryNoteId = m.notes[0];
-    primary.href = notePath(primaryNoteId);
-    primary.setAttribute("download", dlName(primaryNoteId));
-    primary.querySelector("span").textContent = m.notes.length > 1 ? `Open lecture notes · ${m.notes.length} files` : "Open lecture notes";
-    secondary.href = m.deckUrl || SLIDES(m.slides);
-    // Each opened meeting gets its own shareable link; replaceState avoids re-firing the router.
+    // Slide deck opens in a new tab (Google Slides present view / Canva embed).
+    primary.href = m.deckUrl || SLIDES(m.slides);
+    primary.target = "_blank"; primary.rel = "noopener";
+    primary.removeAttribute("download");
+    // Lecture notes open the PDF in a new tab for an in-browser preview (the browser's
+    // native PDF viewer, like knzhou.github.io) — NOT a forced download.
+    secondary.href = notePath(primaryNoteId);
+    secondary.removeAttribute("download");
+    secondary.target = "_blank"; secondary.rel = "noopener";
+    secondary.querySelector("span").textContent = m.notes.length > 1 ? `Open lecture notes · ${m.notes.length} files` : "Open lecture notes";
     try { history.replaceState(null, "", "#" + meetingSlug(m)); } catch (e) {}
 
     modal.classList.add("open");
@@ -698,6 +717,8 @@
   /* -------------------------------------------------------------------
      Render - Notes (with topic cloud from parent meeting)
      ------------------------------------------------------------------- */
+  let notesFilterApply = null;
+
   const FILTERS = [
     { key: "all", label: "All · 16" },
     { key: "notes", label: "Lecture Notes · 11" },
@@ -719,25 +740,56 @@
       const nd = NOTES[id];
       const topics = topicsForNote(id);
       const a = el("a", "ncard reveal");
-      a.href = notePath(id); a.setAttribute("download", dlName(id));
-      a.dataset.cat = nd.cat; a.style.setProperty("--i", Math.min(i, 5));
+      // Open the handout PDF in a new tab (browser's native preview), not a download.
+      a.href = notePath(id); a.target = "_blank"; a.rel = "noopener";
+      a.dataset.cat = nd.cat; a.dataset.yr = nd.yr || "25"; a.style.setProperty("--i", Math.min(i, 5));
       a.setAttribute("aria-label", `${nd.title}, ${nd.type}, Meeting ${nd.meeting}, ${nd.pages} page${nd.pages > 1 ? "s" : ""} (PDF)`);
       a.innerHTML = `
         <div class="ncard__thumb">
-          <div class="ncard__mbadge"><span class="ncard__mbadge-k">Meeting</span><span class="ncard__mbadge-v">${pad(nd.meeting)}</span></div>
+          <span class="ncard__mbadge">${pad(nd.meeting)}</span>
           <span class="ncard__type" data-type="${nd.type}">${nd.type}</span>
           <img src="${noteThumb(id)}" alt="First page of ${nd.title}" loading="lazy" decoding="async" width="340" height="440">
+          <div class="ncard__cloud" aria-hidden="true">
+            <span class="ncard__cloud-k">Topics</span>
+            <div class="ncard__cloud-list">${topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
+          </div>
         </div>
         <div class="ncard__body">
           <h3 class="ncard__title">${nd.title}</h3>
-          <p class="ncard__meta"><span>${nd.pages} pg · LaTeX</span><span class="ncard__open">Open ${IC_OPEN}</span></p>
-        </div>
-        <div class="ncard__cloud" aria-hidden="true">
-          <span class="ncard__cloud-k">Topics inside</span>
-          <div class="ncard__cloud-list">${topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
+          <p class="ncard__meta"><span>${nd.pages} pg</span><span class="ncard__open">Open ${IC_OPEN}</span></p>
         </div>`;
       grid.appendChild(a);
     });
+    const notesWrap = grid.closest(".wrap");
+    const NOTE_BASE = { all: "All", notes: "Lecture Notes", practice: "Worksheets", keys: "Answer Keys" };
+    const noteSeason = () => {
+      const b = notesWrap && notesWrap.querySelector(".season-switch .arc__year.is-active");
+      return b && b.dataset.season === "26" ? "26" : "25";
+    };
+    const noteCat = () => {
+      const b = bar && bar.querySelector(".fbtn.active");
+      return b ? b.dataset.key : "all";
+    };
+    function applyNoteFilters() {
+      const season = noteSeason(), cat = noteCat();
+      const counts = { all: 0, notes: 0, practice: 0, keys: 0 };
+      grid.querySelectorAll(".ncard").forEach((c) => {
+        if ((c.dataset.yr || "25") === season) { counts.all++; counts[c.dataset.cat] = (counts[c.dataset.cat] || 0) + 1; }
+      });
+      grid.querySelectorAll(".ncard").forEach((c) => {
+        const show = (c.dataset.yr || "25") === season && (cat === "all" || c.dataset.cat === cat);
+        c.style.display = show ? "" : "none";
+        if (show) c.classList.add("is-visible");
+      });
+      if (bar) bar.querySelectorAll(".fbtn").forEach((b) => {
+        const k = b.dataset.key;
+        b.textContent = NOTE_BASE[k] + " \u00b7 " + (k === "all" ? counts.all : (counts[k] || 0));
+      });
+      const lede = document.querySelector("#notesLede");
+      if (lede) lede.textContent = "LaTeX handouts compiling notes across all of our meetings. Hover a card to see its topics.";
+      if (notesWrap) { const e = notesWrap.querySelector(".season-empty"); if (e) e.hidden = counts.all > 0; }
+    }
+    notesFilterApply = applyNoteFilters;
     if (bar) {
       FILTERS.forEach((f, i) => {
         const b = el("button", "fbtn" + (i === 0 ? " active" : ""), f.label);
@@ -746,11 +798,12 @@
         b.addEventListener("click", () => {
           bar.querySelectorAll(".fbtn").forEach((x) => { x.classList.remove("active"); x.setAttribute("aria-pressed", "false"); });
           b.classList.add("active"); b.setAttribute("aria-pressed", "true");
-          grid.querySelectorAll(".ncard").forEach((c) => { c.style.display = (f.key === "all" || c.dataset.cat === f.key) ? "" : "none"; });
+          applyNoteFilters();
         });
         bar.appendChild(b);
       });
     }
+    applyNoteFilters();
     initSpotlight($$(".ncard", grid));
   }
 
@@ -1593,9 +1646,12 @@
     }
     renderArc();
     initArcYears();
-    initSeasonToggles();
     renderMeetings();
     renderNotes();
+    // Season toggles must run AFTER the meeting/notes cards exist — otherwise the
+    // initial '25–'26 filter applies to an empty grid and the '26–'27 meeting card
+    // is never hidden, so it flashes at the end of the '25–'26 list on first entry.
+    initSeasonToggles();
     renderTeam();
     renderAtlas();
     initAtlasLightbox();
