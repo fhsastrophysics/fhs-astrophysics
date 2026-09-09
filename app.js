@@ -52,7 +52,7 @@
     19: { title: "Workstation Activity: Answer Key",      meeting: 11, type: "Answer Key",    cat: "keys",     pages: 2 },
     20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8 },
     21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7 },
-    22: { title: "The Roman Space Telescope",            meeting: 14, type: "Lecture Notes", cat: "notes",    pages: 4 },
+    22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26" },
   };
 
   const MEETINGS = [
