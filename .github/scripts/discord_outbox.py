@@ -22,7 +22,7 @@ for item in data:
     if due <= now:
         payload = {"content": item["content"], "allowed_mentions": {"parse": ["everyone"]}}
         req = urllib.request.Request(hook, data=json.dumps(payload).encode(),
-                                     headers={"Content-Type": "application/json"})
+                                     headers={"Content-Type": "application/json", "User-Agent": "astro-club-scheduler (github-actions)"})
         try:
             urllib.request.urlopen(req, timeout=30)
             item["sent"] = True
