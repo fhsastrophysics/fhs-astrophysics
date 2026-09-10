@@ -1,0 +1,159 @@
+\documentclass[11pt]{article}
+
+% basic packages
+\usepackage[margin=1in]{geometry}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{custom}
+
+% page formatting
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\renewcommand{\sectionmark}[1]{\markright{\textsf{\arabic{section}. #1}}}
+\renewcommand{\subsectionmark}[1]{}
+\lhead{\textbf{\thepage} \ \ \nouppercase{\rightmark}}
+\chead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\setlength{\headheight}{14pt}
+
+\linespread{1.03}
+\setlength{\parindent}{0.2in}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\begin{document}
+
+% make title page
+\thispagestyle{empty}
+\bigskip \
+\vspace{0.1cm}
+
+\begin{center}
+{\fontsize{22}{22} \selectfont Lecture Notes on}
+\vskip 16pt
+{\fontsize{36}{36} \selectfont \bf \sffamily
+\href{https://fhsastrophysics.github.io/fhs-astrophysics/\#meeting-2627-1}{The Roman Space Telescope}}
+\vskip 24pt
+{\fontsize{18}{18} \selectfont \rmfamily Abir Mehta \& Dhruv Lagu}
+\vskip 6pt
+{\fontsize{14}{14} \selectfont \ttfamily amehta251@student.fuhsd.org}
+\vskip 24pt
+\end{center}
+
+{\parindent0pt \baselineskip=15.5pt
+These notes open the 2026--27 year. We first review the units astronomers use to
+talk about distance, then turn to NASA's newest instrument, the Nancy Grace Roman
+Space Telescope, which launched on August 30, 2026. We look at who Roman was, what
+the telescope is built from, how it finds planets, and why it may finally pin down
+dark energy.
+}
+
+\newpage
+\microtoc
+\newpage
+
+% ==================================================
+\section{How We Measure Space}
+
+\subsection{Light-Year}
+
+\begin{itemize}
+\item A light-year is the distance light travels in one year, about
+$5.88 \times 10^{12}$ miles.
+\item It is a unit of \emph{distance}, not time.
+\end{itemize}
+
+\subsection{Astronomical Unit (AU)}
+
+\begin{itemize}
+\item 1 AU is the average distance between Earth and the Sun, about
+$9.3 \times 10^{7}$ miles.
+\item Useful for describing distances inside a planetary system.
+\end{itemize}
+
+\subsection{Parsec}
+
+\begin{itemize}
+\item 1 parsec $\approx 3.26$ light-years.
+\item This is the unit professional astronomers actually use.
+\end{itemize}
+
+\subsection{For Scale}
+
+\begin{itemize}
+\item Alpha Centauri, the nearest star system, is about $4.35$ light-years away.
+\item The Milky Way is roughly $100{,}000$ light-years across.
+\end{itemize}
+
+% ==================================================
+\section{The Nancy Grace Roman Space Telescope}
+
+\subsection{The Woman Behind the Telescope}
+
+\begin{itemize}
+\item Nancy Grace Roman (1925--2018) became NASA's first Chief of Astronomy in 1959
+and its first woman executive.
+\item She fought for years to get the Hubble Space Telescope funded and won, which is
+why she is called the \textbf{Mother of Hubble}. Roman is her telescope.
+\end{itemize}
+
+\subsection{The Specs}
+
+\begin{itemize}
+\item \textbf{Launch.} Roman launched on August 30, 2026 at 4:26 AM PDT on a SpaceX
+Falcon Heavy from Launch Complex 39A at Kennedy Space Center.
+\item \textbf{Mirror.} A $2.4$ m primary mirror, the same size as Hubble's. NASA
+received two such mirrors for free from a retired spy-satellite program.
+\item \textbf{Camera.} A $300$-megapixel infrared camera built from $18$ detectors
+in a curved arc. The shape became the mission logo.
+\item \textbf{Location.} Parked at the second Lagrange point (L2), about
+$1.5 \times 10^{6}$ km from Earth, right next to the James Webb Space Telescope.
+\item \textbf{Data.} About $1.4$ TB per day, more in a single day than Hubble makes
+in a whole year, over a planned $5$-year mission.
+\end{itemize}
+
+% ==================================================
+\section{Hubble versus Roman}
+
+\begin{itemize}
+\item A single Roman image covers a patch of sky larger than the full Moon, at the
+same sharpness as Hubble. A Hubble or JWST frame covers a patch about the size of a
+grain of salt held at arm's length.
+\item \textbf{Andromeda, side by side.} To image the Andromeda Galaxy, Hubble needed
+$400$ individual images, $1{,}300$ imaging hours, and $4$ years. Roman needs $2$
+images and about $1$ hour, and both results contain the same $1.5$ billion pixels.
+\end{itemize}
+
+% ==================================================
+\section{What Roman Will Find}
+
+\begin{itemize}
+\item \textbf{Exoplanets.} About $100{,}000$ of them, roughly $16$ times more than
+every exoplanet humanity has found so far, from this one mission.
+\item \textbf{Rogue worlds.} Starless planets drifting alone through the galaxy, some
+as small as Mars.
+\item \textbf{Dark energy.} Dark energy makes up about $68\%$ of the universe and
+drives its accelerating expansion, yet after $28$ years no one knows what it is.
+Roman will map about $620$ million galaxies and $10{,}000$ exploding stars to trace
+how space is stretching. Recent DESI results hint dark energy may be changing over
+time, and Roman is expected to settle the question within $5$ years.
+\end{itemize}
+
+% ==================================================
+\section{How Roman Finds Planets: Gravitational Microlensing}
+
+\begin{itemize}
+\item When a foreground star drifts in front of a more distant background star, the
+foreground star's gravity bends and focuses the background star's light, briefly
+brightening it. This is \textbf{gravitational microlensing}.
+\item If the foreground star has a planet, the planet adds a small extra spike to the
+light curve. That spike reveals worlds up to about $26{,}000$ light-years away.
+\item Einstein predicted this effect in 1936 and thought it would never be observable
+in practice. Roman turns it into a survey tool.
+\end{itemize}
+
+\end{document}

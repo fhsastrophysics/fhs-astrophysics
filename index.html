@@ -15,11 +15,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <!-- Type system, all Google-Fonts-served (no local files):
-       Bricolage Grotesque — the ONE typeface used across the whole site: wordmark,
-                             titles, body copy, nav, buttons, inputs, and all labels.
-                             (No secondary/label font, no monospace anywhere.) -->
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css?v=9" />
+       Bricolage Grotesque — the primary typeface: wordmark, titles, body copy,
+                             nav, buttons, inputs, header subtext, and most labels.
+       Libre Franklin — used ONLY for the small labels in the Meetings and Notes
+                sections (kinds, type badges, meta, chips, the meeting number +
+                eyebrow): a well-proportioned editorial gothic at a medium weight
+                (500) — an intentional label cut next to Bricolage. (No monospace.) -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css?v=16" />
 </head>
 <body>
 <a class="skip-link" href="#/">Skip to content</a>
@@ -178,10 +181,6 @@
           other Wednesday at lunch and work through the physics of stars, black holes,
           exoplanets, relativity and cosmology, starting from first principles.
         </p>
-        <p class="reveal about__note">
-          Thirteen meetings and sixteen handouts so far. Every deck and handout here is the
-          one used in the room, free to download.
-        </p>
       </div>
     </div>
 
@@ -224,7 +223,7 @@
 <section class="route route--meetings" data-route="/meetings">
   <div class="chapter">
     <h1 class="chapter__title split-chars">Meeting Archive</h1>
-    <p class="chapter__lede">The full 2025–2026 archive. Click a card to preview the deck before downloading.</p>
+    <p class="chapter__lede">All of our meeting slidedecks across the years.</p>
     <div class="chapter__rule"><span></span><span></span><span></span></div>
   </div>
 
@@ -253,7 +252,7 @@
 <section class="route route--notes" data-route="/notes">
   <div class="chapter">
     <h1 class="chapter__title split-chars">Lecture Notes</h1>
-    <p class="chapter__lede">Sixteen LaTeX handouts, written by us. Hover a card to see its topics.</p>
+    <p class="chapter__lede" id="notesLede">LaTeX handouts compiling notes across all of our meetings. Hover a card to see its topics.</p>
     <div class="chapter__rule"><span></span><span></span><span></span></div>
   </div>
 
@@ -306,7 +305,7 @@
 <section class="route route--team" data-route="/team">
   <div class="chapter">
     <h1 class="chapter__title split-chars">The Team</h1>
-    <p class="chapter__lede">Three officers. Email any of us with questions.</p>
+    <p class="chapter__lede">The officers of Astrophysics Club.</p>
     <div class="chapter__rule"><span></span><span></span><span></span></div>
   </div>
 
@@ -357,14 +356,6 @@
           </div>
         </form>
 
-        <!-- Condensed from the old four-line benefits wall: four short proofs, the
-             club's own voice kept intact ("Snacks at every meeting"). -->
-        <ul class="signup__perks">
-          <li>Worked from first principles</li>
-          <li>A LaTeX handout to keep</li>
-          <li>No prerequisites, drop in any time</li>
-          <li>Snacks at every meeting</li>
-        </ul>
       </div>
 
       <!-- ── SUPPORTING CONTEXT ─────────────────────────────────────────────
@@ -378,14 +369,14 @@
              than "12:55 wherever you happen to be". To roll the card to the next
              session, change this attribute plus the visible strings below; the WHEN
              row states the recurring cadence, so it stays put. -->
-        <div class="nextmeet reveal" id="nextMeeting" data-when="2026-09-09T12:55:00-07:00" style="--i:1">
+        <div class="nextmeet reveal" id="nextMeeting" data-when="2026-09-23T12:55:00-07:00" style="--i:1">
           <div class="nextmeet__top">
             <span class="nextmeet__k">§ Next meeting</span>
           </div>
 
-          <p class="nextmeet__topic">Introduction to Astrophysics Club</p>
+          <p class="nextmeet__topic">Guest Speaker: <a class="ulink" href="https://en.wikipedia.org/wiki/Seth_Shostak" target="_blank" rel="noopener">Dr. Shostak</a></p>
           <p class="nextmeet__when">
-            <time datetime="2026-09-09T12:55:00-07:00">Wednesday, September 9 · 12:55 PM</time>
+            <time datetime="2026-09-23T12:55:00-07:00">Wednesday, September 23 · 12:55 PM</time>
           </p>
 
           <!-- aria-hidden: the <time> above already states the meeting for assistive
@@ -405,7 +396,7 @@
             </div>
             <div class="nextmeet__metarow">
               <dt>Where</dt>
-              <dd>Room 91 <span>· Mr. Bloom's room</span></dd>
+              <dd>Fair Oaks Room</dd>
             </div>
           </dl>
         </div>
@@ -414,7 +405,7 @@
           <div class="field__head"><span class="field__mark">§</span><h2 class="field__title">Reach us</h2></div>
 
           <div class="joincard__mailrow">
-            <a class="field__mail js-copy" href="mailto:fhsastrophysics@gmail.com" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+            <a class="field__mail js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=fhsastrophysics@gmail.com" target="_blank" rel="noopener" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
             <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
             </button>
@@ -423,9 +414,9 @@
           <p class="joincard__note">Email our club email for questions, ideas, or offerings to help run a meeting. Or reach us directly:</p>
 
           <ul class="joincard__officers">
-            <li><a href="mailto:amehta251@student.fuhsd.org"><span class="jo__name">Abir Mehta</span><span class="jo__role">Co-Founder &amp; President</span><span class="jo__mail">amehta251@student.fuhsd.org</span></a></li>
-            <li><a href="mailto:dlagu234@student.fuhsd.org"><span class="jo__name">Dhruv Lagu</span><span class="jo__role">Co-Founder &amp; Vice President</span><span class="jo__mail">dlagu234@student.fuhsd.org</span></a></li>
-            <li><a href="mailto:sdoshi468@student.fuhsd.org"><span class="jo__name">Saanvi Doshi</span><span class="jo__role">Social Media &amp; Outreach Lead</span><span class="jo__mail">sdoshi468@student.fuhsd.org</span></a></li>
+            <li><a href="#/team" data-route="/team"><span class="jo__name">Abir Mehta</span><span class="jo__role">Co-Founder &amp; President</span><span class="jo__mail">amehta251@student.fuhsd.org</span></a></li>
+            <li><a href="#/team" data-route="/team"><span class="jo__name">Dhruv Lagu</span><span class="jo__role">Co-Founder &amp; Vice President</span><span class="jo__mail">dlagu234@student.fuhsd.org</span></a></li>
+            <li><a href="#/team" data-route="/team"><span class="jo__name">Saanvi Doshi</span><span class="jo__role">Social Media &amp; Outreach Lead</span><span class="jo__mail">sdoshi468@student.fuhsd.org</span></a></li>
           </ul>
 
           <div class="joincard__social">
@@ -587,11 +578,11 @@
     <div class="modal__thumbs" id="modalThumbs" aria-label="Deck preview"></div>
     <div class="modal__actions">
       <a class="modal__primary" id="modalPrimary" href="#" target="_blank" rel="noopener">
-        <span>Open lecture notes</span>
+        <span>Open slide deck</span>
         <span aria-hidden="true">↗</span>
       </a>
       <a class="modal__secondary" id="modalSecondary" href="#" target="_blank" rel="noopener">
-        <span>Open slide deck</span>
+        <span>Open lecture notes</span>
         <span aria-hidden="true">↗</span>
       </a>
     </div>
@@ -630,6 +621,6 @@
   </div>
 </footer>
 
-<script src="app.js?v=16"></script>
+<script src="app.js?v=23"></script>
 </body>
 </html>
