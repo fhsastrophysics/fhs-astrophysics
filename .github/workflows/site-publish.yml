@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Promote site-launch to main when due
         env:
-          PUBLISH_AT: "2026-09-09T20:35:00Z"
+          PUBLISH_AT: "2026-09-23T20:35:00Z"
         run: |
           now=$(date -u +%s); due=$(date -u -d "$PUBLISH_AT" +%s)
           if [ "$now" -lt "$due" ]; then echo "not due yet (due $PUBLISH_AT)"; exit 0; fi
