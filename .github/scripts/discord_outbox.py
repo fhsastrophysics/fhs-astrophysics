@@ -20,7 +20,7 @@ for item in data:
         print("bad sendAtUTC on", item.get("id"), e)
         continue
     if due <= now:
-        payload = {"content": item["content"], "allowed_mentions": {"parse": ["everyone"]}}
+        payload = {"content": item["content"], "username": "Astro Bot", "avatar_url": "https://fhsastrophysics.github.io/fhs-astrophysics/assets/logo-circle.png", "allowed_mentions": {"parse": ["everyone"]}}
         req = urllib.request.Request(hook, data=json.dumps(payload).encode(),
                                      headers={"Content-Type": "application/json", "User-Agent": "astro-club-scheduler (github-actions)"})
         try:
