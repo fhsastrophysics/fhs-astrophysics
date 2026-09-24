@@ -53,7 +53,7 @@
     20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8 },
     21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7 },
     22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26" },
-    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 6, yr: "26" },
+    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26" },
   };
 
   const MEETINGS = [
@@ -114,7 +114,7 @@
       summary: "Kicking off 2026-27: how we measure cosmic distance, then NASA's newly launched Nancy Grace Roman Space Telescope. Its wide-field camera, gravitational microlensing, and the hunt for dark energy.",
       topics: ["Cosmic Distances", "Roman Space Telescope", "Microlensing", "Dark Energy"] },
     { n: 15, disp: "2", yr: "26", kind: "Guest Speaker", short: "Dr. Seth Shostak (SETI)", title: "Guest Speaker: Dr. Seth Shostak",
-      slides: "", deckUrl: "https://canva.link/qylu2lu8uqyn7x7", notes: [23],
+      slides: "", deckUrl: "https://www.canva.com/design/DAHVZZk7yjo/Gw6NIL3vm5xMa4q56CodCA/view?embed", notes: [23],
       summary: "A guest talk and Q&A with Dr. Seth Shostak, Senior Astronomer at the SETI Institute, on the search for extraterrestrial intelligence. How SETI listens for signals, the Drake equation, the Fermi paradox, and why he is betting we will find life within decades.",
       topics: ["SETI", "Drake Equation", "Fermi Paradox", "Guest Q&A"] },
   ];
