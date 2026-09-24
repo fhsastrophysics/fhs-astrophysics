@@ -1113,6 +1113,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .nextmeet{ display:flex; flex-direction:column; padding:clamp(1.5rem,2.4vw,1.9rem) clamp(1.4rem,2.2vw,1.7rem); border:1px solid var(--glass-brd); border-radius:16px; background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4); box-shadow:var(--glass-glow); }
 .nextmeet__top{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
 .nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.02em; text-transform:uppercase; color:var(--warm); }
+/* RSVP pill — top-right of the next-meeting card, for meetings that need a sign-up. */
+.nextmeet__rsvp{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--font-mono); font-weight:700; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); border:1px solid var(--warm); border-radius:8px; padding:.36rem .72rem; white-space:nowrap; transition:background .2s var(--ease), color .2s var(--ease); }
+.nextmeet__rsvp:hover{ background:var(--accent); color:#04122e; }
 /* State pill. The dot pulses only while the meeting is actually live. */
 .nextmeet__status{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--line); border-radius:8px; padding:.3rem .6rem; white-space:nowrap; }
 .nextmeet__status::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--ink-mute); flex:0 0 auto; }
@@ -1896,4 +1899,106 @@ body[data-route="/"] .footer{ margin-top:0; }
   .acard{ transition:border-color .35s var(--ease), transform .3s var(--ease-calm); }
   .acard:hover{ transform:none; }
   .acard:active{ transform:scale(.982); transition-duration:.07s; }
+}
+
+/* =====================================================================
+   EVENTS — guest speaker cards: header + recording + gallery.
+   Same steel-glass surface as .joincard; the recording is the hero, the
+   gallery sits under it in the site's grid language (.acard-style tiles).
+   ===================================================================== */
+.events{ display:flex; flex-direction:column; gap:clamp(2.5rem,5vw,4.5rem); margin-bottom:1rem; }
+.event{ position:relative; padding:clamp(1.5rem,2.6vw,2.4rem); border:1px solid var(--glass-brd); border-radius:20px;
+  background:var(--glass); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4);
+  box-shadow:var(--glass-glow); }
+.event__head{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:1.5rem 3rem; align-items:end; margin-bottom:1.4rem; }
+.event__eyebrow{ display:block; font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.06em; text-transform:uppercase; color:var(--warm); }
+.event__name{ margin:.55rem 0 .25rem; font-family:var(--font-display); font-weight:400; font-size:clamp(2.1rem,4.6vw,3.6rem); line-height:1; letter-spacing:-.025em; color:var(--ink); }
+.event__role{ margin:0; font-size:clamp(1rem,1.6vw,1.2rem); color:var(--ink-soft); }
+.event__stats{ display:flex; gap:1.8rem; margin:0; padding:0; }
+.event__stats div{ display:flex; flex-direction:column; gap:.3rem; }
+.event__stats dt{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-mute); }
+.event__stats dd{ margin:0; font-family:var(--font-display); font-weight:400; font-size:1.55rem; line-height:1; letter-spacing:-.01em; color:var(--ink); white-space:nowrap; }
+.event__media{ margin:0 0 1.4rem; }
+.event__desc{ max-width:70ch; margin:0 0 2rem; color:var(--ink-soft); font-size:1.02rem; line-height:1.6; }
+
+/* Recording frame — 16:9, poster underneath, one of three states:
+   --soon (no link yet), --ready (click-to-load facade), --live (iframe). */
+.evideo{ position:relative; display:block; width:100%; aspect-ratio:16/9; padding:0; overflow:hidden; border-radius:14px;
+  border:1px solid var(--line-2); background:#05080F; text-align:left; }
+.evideo__poster{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 35%; }
+.evideo--soon .evideo__poster{ filter:saturate(.75) brightness(.72); }
+.evideo--ready{ cursor:pointer; }
+.evideo--ready .evideo__poster{ filter:saturate(.95) brightness(.82); transition:filter .5s var(--ease), transform .9s var(--ease-out); }
+.evideo--ready:hover .evideo__poster, .evideo--ready:focus-visible .evideo__poster{ filter:saturate(1.05) brightness(.95); transform:scale(1.02); }
+.evideo--ready:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+.evideo__play{ position:absolute; left:50%; top:50%; width:84px; height:84px; transform:translate(-50%,-50%); display:flex; align-items:center; justify-content:center;
+  border-radius:50%; color:#fff; background:rgba(4,7,15,.55); border:1px solid rgba(160,196,255,.55); backdrop-filter:blur(8px);
+  box-shadow:0 0 0 0 rgba(106,164,255,.35); transition:transform .3s var(--ease-out), box-shadow .4s var(--ease), background .3s var(--ease); }
+.evideo__play svg{ width:36px; height:36px; margin-left:4px; }
+.evideo--ready:hover .evideo__play{ transform:translate(-50%,-50%) scale(1.06); background:var(--warm-deep); box-shadow:0 0 0 14px rgba(106,164,255,.14); }
+.evideo__tag, .evideo__soon{ position:absolute; left:1rem; bottom:1rem; display:inline-flex; align-items:center; gap:.55rem; padding:.5rem .85rem; border-radius:10px;
+  font-family:var(--font-mono); font-weight:700; font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:#fff;
+  background:rgba(4,7,15,.62); border:1px solid rgba(160,196,255,.35); backdrop-filter:blur(6px); }
+.evideo__dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 0 rgba(106,164,255,.6); animation:evPulse 2.2s ease-out infinite; }
+@keyframes evPulse{ 0%{ box-shadow:0 0 0 0 rgba(106,164,255,.6); } 100%{ box-shadow:0 0 0 9px rgba(106,164,255,0); } }
+.evideo--live iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+/* Gallery — 3:2 tiles on a 4-col grid; the first tile is a 2×2 feature. */
+.event__gallery{ padding-top:1.6rem; border-top:1px solid var(--line); }
+.event__gallery-head{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+.event__count{ color:var(--ink-mute); letter-spacing:.06em; }
+.gallery{ display:grid; grid-template-columns:repeat(4,1fr); gap:.7rem; }
+.ph{ position:relative; display:block; padding:0; margin:0; aspect-ratio:3/2; overflow:hidden; border-radius:12px; border:1px solid var(--line-2); background:#070B16; cursor:zoom-in;
+  transition:border-color .3s var(--ease), box-shadow .35s var(--ease), transform .45s var(--ease-out); }
+.ph[hidden]{ display:none; }
+.ph:first-child{ grid-column:span 2; grid-row:span 2; }
+.ph img{ width:100%; height:100%; object-fit:cover; filter:brightness(.92) saturate(1.02); transform:scale(1.01);
+  transition:filter .45s var(--ease), transform .8s var(--ease-out); }
+.ph:hover, .ph:focus-visible{ border-color:var(--glass-brd-hover); box-shadow:0 14px 32px -10px rgba(2,6,18,.7); }
+.ph:hover img, .ph:focus-visible img{ filter:brightness(1.02) saturate(1.08); transform:scale(1.05); }
+.ph:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+.ph--in{ animation:phIn .5s var(--ease-out) both; }
+@keyframes phIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+.gallery__more{ display:flex; align-items:center; justify-content:center; gap:.7rem; width:100%; margin-top:.9rem; padding:1rem; border-radius:12px; cursor:pointer;
+  font-family:var(--font-sans); font-weight:500; font-size:.95rem; color:var(--ink); background:rgba(255,255,255,.03); border:1px solid var(--line-2);
+  transition:border-color .25s var(--ease), color .25s var(--ease), background .25s var(--ease); }
+.gallery__more:hover{ border-color:var(--accent); color:var(--accent); background:rgba(106,164,255,.06); }
+
+/* Photo lightbox — edge-to-edge image with side arrows and a caption bar. */
+.plb{ padding:0; }
+.plb__stage{ position:relative; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:.5rem; width:100%; height:100%; padding:clamp(.75rem,2vw,1.5rem); }
+.plb__close{ z-index:3; }
+.plb__fig{ margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:0; height:100%; gap:.8rem; }
+.plb__fig img{ max-width:100%; max-height:calc(100vh - 8rem); width:auto; height:auto; border-radius:12px; border:1px solid var(--line-2); background:#05080F; box-shadow:0 30px 80px -20px rgba(1,3,10,.9);
+  opacity:0; transform:scale(.985); transition:opacity .35s var(--ease), transform .45s var(--ease-out); }
+.plb__fig img.is-in{ opacity:1; transform:none; }
+.plb__cap{ display:flex; align-items:baseline; gap:1.2rem; font-family:var(--font-mono); font-weight:700; font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-mute); }
+.plb__title{ color:var(--ink-soft); }
+.plb__count{ color:var(--accent); }
+.plb__nav{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink);
+  background:rgba(255,255,255,.04); border:1px solid var(--line-2); transition:background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease); }
+.plb__nav svg{ width:22px; height:22px; }
+.plb__nav:hover, .plb__nav:focus-visible{ background:rgba(106,164,255,.1); border-color:var(--accent); color:var(--accent); }
+
+@media (max-width: 980px){
+  .gallery{ grid-template-columns:repeat(3,1fr); }
+}
+@media (max-width: 640px){
+  .event__head{ grid-template-columns:1fr; align-items:start; gap:1.1rem; }
+  .event__stats{ gap:1.4rem; }
+  .event__stats dd{ font-size:1.3rem; }
+  .gallery{ grid-template-columns:repeat(2,1fr); gap:.5rem; }
+  .plb__stage{ grid-template-columns:1fr; padding:.6rem; }
+  .plb__nav{ position:absolute; top:50%; transform:translateY(-50%); z-index:2; width:42px; height:42px; background:rgba(4,7,15,.55); }
+  .plb__nav--prev{ left:.5rem; } .plb__nav--next{ right:.5rem; }
+  .plb__fig img{ max-height:calc(100vh - 6rem); }
+  .evideo__play{ width:64px; height:64px; } .evideo__play svg{ width:28px; height:28px; }
+}
+@media (hover: none){
+  /* Same rule as the rest of the site: no backdrop-filter on touch GPUs. */
+  .event, .evideo__play, .evideo__tag, .evideo__soon{ backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .event{ background:var(--glass-flat); }
+}
+@media (prefers-reduced-motion: reduce){
+  .evideo__dot{ animation:none; } .ph--in{ animation:none; } .plb__fig img{ transition:none; opacity:1; transform:none; }
 }

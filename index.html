@@ -22,7 +22,7 @@
                 eyebrow): a well-proportioned editorial gothic at a medium weight
                 (500) — an intentional label cut next to Bricolage. (No monospace.) -->
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css?v=16" />
+<link rel="stylesheet" href="styles.css?v=18" />
 </head>
 <body>
 <a class="skip-link" href="#/">Skip to content</a>
@@ -70,6 +70,7 @@
       <a href="#/meetings" data-route="/meetings">Meetings</a>
       <a href="#/notes"    data-route="/notes">Notes</a>
       <a href="#/atlas"    data-route="/atlas">Atlas</a>
+      <a href="#/events"   data-route="/events">Events</a>
       <a href="#/team"     data-route="/team">Team</a>
       <a href="#/faq"      data-route="/faq">FAQ</a>
       <a href="#/join"     data-route="/join" class="nav__cta">Join</a>
@@ -290,6 +291,31 @@
     <noscript><p class="dim">Enable JavaScript to browse the atlas.</p></noscript>
 
     <div class="route__next reveal">
+      <a class="route__next-link magnetic" href="#/events" data-route="/events">
+        <span class="mono dim">Continue</span>
+        <span class="route__next-title">Events</span>
+        <span class="route__next-arw" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     ROUTE - EVENTS (guest speakers: recording + photo gallery)
+     Data lives in app.js (EVENTS). Photos: assets/events/<slug>/{full,thumb}/NN.webp
+     ================================================================== -->
+<section class="route route--events" data-route="/events">
+  <div class="chapter">
+    <h1 class="chapter__title split-chars">Events</h1>
+    <p class="chapter__lede">Guest speakers and the moments around them. Recordings and photos from the room.</p>
+    <div class="chapter__rule"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <div class="events" id="eventsList"></div>
+    <noscript><p class="dim">Enable JavaScript to browse events.</p></noscript>
+
+    <div class="route__next reveal">
       <a class="route__next-link magnetic" href="#/team" data-route="/team">
         <span class="mono dim">Continue</span>
         <span class="route__next-title">The Team</span>
@@ -372,6 +398,7 @@
         <div class="nextmeet reveal" id="nextMeeting" data-when="2026-09-23T12:55:00-07:00" style="--i:1">
           <div class="nextmeet__top">
             <span class="nextmeet__k">§ Next meeting</span>
+            <a class="nextmeet__rsvp" href="https://forms.gle/Wcat1Btz7W4Kn5gCA" target="_blank" rel="noopener">RSVP <span aria-hidden="true">↗</span></a>
           </div>
 
           <p class="nextmeet__topic">Guest Speaker: <a class="ulink" href="https://en.wikipedia.org/wiki/Seth_Shostak" target="_blank" rel="noopener">Dr. Shostak</a></p>
@@ -566,6 +593,27 @@
   </div>
 </div>
 
+<!-- Event photo lightbox (populated dynamically; ← → to move, Esc to close) -->
+<div class="modal plb" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="plb__stage" role="document">
+    <button class="modal__close plb__close" data-close aria-label="Close viewer">✕</button>
+    <button class="plb__nav plb__nav--prev" data-dir="-1" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <figure class="plb__fig">
+      <img id="plbImg" src="" alt="" decoding="async" />
+      <figcaption class="plb__cap">
+        <span class="plb__title" id="plbTitle"></span>
+        <span class="plb__count" id="plbCount"></span>
+      </figcaption>
+    </figure>
+    <button class="plb__nav plb__nav--next" data-dir="1" aria-label="Next photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
 <!-- Meeting modal (populated dynamically) -->
 <div class="modal" id="meetingModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
   <div class="modal__scrim" data-close></div>
@@ -611,6 +659,7 @@
       <a href="#/meetings" data-route="/meetings">Meetings</a>
       <a href="#/notes"    data-route="/notes">Notes</a>
       <a href="#/atlas"    data-route="/atlas">Atlas</a>
+      <a href="#/events"   data-route="/events">Events</a>
       <a href="#/team"     data-route="/team">Team</a>
       <a href="#/faq"      data-route="/faq">FAQ</a>
       <a href="#/join"     data-route="/join">Join</a>
@@ -621,6 +670,6 @@
   </div>
 </footer>
 
-<script src="app.js?v=27"></script>
+<script src="app.js?v=28"></script>
 </body>
 </html>

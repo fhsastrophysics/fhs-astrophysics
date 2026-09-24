@@ -128,7 +128,34 @@
       bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
   ];
 
-  const ROUTES = ["/", "/about", "/meetings", "/notes", "/atlas", "/team", "/faq", "/join"];
+  const ROUTES = ["/", "/about", "/meetings", "/notes", "/atlas", "/events", "/team", "/faq", "/join"];
+
+  /* -------------------------------------------------------------------
+     EVENTS — guest speakers. One entry per event; photos are numbered
+     01..count under dir/{full,thumb}/NN.webp (full = 1600px, thumb = 640px).
+     `youtube` is the YouTube video ID (the part after v=). While it is null
+     the card shows the poster with a "recording coming soon" state.
+     ------------------------------------------------------------------- */
+  const EVENTS = [
+    {
+      slug: "shostak",
+      kind: "Guest speaker",
+      date: "September 23, 2026",
+      iso: "2026-09-23",
+      where: "Fair Oaks Room",
+      name: "Dr. Seth Shostak",
+      role: "Senior Astronomer, SETI Institute",
+      desc: "Senior Astronomer at the SETI Institute and host of the Big Picture Science podcast, Dr. Shostak joined us at lunch for a talk on the search for extraterrestrial intelligence, followed by questions from the room. Our first guest speaker of the ’26–’27 year.",
+      stats: [["Attendance", "~40"], ["Talk", "32 min"], ["Photos", "51"]],
+      youtube: null,
+      dir: "assets/events/shostak",
+      count: 51,
+      poster: 33,
+      // Photos shown before "See all" — the strongest wide shots first.
+      lead: [33, 23, 31, 29, 22, 30, 20, 4],
+    },
+  ];
+  const evPhoto = (ev, n, size) => `${ev.dir}/${size}/${String(n).padStart(2, "0")}.webp`;
 
   /* -------------------------------------------------------------------
      DEEP-SKY ATLAS — real Hubble/Webb-archive objects (images already in
@@ -930,6 +957,141 @@
   }
 
   /* -------------------------------------------------------------------
+     Render - Events (speaker card + recording + photo gallery + lightbox)
+     ------------------------------------------------------------------- */
+  const GALLERY_LEAD = 8;
+  function renderEvents() {
+    const list = $("#eventsList");
+    if (!list) return;
+    if (!EVENTS.length) {
+      list.innerHTML = `<p class="arc__empty">No events yet. Guest talks will show up here as we host them.</p>`;
+      return;
+    }
+    EVENTS.forEach((ev, i) => {
+      const art = el("article", "event reveal");
+      art.style.setProperty("--i", Math.min(i, 5));
+      art.id = `event-${ev.slug}`;
+      const order = ev.lead.concat(Array.from({ length: ev.count }, (_, k) => k + 1).filter((n) => !ev.lead.includes(n)));
+      art.dataset.order = order.join(",");
+      const tiles = order.map((n, k) => `
+        <button type="button" class="ph${k >= GALLERY_LEAD ? " ph--more" : ""}" data-n="${n}" data-k="${k}" aria-label="Open photo ${k + 1} of ${ev.count}" ${k >= GALLERY_LEAD ? "hidden" : ""}>
+          <img src="${evPhoto(ev, n, "thumb")}" alt="" loading="lazy" decoding="async" width="640" height="427">
+        </button>`).join("");
+      const video = ev.youtube ? `
+        <button type="button" class="evideo evideo--ready" data-yt="${ev.youtube}" aria-label="Play the recording of ${ev.name}'s talk">
+          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "full")}" alt="" decoding="async">
+          <span class="evideo__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          <span class="evideo__tag" aria-hidden="true">▶ Watch the talk · ${ev.stats[1][1]}</span>
+        </button>` : `
+        <div class="evideo evideo--soon" aria-label="Recording coming soon">
+          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "full")}" alt="${ev.name} speaking to the club" decoding="async">
+          <span class="evideo__soon"><span class="evideo__dot" aria-hidden="true"></span>Recording coming soon</span>
+        </div>`;
+      art.innerHTML = `
+        <header class="event__head">
+          <div class="event__lead">
+            <span class="event__eyebrow">§ ${ev.kind} · <time datetime="${ev.iso}">${ev.date}</time> · ${ev.where}</span>
+            <h2 class="event__name">${ev.name}</h2>
+            <p class="event__role">${ev.role}</p>
+          </div>
+          <dl class="event__stats" aria-label="At a glance">
+            ${ev.stats.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
+          </dl>
+        </header>
+        <div class="event__media">${video}</div>
+        <p class="event__desc">${ev.desc}</p>
+        <div class="event__gallery">
+          <div class="event__gallery-head">
+            <span class="event__eyebrow">§ From the room</span>
+            <span class="event__count mono dim"><span data-shown>${Math.min(GALLERY_LEAD, ev.count)}</span> of ${ev.count} photos</span>
+          </div>
+          <div class="gallery" data-ev="${i}">${tiles}</div>
+          ${ev.count > GALLERY_LEAD ? `<button type="button" class="gallery__more" data-more="${i}"><span>See all ${ev.count} photos</span><span aria-hidden="true">↓</span></button>` : ""}
+        </div>`;
+      list.appendChild(art);
+    });
+
+    list.addEventListener("click", (e) => {
+      const more = e.target.closest(".gallery__more");
+      if (more) {
+        const art = more.closest(".event");
+        $$(".ph--more", art).forEach((b) => { b.hidden = false; b.classList.add("ph--in"); });
+        const shown = $("[data-shown]", art); if (shown) shown.textContent = EVENTS[+more.dataset.more].count;
+        more.remove();
+        return;
+      }
+      const ph = e.target.closest(".ph");
+      if (ph) { openPhotoLightbox(+ph.closest(".gallery").dataset.ev, +ph.dataset.k); return; }
+      const vid = e.target.closest(".evideo--ready");
+      if (vid) {
+        const id = vid.dataset.yt;
+        const frame = el("div", "evideo evideo--live");
+        frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1" title="Talk recording" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        vid.replaceWith(frame);
+      }
+    });
+  }
+
+  /* Photo lightbox: one image, ← → / swipe to move, Esc / scrim to close. */
+  const PLB = { ev: null, order: [], k: 0, last: null };
+  function plbShow(k) {
+    const ev = PLB.ev; if (!ev) return;
+    PLB.k = (k + PLB.order.length) % PLB.order.length;
+    const n = PLB.order[PLB.k];
+    const img = $("#plbImg");
+    img.classList.remove("is-in");
+    img.src = evPhoto(ev, n, "full");
+    img.alt = `${ev.name} — photo ${PLB.k + 1} of ${ev.count}`;
+    img.onload = () => img.classList.add("is-in");
+    $("#plbTitle").textContent = `${ev.name} · ${ev.date}`;
+    $("#plbCount").textContent = `${PLB.k + 1} / ${ev.count}`;
+    // Warm the neighbours so paging feels instant.
+    [1, -1].forEach((d) => { const p = new Image(); p.src = evPhoto(ev, PLB.order[(PLB.k + d + PLB.order.length) % PLB.order.length], "full"); });
+  }
+  function openPhotoLightbox(evIdx, k) {
+    const ev = EVENTS[evIdx]; if (!ev) return;
+    const lb = $("#photoLightbox"); if (!lb) return;
+    const art = $(`#event-${ev.slug}`);
+    PLB.ev = ev;
+    PLB.order = (art && art.dataset.order ? art.dataset.order.split(",").map(Number) : Array.from({ length: ev.count }, (_, i) => i + 1));
+    PLB.last = document.activeElement;
+    plbShow(k);
+    lb.classList.add("open");
+    lb.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const c = lb.querySelector(".plb__close"); if (c) c.focus();
+  }
+  function closePhotoLightbox() {
+    const lb = $("#photoLightbox"); if (!lb) return;
+    lb.classList.remove("open");
+    lb.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (PLB.last && PLB.last.focus) PLB.last.focus();
+    PLB.ev = null;
+  }
+  function initPhotoLightbox() {
+    const lb = $("#photoLightbox"); if (!lb) return;
+    lb.addEventListener("click", (e) => {
+      const nav = e.target.closest(".plb__nav");
+      if (nav) { plbShow(PLB.k + (+nav.dataset.dir)); return; }
+      if (e.target.matches("[data-close]") || e.target.closest("[data-close]")) closePhotoLightbox();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "Escape") closePhotoLightbox();
+      else if (e.key === "ArrowRight") plbShow(PLB.k + 1);
+      else if (e.key === "ArrowLeft") plbShow(PLB.k - 1);
+    });
+    let tx = null;
+    lb.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener("touchend", (e) => {
+      if (tx == null) return;
+      const dx = e.changedTouches[0].clientX - tx; tx = null;
+      if (Math.abs(dx) > 48) plbShow(PLB.k + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* -------------------------------------------------------------------
      Ticker (nav)
      ------------------------------------------------------------------- */
   function renderTicker() {
@@ -1665,6 +1827,8 @@
     renderTeam();
     renderAtlas();
     initAtlasLightbox();
+    renderEvents();
+    initPhotoLightbox();
     renderTicker();
     initHeroEquations();
     initAmbientParticles();
