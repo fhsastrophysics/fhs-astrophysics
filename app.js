@@ -132,7 +132,7 @@
 
   /* -------------------------------------------------------------------
      EVENTS — guest speakers. One entry per event; photos are numbered
-     01..count under dir/{full,thumb}/NN.webp (full = 1600px, thumb = 640px).
+     01..count under dir/{full,mid,thumb}/NN.webp (2400 / 1400 / 800px, colour-graded).
      `youtube` is the YouTube video ID (the part after v=). While it is null
      the card shows the poster with a "recording coming soon" state.
      ------------------------------------------------------------------- */
@@ -152,7 +152,7 @@
       count: 51,
       poster: 33,
       // Photos shown before "See all" — the strongest wide shots first.
-      lead: [33, 23, 31, 29, 22, 30, 20, 4],
+      lead: [33, 23, 31, 29, 22, 30, 20, 4, 16],
     },
   ];
   const evPhoto = (ev, n, size) => `${ev.dir}/${size}/${String(n).padStart(2, "0")}.webp`;
@@ -959,7 +959,7 @@
   /* -------------------------------------------------------------------
      Render - Events (speaker card + recording + photo gallery + lightbox)
      ------------------------------------------------------------------- */
-  const GALLERY_LEAD = 8;
+  const GALLERY_LEAD = 9;  // 2×2 feature + 8 tiles = exactly 3 rows of 4
   function renderEvents() {
     const list = $("#eventsList");
     if (!list) return;
@@ -975,16 +975,18 @@
       art.dataset.order = order.join(",");
       const tiles = order.map((n, k) => `
         <button type="button" class="ph${k >= GALLERY_LEAD ? " ph--more" : ""}" data-n="${n}" data-k="${k}" aria-label="Open photo ${k + 1} of ${ev.count}" ${k >= GALLERY_LEAD ? "hidden" : ""}>
-          <img src="${evPhoto(ev, n, "thumb")}" alt="" loading="lazy" decoding="async" width="640" height="427">
+          <img src="${evPhoto(ev, n, "thumb")}" srcset="${evPhoto(ev, n, "thumb")} 800w, ${evPhoto(ev, n, "mid")} 1400w"
+               sizes="${k === 0 ? "(max-width:640px) 100vw, (max-width:980px) 66vw, 640px" : "(max-width:640px) 50vw, (max-width:980px) 33vw, 320px"}"
+               alt="" loading="lazy" decoding="async" width="800" height="533">
         </button>`).join("");
       const video = ev.youtube ? `
         <button type="button" class="evideo evideo--ready" data-yt="${ev.youtube}" aria-label="Play the recording of ${ev.name}'s talk">
-          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "full")}" alt="" decoding="async">
+          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "mid")}" srcset="${evPhoto(ev, ev.poster, "mid")} 1400w, ${evPhoto(ev, ev.poster, "full")} 2400w" sizes="(max-width:1320px) 100vw, 1270px" alt="" decoding="async">
           <span class="evideo__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
           <span class="evideo__tag" aria-hidden="true">▶ Watch the talk · ${ev.stats[0][1]}</span>
         </button>` : `
         <div class="evideo evideo--soon" aria-label="Recording coming soon">
-          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "full")}" alt="${ev.name} speaking to the club" decoding="async">
+          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "mid")}" srcset="${evPhoto(ev, ev.poster, "mid")} 1400w, ${evPhoto(ev, ev.poster, "full")} 2400w" sizes="(max-width:1320px) 100vw, 1270px" alt="${ev.name} speaking to the club" decoding="async">
           <span class="evideo__soon"><span class="evideo__dot" aria-hidden="true"></span>Recording coming soon</span>
         </div>`;
       art.innerHTML = `
