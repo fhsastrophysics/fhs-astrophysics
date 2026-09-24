@@ -133,8 +133,7 @@
   /* -------------------------------------------------------------------
      EVENTS — guest speakers. One entry per event; photos are numbered
      01..count under dir/{full,mid,thumb}/NN.webp (2400 / 1400 / 800px, colour-graded).
-     `youtube` is the YouTube video ID (the part after v=). While it is null
-     the card shows the poster with a "recording coming soon" state.
+     `youtube` is the YouTube video ID (the part after v=); null = no video block.
      ------------------------------------------------------------------- */
   const EVENTS = [
     {
@@ -984,11 +983,7 @@
           <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "mid")}" srcset="${evPhoto(ev, ev.poster, "mid")} 1400w, ${evPhoto(ev, ev.poster, "full")} 2400w" sizes="(max-width:1320px) 100vw, 1270px" alt="" decoding="async">
           <span class="evideo__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
           <span class="evideo__tag" aria-hidden="true">▶ Watch the talk · ${ev.stats[0][1]}</span>
-        </button>` : `
-        <div class="evideo evideo--soon" aria-label="Recording coming soon">
-          <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "mid")}" srcset="${evPhoto(ev, ev.poster, "mid")} 1400w, ${evPhoto(ev, ev.poster, "full")} 2400w" sizes="(max-width:1320px) 100vw, 1270px" alt="${ev.name} speaking to the club" decoding="async">
-          <span class="evideo__soon"><span class="evideo__dot" aria-hidden="true"></span>Recording coming soon</span>
-        </div>`;
+        </button>` : "";
       art.innerHTML = `
         <header class="event__head">
           <div class="event__lead">
@@ -1000,7 +995,7 @@
             ${ev.stats.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
           </dl>
         </header>
-        <div class="event__media">${video}</div>
+        ${video ? `<div class="event__media">${video}</div>` : ""}
         <p class="event__desc">${ev.desc}</p>
         <div class="event__gallery">
           <div class="event__gallery-head">
