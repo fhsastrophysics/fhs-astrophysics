@@ -146,7 +146,7 @@
       name: "Dr. Seth Shostak",
       role: "Senior Astronomer, SETI Institute",
       desc: "Senior Astronomer at the SETI Institute and host of the Big Picture Science podcast, Dr. Shostak joined us at lunch for a talk on the search for extraterrestrial intelligence, followed by questions from the room. Our first guest speaker of the ’26–’27 year.",
-      stats: [["Attendance", "~40"], ["Talk", "32 min"], ["Photos", "51"]],
+      stats: [["Talk", "32 min"], ["Photos", "51"]],
       youtube: null,
       dir: "assets/events/shostak",
       count: 51,
@@ -981,7 +981,7 @@
         <button type="button" class="evideo evideo--ready" data-yt="${ev.youtube}" aria-label="Play the recording of ${ev.name}'s talk">
           <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "full")}" alt="" decoding="async">
           <span class="evideo__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span class="evideo__tag" aria-hidden="true">▶ Watch the talk · ${ev.stats[1][1]}</span>
+          <span class="evideo__tag" aria-hidden="true">▶ Watch the talk · ${ev.stats[0][1]}</span>
         </button>` : `
         <div class="evideo evideo--soon" aria-label="Recording coming soon">
           <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "full")}" alt="${ev.name} speaking to the club" decoding="async">
