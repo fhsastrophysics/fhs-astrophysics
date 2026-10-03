@@ -54,6 +54,7 @@
     21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7 },
     22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26" },
     23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26" },
+    24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26" },
   };
 
   const MEETINGS = [
@@ -117,6 +118,10 @@
       slides: "", deckUrl: "https://www.canva.com/design/DAHVZZk7yjo/Gw6NIL3vm5xMa4q56CodCA/view?embed", notes: [23],
       summary: "A guest talk and Q&A with Dr. Seth Shostak, Senior Astronomer at the SETI Institute, on the search for extraterrestrial intelligence. How SETI listens for signals, the Drake equation, the Fermi paradox, and why he is betting we will find life within decades.",
       topics: ["SETI", "Drake Equation", "Fermi Paradox", "Guest Q&A"] },
+    { n: 16, disp: "3", yr: "26", kind: "Lecture", short: "The Fermi Paradox", title: "The Fermi Paradox",
+      slides: "", deckUrl: "https://www.canva.com/design/DAHW5xhK7WA/pARQjdP0aob9_VlWaEstUA/view?embed", notes: [24],
+      summary: "If intelligent life is possible, why haven't we seen it? Colonies that launch more colonies could fill the galaxy many times over, so we weigh the ways out: how uncertain the Drake equation really is, the chance that we are alone, and the Great Filter.",
+      topics: ["Fermi Paradox", "Colony Growth", "Drake Equation", "Great Filter"] },
   ];
 
   const OFFICERS = [
