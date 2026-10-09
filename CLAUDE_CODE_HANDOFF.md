@@ -182,10 +182,9 @@ description ending in a sentence. Change that last sentence to exactly:
 ### 3.12 ✅ "Reach us" box — list each officer's contact, Abir first
 The Join page "Reach us" card previously showed only the club email + a generic note. Abir
 wanted **each officer's contact listed, with his name first**. It now shows the club email
-plus three officer rows (name, role, email), in order **Abir Mehta (Co-Founder & President),
-Dhruv Lagu (Co-Founder & Vice President), Saanvi Doshi (Social Media & Outreach Lead)**.
-Emails: `amehta251@student.fuhsd.org`, `dlagu234@student.fuhsd.org`,
-`sdoshi468@student.fuhsd.org`. Verify order and that emails render in the SANS font (3.1).
+plus two officer rows (name, role, email), in order **Abir Mehta (Co-Founder & President),
+Dhruv Lagu (Co-Founder & Vice President)**.
+Emails: `amehta251@student.fuhsd.org`, `dlagu234@student.fuhsd.org`. Verify order and that emails render in the SANS font (3.1).
 
 ### 3.13 ✅ Remove all em dashes ("—")
 Abir: remove em dashes, *especially* in the "Reach us" box copy. Done in the visible copy

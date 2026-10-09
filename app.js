@@ -119,7 +119,7 @@
       summary: "A guest talk and Q&A with Dr. Seth Shostak, Senior Astronomer at the SETI Institute, on the search for extraterrestrial intelligence. How SETI listens for signals, the Drake equation, the Fermi paradox, and why he is betting we will find life within decades.",
       topics: ["SETI", "Drake Equation", "Fermi Paradox", "Guest Q&A"] },
     { n: 16, disp: "3", yr: "26", kind: "Lecture", short: "The Fermi Paradox", title: "The Fermi Paradox",
-      slides: "", deckUrl: "https://www.canva.com/design/DAHW5xhK7WA/pARQjdP0aob9_VlWaEstUA/view?embed", notes: [24],
+      slides: "", deckUrl: "https://www.canva.com/design/DAHXF5xio1o/KlsxOGQwIrWpS5J8WxpikQ/view?embed", notes: [24],
       summary: "If intelligent life is possible, why haven't we seen it? Colonies that launch more colonies could fill the galaxy many times over, so we weigh the ways out: how uncertain the Drake equation really is, the chance that we are alone, and the Great Filter.",
       topics: ["Fermi Paradox", "Colony Growth", "Drake Equation", "Great Filter"] },
   ];
@@ -129,8 +129,6 @@
       bio: "Founded the Astrophysics Club with Dhruv in September 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
     { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/dhruv.jpeg", email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
-    { name: "Saanvi Doshi", role: "Social Media & Outreach Lead", photo: "assets/saanvi.jpeg", email: "sdoshi468@student.fuhsd.org",
-      bio: "Joined the Astrophysics Club in April of 2026. Runs the club's Instagram and other socials, as well as running fundraisers and keeping the club connected with Fremont's ASB (Associated Student Body). Outside the club, Saanvi is interested in lab research and is involved in FHS Science Olympiad, as well as various other leadership roles on campus." },
   ];
 
   const ROUTES = ["/", "/about", "/meetings", "/notes", "/atlas", "/events", "/team", "/faq", "/join"];
