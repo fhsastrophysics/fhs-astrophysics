@@ -303,8 +303,6 @@ main, .nav, .footer{ position:relative; z-index:3; }
 .btn--ghost:hover{ border-color:var(--accent); background:rgba(26,38,72,.7); color:#fff; }
 .btn__arw{ font-family:var(--font-mono); transition:transform .3s var(--ease); }
 .btn:hover .btn__arw{ transform:translate(4px,-4px); }
-.magnetic{ transition: transform .55s cubic-bezier(.16,1,.3,1), background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), box-shadow .3s var(--ease); }
-.magnetic.is-magnet-active{ transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), box-shadow .3s var(--ease); }
 
 .ulink{ color:var(--accent); border-bottom:1px solid transparent; transition:border-color .2s var(--ease); word-break:break-word; }
 .ulink:hover{ border-bottom-color:var(--accent); }
@@ -641,14 +639,6 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
 .route:not(.route--home) .chapter{ position:relative; }
 .route:not(.route--home) .chapter::after{ content:""; position:absolute; inset:-24% -10% -10%; z-index:-1; pointer-events:none;
   background:radial-gradient(ellipse 82% 74% at 32% 44%, rgba(3,5,12,.74) 0%, rgba(3,5,12,.42) 46%, transparent 76%); }
-
-/* Cursor spotlight on the plainer cards (goal + arc-node); --mx/--my from JS */
-.goal, .arc-node{ position:relative; }
-.goal > *, .arc-node > *{ position:relative; z-index:2; }
-.goal::before, .arc-node::before{ content:""; position:absolute; inset:0; z-index:1; border-radius:inherit; pointer-events:none;
-  background:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%), rgba(188,215,255,.10), transparent 55%);
-  opacity:0; transition:opacity .35s var(--ease); }
-.goal:hover::before, .arc-node:hover::before{ opacity:1; }
 
 /* Ambient particles — sparse specks drifting up on every route */
 .ambient-particles{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
@@ -2002,3 +1992,149 @@ body[data-route="/"] .footer{ margin-top:0; }
 @media (prefers-reduced-motion: reduce){
   .evideo__dot{ animation:none; } .ph--in{ animation:none; } .plb__fig img{ transition:none; opacity:1; transform:none; }
 }
+
+/* =====================================================================
+   PLAIN LABELS, NO CARD BOXES (Abir's notes from the Mark tool, Oct 2026)
+   1. Tiny, wide-tracked, all-caps labels read as filler an AI adds "just
+      because". What a thing is goes in one plain sentence-case line in the
+      body face, under its title. No § marks.
+   2. No rounded, blue-outlined boxes around grid items and panels, and no
+      hover float, lift or zoom. Items sit on the page; square-cornered
+      images carry the shape.
+   3. No pill badges slapped on top of images, and no stats for their own sake.
+   Last in the file on purpose: it settles every earlier rule, including the
+   touch and phone blocks, on these properties.
+   ===================================================================== */
+
+/* -- 1 · the plain line ------------------------------------------------- */
+.mcard__by, .ncard__by, .modal__eyebrow, #meetingModal .modal__eyebrow, .event__when,
+.nextmeet__k, .nmu__l, .nextmeet__meta dt, .lightbox__data dt, .lightbox__credit,
+.signup__eyebrow, .signup__meta, .plb__cap, .evideo__tag, .evideo__soon{
+  font-family:var(--font-sans); font-weight:400; font-size:.95rem; line-height:1.45;
+  letter-spacing:0; text-transform:none; color:var(--ink-mute);
+}
+/* Small labels elsewhere on the site: same face, sentence case, normal tracking. */
+.mono, .home__eyebrow, .footer__sub, .jo__role, .faq-side__eyebrow, .faq-side__discord, .tcard__role, .tcard__badge{
+  font-family:var(--font-sans); letter-spacing:0; text-transform:none;
+}
+.mono{ font-weight:400; font-size:.95rem; }
+.home__eyebrow{ font-weight:400; font-size:1.05rem; color:var(--ink-soft); opacity:1; }
+.footer__sub, .jo__role{ font-weight:400; font-size:.88rem; }
+.faq-side__eyebrow{ font-weight:400; font-size:.95rem; color:var(--ink-mute); }
+.faq-side__discord{ font-weight:500; font-size:.92rem; }
+.tcard__role{ font-weight:400; font-size:.95rem; }
+.tcard__badge{ font-weight:400; font-size:.88rem; border:0; background:none; padding:0; color:var(--ink-mute); }
+
+/* -- Meetings: no box, no corner label, no chips, no float ------------- */
+.meetings{ gap:3.2rem 2.4rem; }
+.mcard, .mcard:hover{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; }
+.mcard__thumb{ aspect-ratio:16/9; border:0; border-radius:0; }   /* the decks are 16:9; 16:10 cropped their left edge */
+.mcard__body{ padding:1.15rem 0 0; gap:.5rem; }
+.mcard__title{ font-size:clamp(1.45rem,2vw,1.75rem); line-height:1.1; }
+.mcard__by, .ncard__by{ margin:0; }
+.mcard__sum{ margin-top:.35rem; }
+.mcard__cta{ border-top:0; padding-top:.5rem; justify-content:flex-start; gap:.45rem;
+  font-family:var(--font-sans); font-weight:500; font-size:.95rem; letter-spacing:0; text-transform:none; }
+
+/* -- Season switch: no segmented box; the active season wears the
+      "Open slide deck" gradient ----------------------------------------- */
+.arc__years{ background:none; border:0; border-radius:0; overflow:visible; gap:.4rem; }
+.arc__year{ padding:.6rem 1.05rem; border:1px solid transparent; border-radius:10px;
+  font-family:var(--font-sans); font-weight:500; font-size:.95rem; letter-spacing:0; color:var(--ink-mute); }
+.arc__year + .arc__year{ border-left:1px solid transparent; }
+.arc__year:not(.is-active):hover{ background:none; color:var(--ink); }
+.arc__year.is-active{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); color:#fff;
+  border-color:rgba(160,196,255,.55); box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; }
+
+/* -- Meeting preview: byline under the title, plain topics, full 16:9
+      cover, no labels on the previews ------------------------------------ */
+.modal__title{ margin-bottom:.3rem; }
+#meetingModal .modal__eyebrow, .modal__eyebrow{ margin:0 0 1.1rem; }
+.modal__topics{ display:block; margin:-.5rem 0 1.6rem; font-size:.95rem; color:var(--ink-mute); line-height:1.5; }
+.modal__thumbs .mt{ border:0; border-radius:0; }
+.modal__thumbs .mt--hero{ aspect-ratio:16/9; }
+
+/* -- Notes: no box, no badges, no page count, no "Open", no zoom -------- */
+.notes-grid{ gap:2.8rem 1.8rem; }
+.ncard, .ncard:hover{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; }
+.ncard__thumb{ border:0; border-radius:0; }
+.ncard__thumb::after{ content:none; }
+.ncard:hover .ncard__thumb img{ transform:none; }
+.ncard__body{ padding:.95rem 0 0; gap:.3rem; }
+/* Filters: plain words; the active one is underlined, not boxed. */
+.notes-filter{ gap:.4rem 1.7rem; margin-bottom:2.4rem; }
+.fbtn, .fbtn:hover, .fbtn.active{ padding:.35rem 0; background:none; border:0; border-bottom:2px solid transparent; border-radius:0; box-shadow:none;
+  font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; }
+.fbtn{ color:var(--ink-mute); }
+.fbtn:hover{ color:var(--ink); }
+.fbtn.active{ color:var(--ink); border-bottom-color:var(--accent); }
+
+/* -- Atlas: no outline, no zoom; catalog number lives in the type line -- */
+.acard, .acard:hover{ border:0; border-radius:0; box-shadow:none; }
+.acard__media img, .acard:hover .acard__media img, .acard:focus-visible .acard__media img{ transform:none; }
+.acard__media img{ transition:filter .4s var(--ease); }
+.acard__meta{ font-family:var(--font-sans); font-weight:400; font-size:.95rem; letter-spacing:0; text-transform:none; color:var(--ink-soft); }
+.lightbox__media{ border:0; border-radius:0; }
+.lightbox__data dt{ font-size:.9rem; }
+
+/* -- Events: the talk's title leads; no panel, no stats, no zoom -------- */
+.event{ padding:0; border:0; border-radius:0; background:none; box-shadow:none;
+  backdrop-filter:none; -webkit-backdrop-filter:none; }
+.event__head{ display:block; margin-bottom:1.6rem; }
+.event__name{ margin:0 0 .55rem; }
+.event__when{ margin:.4rem 0 0; }
+.event__gallery-title{ margin:0 0 1rem; font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.4rem,2.2vw,1.7rem); line-height:1.1; letter-spacing:-.02em; color:var(--ink); }
+.evideo, .ph, .ph:hover, .ph:focus-visible{ border:0; border-radius:0; box-shadow:none; }
+.ph img, .ph:hover img, .ph:focus-visible img{ transform:none; }
+.evideo__tag, .evideo__soon{ color:#fff; }
+
+/* -- Join: no boxes around sign-up, next meeting or reach-us ----------- */
+.signup, .nextmeet, .joincard{ padding:clamp(1.4rem,2.4vw,1.8rem) 0 0; border:0; border-top:1px solid var(--line-2); border-radius:0;
+  background:none; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; overflow:visible; }
+.signup::before{ content:none; }
+.nextmeet__top{ margin-bottom:.6rem; }
+.nmu__l{ font-size:.9rem; }
+.nextmeet__metarow{ grid-template-columns:4.4rem 1fr; }
+.joincard__officers{ gap:0; }
+.joincard__officers a, .joincard__officers a:hover{ padding:.75rem 0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:none; }
+.joincard__officers a:hover .jo__name{ color:var(--accent); }
+.gallery__more, .gallery__more:hover{ width:auto; margin-top:1rem; padding:.5rem 0; border:0; border-radius:0; background:none; box-shadow:none;
+  justify-content:flex-start; font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; color:var(--accent); }
+.gallery__more:hover{ color:var(--ink); }
+
+/* Deck covers are never cropped, whatever shape the source slide is: the frame
+   is 16:9 (the deck format) and the image is fitted, not filled. A 16:10 cover
+   just gets thin dark sides instead of losing its left edge. */
+.mcard__thumb img, .modal__thumbs .mt--hero img{ object-fit:contain; object-position:center; background:#05080F; }
+
+/* -- About, Team, FAQ: the same rule, no boxed cards --------------------- */
+.arc-node, .arc-node:hover, .goal, .goal:hover, .tcard, .tcard:hover, .faq-side, .arc__empty{
+  border:0; border-radius:0; background:none; box-shadow:none; transform:none;
+  backdrop-filter:none; -webkit-backdrop-filter:none; }
+.arc-node{ width:170px; min-height:0; padding:.9rem 0 0; border-top:1px solid var(--line-2); }
+.goal-grid{ gap:2.2rem; }
+.goal{ padding:1.1rem 0 0; border-top:1px solid var(--line-2); }
+.tcard__portrait{ border-bottom:0; }
+.tcard__body{ padding:1.2rem 0 0; }
+.faq-side{ padding:1.1rem 0 0; border-top:1px solid var(--line-2); }
+.arc__empty{ padding:0; }
+
+/* -- Hover, everywhere: nothing lifts, floats or zooms. (Arrows still nudge
+      toward where the click goes; that's direction, not decoration.) ------ */
+.nav__cta:hover, .nav__soc:hover, .btn--solid:hover, .modal__primary:hover, .signup__btn:hover, .mi-item:hover,
+.tcard:hover .tcard__portrait img, .tcard:hover .tcard__portrait--avatar img, .slink:hover .slink__ico,
+.evideo--ready:hover .evideo__poster, .evideo--ready:focus-visible .evideo__poster{ transform:none; }
+.evideo--ready:hover .evideo__play{ transform:translate(-50%,-50%); box-shadow:none; }
+
+/* Text that used to sit on a navy panel now sits on the photograph. A tight
+   dark shadow keeps it legible over bright stars; on dark sky it's invisible. */
+.mcard__title, .mcard__sum, .mcard__by, .mcard__cta, .ncard__title, .ncard__by, .goal__t, .goal p, .arc-node__n, .arc-node__t,
+.tcard__name, .tcard__role, .tcard__bio, .tcard__mail, .event__desc, .event__role, .event__when, .event__gallery-title,
+.signup__eyebrow, .signup__title, .signup__desc, .nextmeet__k, .nextmeet__topic, .nextmeet__when, .nmu__v, .nmu__l, .nextmeet__meta,
+.joincard__note, .joincard__officers, .faq-side__eyebrow, .faq-side__title, .faq-side__desc, .arc__empty{
+  text-shadow:0 1px 2px rgba(1,3,10,.9), 0 0 12px rgba(1,3,10,.7); }
+.tcard__mail{ font-family:var(--font-sans); font-size:.9rem; }
+/* In the preview the cover keeps its own shape (one image, nothing to line up with). */
+.modal__thumbs .mt--hero{ aspect-ratio:auto; }
+.modal__thumbs .mt--hero img{ height:auto; }

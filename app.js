@@ -35,26 +35,29 @@
   /* -------------------------------------------------------------------
      DATA (factual, extracted from decks & handouts)
      ------------------------------------------------------------------- */
+  // `file` is the handout's public name under assets/notes/, knzhou-style:
+  // <season>/M<meeting>.pdf, with Sol / Constants for a meeting's extra sheets.
+  // (The old src-<id>.pdf copies stay only so links already posted keep working.)
   const NOTES = {
-    6:  { title: "Introduction to Astrophysics",          meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    7:  { title: "Celestial Motion & Orbits",             meeting: 2,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    8:  { title: "Stars & Their Life Cycles",             meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    9:  { title: "Exoplanets",                            meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 7 },
-    10: { title: "Semester 1 Review: Astro Jeopardy",     meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    11: { title: "Exoplanet Detection with Real Data",    meeting: 6,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    12: { title: "Transit Detection + Model Evaluation",  meeting: 7,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    13: { title: "Black Holes",                           meeting: 8,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    14: { title: "Black Hole Problems",                   meeting: 9,  type: "Worksheet",     cat: "practice", pages: 2 },
-    15: { title: "Black Hole: Table of Constants",        meeting: 9,  type: "Reference",     cat: "practice", pages: 1 },
-    16: { title: "Black Hole Problems: Answer Key",       meeting: 9,  type: "Answer Key",    cat: "keys",     pages: 1 },
-    17: { title: "Composition of the Universe",           meeting: 10, type: "Lecture Notes", cat: "notes",    pages: 7 },
-    18: { title: "Workstation Activity: Dark Matter",     meeting: 11, type: "Activity",      cat: "practice", pages: 6 },
-    19: { title: "Workstation Activity: Answer Key",      meeting: 11, type: "Answer Key",    cat: "keys",     pages: 2 },
-    20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8 },
-    21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7 },
-    22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26" },
-    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26" },
-    24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26" },
+    6:  { title: "Introduction to Astrophysics",          meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M1.pdf" },
+    7:  { title: "Celestial Motion & Orbits",             meeting: 2,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M2.pdf" },
+    8:  { title: "Stars & Their Life Cycles",             meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M3.pdf" },
+    9:  { title: "Exoplanets",                            meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/M4.pdf" },
+    10: { title: "Semester 1 Review: Astro Jeopardy",     meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M5.pdf" },
+    11: { title: "Exoplanet Detection with Real Data",    meeting: 6,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M6.pdf" },
+    12: { title: "Transit Detection + Model Evaluation",  meeting: 7,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M7.pdf" },
+    13: { title: "Black Holes",                           meeting: 8,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/M8.pdf" },
+    14: { title: "Black Hole Problems",                   meeting: 9,  type: "Worksheet",     cat: "practice", pages: 2, file: "2025-26/M9.pdf" },
+    15: { title: "Black Hole: Table of Constants",        meeting: 9,  type: "Reference",     cat: "practice", pages: 1, file: "2025-26/M9Constants.pdf" },
+    16: { title: "Black Hole Problems: Answer Key",       meeting: 9,  type: "Answer Key",    cat: "keys",     pages: 1, file: "2025-26/M9Sol.pdf" },
+    17: { title: "Composition of the Universe",           meeting: 10, type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/M10.pdf" },
+    18: { title: "Workstation Activity: Dark Matter",     meeting: 11, type: "Activity",      cat: "practice", pages: 6, file: "2025-26/M11.pdf" },
+    19: { title: "Workstation Activity: Answer Key",      meeting: 11, type: "Answer Key",    cat: "keys",     pages: 2, file: "2025-26/M11Sol.pdf" },
+    20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8, file: "2025-26/M12.pdf" },
+    21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/M13.pdf" },
+    22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26", file: "2026-27/M1.pdf" },
+    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26", file: "2026-27/M2.pdf" },
+    24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/M3.pdf" },
   };
 
   const MEETINGS = [
@@ -141,14 +144,14 @@
   const EVENTS = [
     {
       slug: "shostak",
-      kind: "Guest speaker",
+      kind: "Guest talk",
+      talk: "The Search for Extraterrestrial Intelligence",
       date: "September 23, 2026",
       iso: "2026-09-23",
       where: "Fair Oaks Room",
       name: "Dr. Seth Shostak",
-      role: "Senior Astronomer, SETI Institute",
-      desc: "Senior Astronomer at the SETI Institute and host of the Big Picture Science podcast, Dr. Shostak joined us at lunch for a talk on the search for extraterrestrial intelligence, followed by questions from the room. Our first guest speaker of the ’26–’27 year.",
-      stats: [["Talk", "32 min"], ["Photos", "51"]],
+      role: "Senior Astronomer at the SETI Institute",
+      desc: "Dr. Shostak, who also hosts the Big Picture Science podcast, joined us at lunch for a talk on the search for extraterrestrial intelligence, followed by questions from the room. Our first guest speaker of the ’26–’27 year.",
       youtube: null,
       dir: "assets/events/shostak",
       count: 51,
@@ -193,13 +196,13 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
-  const notePath = (id) => `assets/notes/src-${id}.pdf`;
+  const notePath = (id) => `assets/notes/${(NOTES[id] && NOTES[id].file) || `src-${id}.pdf`}`;
   const noteThumb = (id) => `assets/thumbs/note-${id}.jpg`;
   const deckThumb = (n) => `assets/thumbs/deck-${n}.jpg`;
   const dlName = (id) => { const m = NOTES[id]; return `FHS Astrophysics - M${m.meeting} - ${m.title}.pdf`; };
   const pad = (n) => String(n);   /* single digit: 1,2,3 not 01,02,03 (per Abir) */
+  const sentence = (t) => t ? t.charAt(0) + t.slice(1).toLowerCase() : "";   /* "Answer Key" -> "Answer key" */
 
-  const IC_OPEN = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
   /* -------------------------------------------------------------------
      Scroll bus — ONE listener for the whole app.
@@ -274,48 +277,6 @@
       setTimeout(() => { reel.style.transform = `translateY(-${(reel.children.length - 1)}em)`; }, i * 120);
     }));
     setTimeout(() => cols.forEach((reel) => { reel.style.transform = `translateY(-${(reel.children.length - 1)}em)`; }), 1800);
-  }
-
-  /* -------------------------------------------------------------------
-     Magnetic buttons
-     ------------------------------------------------------------------- */
-  function initMagnetic() {
-    if (!FINE || REDUCED) return;
-    $$(".magnetic").forEach((btn) => {
-      let raf = null;
-      const strength = 0.15;
-      btn.addEventListener("pointerenter", () => btn.classList.add("is-magnet-active"));
-      btn.addEventListener("pointermove", (e) => {
-        const r = btn.getBoundingClientRect();
-        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        const dx = e.clientX - cx, dy = e.clientY - cy;
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          btn.style.transform = `translate(${(dx * strength).toFixed(1)}px, ${(dy * strength).toFixed(1)}px)`;
-          raf = null;
-        });
-      });
-      btn.addEventListener("pointerleave", () => {
-        if (raf) { cancelAnimationFrame(raf); raf = null; }
-        btn.classList.remove("is-magnet-active");
-        btn.style.transform = "translate(0px, 0px)";
-        setTimeout(() => { btn.style.transform = ""; }, 600);
-      });
-    });
-  }
-
-  /* -------------------------------------------------------------------
-     Card spotlight
-     ------------------------------------------------------------------- */
-  function initSpotlight(cards) {
-    if (!FINE || REDUCED) return;
-    cards.forEach((c) => {
-      c.addEventListener("pointermove", (e) => {
-        const r = c.getBoundingClientRect();
-        c.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100) + "%");
-        c.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100) + "%");
-      });
-    });
   }
 
   /* -------------------------------------------------------------------
@@ -647,17 +608,13 @@
       card.setAttribute("role", "button");
       card.setAttribute("aria-label", `Preview Meeting ${m.n}: ${m.title}`);
       card.innerHTML = `
-        <div class="mcard__head">
-          <span class="mcard__no">${m.disp || pad(m.n)}</span>
-          <span class="mcard__kind">${m.kind}</span>
-        </div>
         <div class="mcard__thumb">
-          <img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.n}: ${m.title}" loading="lazy" decoding="async" width="640" height="400">
+          <img src="${deckThumb(m.n)}" alt="Title slide, Meeting ${m.disp || m.n}: ${m.title}" loading="lazy" decoding="async" width="640" height="360">
         </div>
         <div class="mcard__body">
           <h3 class="mcard__title">${m.title}</h3>
+          <p class="mcard__by">Meeting ${m.disp || pad(m.n)} · ${sentence(m.kind)}</p>
           <p class="mcard__sum">${m.summary}</p>
-          <div class="mcard__topics">${m.topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
           <div class="mcard__cta">
             <span>Preview deck</span>
             <span class="mcard__cta-arw" aria-hidden="true">→</span>
@@ -687,30 +644,24 @@
     const modal = $("#meetingModal"); if (!modal) return;
     lastFocus = document.activeElement;
 
-    $("#modalEyebrow").textContent = `Meeting ${m.disp || pad(m.n)} · ${m.kind}`;
+    $("#modalEyebrow").textContent = `Meeting ${m.disp || pad(m.n)} · ${sentence(m.kind)}`;
     $("#modalTitle").textContent = m.title;
     $("#modalSum").textContent = m.summary;
 
     const topics = $("#modalTopics");
-    topics.innerHTML = m.topics.map((x) => `<span class="chip">${x}</span>`).join("");
+    topics.textContent = m.topics.join(", ");
 
     // Preview: large deck-cover thumbnail + supporting note thumbs
     const thumbs = $("#modalThumbs");
     thumbs.innerHTML = "";
     const heroWrap = el("div", "mt mt--hero");
-    heroWrap.innerHTML = `
-      <span class="mt__n">Slidedeck</span>
-      <img src="${deckThumb(m.n)}" alt="Cover slide, Meeting ${m.n}: ${m.title}" loading="lazy" decoding="async" />
-    `;
+    heroWrap.innerHTML = `<img src="${deckThumb(m.n)}" alt="Cover slide, Meeting ${m.disp || m.n}: ${m.title}" loading="lazy" decoding="async" />`;
     thumbs.appendChild(heroWrap);
     // Show 1st page of any lecture-note handout as supporting preview
     const noteId = m.notes[0];
     if (noteId) {
       const nWrap = el("div", "mt");
-      nWrap.innerHTML = `
-        <span class="mt__n">Handout</span>
-        <img src="${noteThumb(noteId)}" alt="First page of the meeting handout" loading="lazy" decoding="async" />
-      `;
+      nWrap.innerHTML = `<img src="${noteThumb(noteId)}" alt="First page of the meeting handout" loading="lazy" decoding="async" />`;
       thumbs.appendChild(nWrap);
     }
 
@@ -759,17 +710,11 @@
   let notesFilterApply = null;
 
   const FILTERS = [
-    { key: "all", label: "All · 16" },
-    { key: "notes", label: "Lecture Notes · 11" },
-    { key: "practice", label: "Worksheets · 3" },
-    { key: "keys", label: "Answer Keys · 2" },
+    { key: "all", label: "All" },
+    { key: "notes", label: "Lecture notes" },
+    { key: "practice", label: "Worksheets" },
+    { key: "keys", label: "Answer keys" },
   ];
-
-  function topicsForNote(id) {
-    const nd = NOTES[id]; if (!nd) return [];
-    const m = MEETINGS.find((x) => x.n === nd.meeting);
-    return m ? m.topics : [];
-  }
 
   function renderNotes() {
     const grid = $("#notesGrid");
@@ -777,7 +722,6 @@
     if (!grid) return;
     Object.keys(NOTES).map(Number).sort((a, b) => a - b).forEach((id, i) => {
       const nd = NOTES[id];
-      const topics = topicsForNote(id);
       const a = el("a", "ncard reveal");
       // Open the handout PDF in a new tab (browser's native preview), not a download.
       a.href = notePath(id); a.target = "_blank"; a.rel = "noopener";
@@ -785,22 +729,16 @@
       a.setAttribute("aria-label", `${nd.title}, ${nd.type}, Meeting ${nd.meeting}, ${nd.pages} page${nd.pages > 1 ? "s" : ""} (PDF)`);
       a.innerHTML = `
         <div class="ncard__thumb">
-          <span class="ncard__mbadge">${pad(nd.meeting)}</span>
-          <span class="ncard__type" data-type="${nd.type}">${nd.type}</span>
           <img src="${noteThumb(id)}" alt="First page of ${nd.title}" loading="lazy" decoding="async" width="340" height="440">
-          <div class="ncard__cloud" aria-hidden="true">
-            <span class="ncard__cloud-k">Topics</span>
-            <div class="ncard__cloud-list">${topics.map((x) => `<span class="chip">${x}</span>`).join("")}</div>
-          </div>
         </div>
         <div class="ncard__body">
           <h3 class="ncard__title">${nd.title}</h3>
-          <p class="ncard__meta"><span>${nd.pages} pg</span><span class="ncard__open">Open ${IC_OPEN}</span></p>
+          <p class="ncard__by">Meeting ${pad(nd.meeting)} · ${sentence(nd.type)}</p>
         </div>`;
       grid.appendChild(a);
     });
     const notesWrap = grid.closest(".wrap");
-    const NOTE_BASE = { all: "All", notes: "Lecture Notes", practice: "Worksheets", keys: "Answer Keys" };
+    const NOTE_BASE = { all: "All", notes: "Lecture notes", practice: "Worksheets", keys: "Answer keys" };
     const noteSeason = () => {
       const b = notesWrap && notesWrap.querySelector(".season-switch .arc__year.is-active");
       return b && b.dataset.season === "26" ? "26" : "25";
@@ -822,10 +760,10 @@
       });
       if (bar) bar.querySelectorAll(".fbtn").forEach((b) => {
         const k = b.dataset.key;
-        b.textContent = NOTE_BASE[k] + " \u00b7 " + (k === "all" ? counts.all : (counts[k] || 0));
+        b.textContent = NOTE_BASE[k];
       });
       const lede = document.querySelector("#notesLede");
-      if (lede) lede.textContent = "LaTeX handouts compiling notes across all of our meetings. Hover a card to see its topics.";
+      if (lede) lede.textContent = "LaTeX handouts compiling notes across all of our meetings.";
       if (notesWrap) { const e = notesWrap.querySelector(".season-empty"); if (e) e.hidden = counts.all > 0; }
     }
     notesFilterApply = applyNoteFilters;
@@ -843,7 +781,6 @@
       });
     }
     applyNoteFilters();
-    initSpotlight($$(".ncard", grid));
   }
 
   /* -------------------------------------------------------------------
@@ -900,15 +837,10 @@
         <span class="acard__media"><img src="${atlasImg(m)}" alt="" loading="lazy" decoding="async"></span>
         <span class="acard__top" aria-hidden="true">
           <span class="acard__idx">${pad(i + 1)}</span>
-          <span class="acard__cat">${m.cat}</span>
         </span>
         <span class="acard__info">
           <span class="acard__name">${m.name}</span>
-          <span class="acard__meta">${m.type}</span>
-          <span class="acard__stats" aria-hidden="true">
-            <span><i>Distance</i><b>${m.dist}</b></span>
-            <span><i>Constellation</i><b>${m.con}</b></span>
-          </span>
+          <span class="acard__meta">${m.type}, ${m.cat}</span>
         </span>`;
       grid.appendChild(card);
     });
@@ -928,13 +860,12 @@
     lbLastFocus = document.activeElement;
     $("#lbImg").src = atlasImg(m);
     $("#lbImg").alt = m.name;
-    $("#lbEyebrow").textContent = `Object ${pad(i + 1)} · ${m.type}`;
     $("#lbTitle").textContent = m.name;
     $("#lbSum").textContent = m.desc;
     $("#lbData").innerHTML = [
       ["Catalog", m.cat], ["Type", m.type], ["Distance", m.dist], ["Constellation", m.con],
     ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
-    $("#lbCredit").textContent = "Imagery · NASA / ESA mission archives";
+    $("#lbCredit").textContent = "Images from the NASA and ESA mission archives";
     lb.classList.add("open");
     lb.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -985,26 +916,20 @@
         <button type="button" class="evideo evideo--ready" data-yt="${ev.youtube}" aria-label="Play the recording of ${ev.name}'s talk">
           <img class="evideo__poster" src="${evPhoto(ev, ev.poster, "mid")}" srcset="${evPhoto(ev, ev.poster, "mid")} 1400w, ${evPhoto(ev, ev.poster, "full")} 2400w" sizes="(max-width:1320px) 100vw, 1270px" alt="" decoding="async">
           <span class="evideo__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span class="evideo__tag" aria-hidden="true">▶ Watch the talk · ${ev.stats[0][1]}</span>
+          <span class="evideo__tag" aria-hidden="true">▶ Watch the talk</span>
         </button>` : "";
       art.innerHTML = `
         <header class="event__head">
           <div class="event__lead">
-            <span class="event__eyebrow">§ ${ev.kind} · <time datetime="${ev.iso}">${ev.date}</time> · ${ev.where}</span>
-            <h2 class="event__name">${ev.name}</h2>
-            <p class="event__role">${ev.role}</p>
+            <h2 class="event__name">${ev.talk || ev.name}</h2>
+            <p class="event__role">${ev.talk ? `${ev.name}, ${ev.role}` : ev.role}</p>
+            <p class="event__when">${ev.kind} · <time datetime="${ev.iso}">${ev.date}</time> · ${ev.where}</p>
           </div>
-          <dl class="event__stats" aria-label="At a glance">
-            ${ev.stats.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
-          </dl>
         </header>
         ${video ? `<div class="event__media">${video}</div>` : ""}
         <p class="event__desc">${ev.desc}</p>
         <div class="event__gallery">
-          <div class="event__gallery-head">
-            <span class="event__eyebrow">§ From the room</span>
-            <span class="event__count mono dim"><span data-shown>${Math.min(GALLERY_LEAD, ev.count)}</span> of ${ev.count} photos</span>
-          </div>
+          <h3 class="event__gallery-title">From the room</h3>
           <div class="gallery" data-ev="${i}">${tiles}</div>
           ${ev.count > GALLERY_LEAD ? `<button type="button" class="gallery__more" data-more="${i}"><span>See all ${ev.count} photos</span><span aria-hidden="true">↓</span></button>` : ""}
         </div>`;
@@ -1016,7 +941,6 @@
       if (more) {
         const art = more.closest(".event");
         $$(".ph--more", art).forEach((b) => { b.hidden = false; b.classList.add("ph--in"); });
-        const shown = $("[data-shown]", art); if (shown) shown.textContent = EVENTS[+more.dataset.more].count;
         more.remove();
         return;
       }
@@ -1834,12 +1758,9 @@
     initAmbientParticles();
     // Cursor spotlight on the plainer inner-route cards too (meeting cards get it
     // inside renderMeetings). Notes/team keep their own richer hover treatments.
-    initSpotlight($$(".arc-node"));
-    initSpotlight($$(".goal"));
     initNav();
     initStars();
     initReveal();
-    initMagnetic();
     initModal();
     initCopy();
     initSignup();
