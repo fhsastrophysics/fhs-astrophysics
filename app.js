@@ -56,7 +56,7 @@
     20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8, file: "2025-26/SpecialRelativity.pdf" },
     21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/EdgesOfTime.pdf" },
     22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26", file: "2026-27/RomanTelescope.pdf" },
-    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26", file: "2026-27/SETI.pdf" },
+    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 6, yr: "26", file: "2026-27/SETI.pdf" },
     24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FermiParadox.pdf" },
   };
 
