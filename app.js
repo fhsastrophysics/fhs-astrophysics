@@ -16,7 +16,13 @@
   // Open the deck in Google Slides (presentation view) in a new tab — NOT the PDF
   // export, which forces a download. Used by the About "arc" boxes and the meeting
   // modal's deck button; both are target="_blank" so no SPA/warp transition fires.
-  const SLIDES = (id) => `https://docs.google.com/presentation/d/${id}/present`;
+  // Deck links always open a clean, non-editable preview, never the Slides or
+  // Drive app: a Google Slides ID (44 chars) uses /embed; a .pptx uploaded to
+  // Drive (33-char file ID, meetings 10-13) uses Drive's /preview. Canva decks
+  // carry their own deckUrl (/view?embed).
+  const SLIDES = (id) => id.length === 33
+    ? `https://drive.google.com/file/d/${id}/preview`
+    : `https://docs.google.com/presentation/d/${id}/embed`;
   // Season-scoped meeting links: year + that season's own number, so numbering
   // does not carry over across years (2026-27 meeting 1 is meeting-2627-1, not -14).
   const seasonCode = (yr) => { const a = parseInt(yr || "25", 10); return String(a).padStart(2, "0") + String((a + 1) % 100).padStart(2, "0"); };
