@@ -813,11 +813,22 @@
       return b ? b.dataset.key : "all";
     };
     function applyNoteFilters() {
-      const season = noteSeason(), cat = noteCat();
+      const season = noteSeason();
       const counts = { all: 0, notes: 0, practice: 0, keys: 0 };
       grid.querySelectorAll(".ncard").forEach((c) => {
         if ((c.dataset.yr || "25") === season) { counts.all++; counts[c.dataset.cat] = (counts[c.dataset.cat] || 0) + 1; }
       });
+      // A filter with nothing in this season is hidden; if it was the active one, fall back to All.
+      if (bar) bar.querySelectorAll(".fbtn").forEach((b) => {
+        const empty = b.dataset.key !== "all" && !counts[b.dataset.key];
+        b.hidden = empty;
+        if (empty && b.classList.contains("active")) {
+          b.classList.remove("active"); b.setAttribute("aria-pressed", "false");
+          const all = bar.querySelector('.fbtn[data-key="all"]');
+          if (all) { all.classList.add("active"); all.setAttribute("aria-pressed", "true"); }
+        }
+      });
+      const cat = noteCat();
       grid.querySelectorAll(".ncard").forEach((c) => {
         const show = (c.dataset.yr || "25") === season && (cat === "all" || c.dataset.cat === cat);
         c.style.display = show ? "" : "none";
@@ -873,7 +884,7 @@
             <h3 class="tcard__name">${o.name}</h3>
             <span class="tcard__role">${o.role}</span>
             <p class="tcard__bio">${o.bio || ""}</p>
-            ${o.email ? `<a class="tcard__mail js-copy" href="mailto:${o.email}" data-copy="${o.email}">${o.email}</a>` : ""}
+            ${o.email ? `<a class="tcard__mail js-copy" href="https://mail.google.com/mail/?view=cm&fs=1&to=${o.email}" target="_blank" rel="noopener" data-copy="${o.email}">${o.email}</a>` : ""}
           </div>`;
         // If the photo file is missing, gracefully fall back to the initials tile
         // instead of showing a broken-image icon.
