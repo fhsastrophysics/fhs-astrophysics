@@ -2190,5 +2190,18 @@ body[data-route="/"] .footer{ margin-top:0; }
 .nav__cta:hover{ background:linear-gradient(180deg,#6EABFF 0%,#4A82F0 100%); }
 
 /* -- Team: two officers, so they take the full width ------------------- */
-.team-grid{ max-width:none; gap:clamp(1.6rem,3vw,2.6rem); }
-.tcard__portrait{ aspect-ratio:4/3; }   /* full-width cards: landscape keeps the photos sharp and the bios in view */
+/* Two officers: one full-width row each, portrait beside the bio, sides
+   alternating. Portraits keep their own 4:5 shape, so a tall photo is never
+   stretched across a wide frame (which could only ever show a face). */
+.team-grid{ max-width:none; grid-template-columns:1fr; gap:clamp(3rem,6vw,5.5rem); }
+.tcard{ display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(1.6rem,4.5vw,4.5rem); align-items:center; }
+.tcard:nth-child(even){ grid-template-columns:minmax(0,7fr) minmax(0,5fr); }
+.tcard:nth-child(even) .tcard__portrait{ order:2; }
+.tcard__portrait{ aspect-ratio:4/5; }
+.tcard__body{ padding:0; max-width:60ch; }
+.tcard__name{ font-size:clamp(2rem,3.4vw,2.8rem); }
+.tcard__bio{ font-size:1.02rem; line-height:1.65; }
+@media (max-width:760px){
+  .tcard, .tcard:nth-child(even){ grid-template-columns:1fr; gap:1.2rem; }
+  .tcard:nth-child(even) .tcard__portrait{ order:0; }
+}
