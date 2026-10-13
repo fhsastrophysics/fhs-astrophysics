@@ -2138,3 +2138,57 @@ body[data-route="/"] .footer{ margin-top:0; }
 /* In the preview the cover keeps its own shape (one image, nothing to line up with). */
 .modal__thumbs .mt--hero{ aspect-ratio:auto; }
 .modal__thumbs .mt--hero img{ height:auto; }
+
+/* =====================================================================
+   ROUND 2 (Abir's notes 15–21)
+   Square image corners read as harsh; outlined boxes read as AI. Images get
+   soft continuous corners (squircles where the browser supports
+   corner-shape, ordinary radius elsewhere). A clickable image grows a
+   little and rounds further on hover. Atlas photos drop the rectangle
+   entirely and dissolve into the sky at their edges.
+   ===================================================================== */
+:root{ --r-img:10px; --r-img-hover:16px; --r-paper:6px; }
+@supports (corner-shape: squircle){
+  :root{ --r-img:18px; --r-img-hover:30px; --r-paper:12px; }
+  .mcard__thumb, .modal__thumbs .mt, .ncard__thumb, .ph, .evideo, .tcard__portrait, .lightbox__media{ corner-shape:squircle; }
+}
+.mcard, .ncard{ overflow:visible; contain:none; }   /* the hover growth must not be clipped by the card */
+.mcard__thumb, .modal__thumbs .mt, .ph, .evideo, .tcard__portrait, .lightbox__media{ border-radius:var(--r-img); }
+.mcard__thumb, .ncard__thumb, .ph{ transition:transform .38s var(--ease-out), border-radius .38s var(--ease-out); }
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion: no-preference){
+  .mcard:hover .mcard__thumb, .ncard:hover .ncard__thumb, .ph:hover, .ph:focus-visible{ transform:scale(1.025); border-radius:var(--r-img-hover); }
+}
+
+/* Notes: a sheet of paper whose empty lower half fades into the sky, so the
+   masthead reads and there's no hard white rectangle. */
+.ncard__thumb{ aspect-ratio:8.5/6; border-radius:var(--r-paper); background:none;
+  -webkit-mask-image:linear-gradient(180deg, #000 62%, transparent 100%); mask-image:linear-gradient(180deg, #000 62%, transparent 100%); }
+.ncard__body{ margin-top:-1.4rem; position:relative; }   /* the title tucks into the fade */
+
+/* Atlas: no frame at all. Each photo feathers out at its edges; hovering
+   brings it into focus (the feather tightens) instead of zooming. */
+@property --feather{ syntax:"<percentage>"; inherits:false; initial-value:16%; }
+.acard, .acard:hover{ background:none; overflow:visible; }
+.acard__media{ --feather:16%; transition:--feather .5s var(--ease-out);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent),
+                     linear-gradient(180deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent),
+             linear-gradient(180deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent);
+  mask-composite:intersect; }
+.acard:hover .acard__media, .acard:focus-visible .acard__media{ --feather:5%; }
+.acard__info{ background:none; padding-bottom:1.6rem; }
+.acard__top{ padding:1.6rem 1.7rem; }
+.acard__info{ padding-left:1.7rem; padding-right:1.7rem; }
+.acard__name, .acard__meta, .acard__idx{ text-shadow:0 1px 3px rgba(1,3,10,.95), 0 0 18px rgba(1,3,10,.8); }
+
+/* -- The gradient as the site's "selected / primary" mark -------------- */
+.fbtn, .fbtn:hover, .fbtn.active{ padding:.5rem .95rem; border:1px solid transparent; border-radius:10px; }
+.notes-filter{ gap:.4rem; }
+.fbtn.active{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); color:#fff; border-color:rgba(160,196,255,.55); box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; }
+.nav__cta, .nav__cta:hover{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); border-color:rgba(160,196,255,.55); color:#fff !important; box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; }
+.nav__cta:hover{ background:linear-gradient(180deg,#6EABFF 0%,#4A82F0 100%); }
+
+/* -- Team: two officers, so they take the full width ------------------- */
+.team-grid{ max-width:none; gap:clamp(1.6rem,3vw,2.6rem); }
+.tcard__portrait{ aspect-ratio:4/3; }   /* full-width cards: landscape keeps the photos sharp and the bios in view */

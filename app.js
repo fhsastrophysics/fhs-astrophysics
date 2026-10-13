@@ -130,7 +130,7 @@
   const OFFICERS = [
     { name: "Abir Mehta",   role: "Co-Founder & President",       photo: "assets/abir.jpeg", focus: "50% 8%", email: "amehta251@student.fuhsd.org",
       bio: "Founded the Astrophysics Club with Dhruv in September 2025, developing the core curriculum and overall strategies for club success. Abir designs the typeset notes and handouts for biweekly meetings, and manages communication and outreach to recruit new members. Outside the club, he is a dedicated physics enthusiast who devotes most of his time to the broader field, having completed a wide range of advanced physics and math courses alongside working on a variety of personal projects. Feel free to message him with any inquiries." },
-    { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/dhruv.jpeg", email: "dlagu234@student.fuhsd.org",
+    { name: "Dhruv Lagu",   role: "Co-Founder & Vice President",  photo: "assets/dhruv-wide.jpg", focus: "50% 20%", email: "dlagu234@student.fuhsd.org",
       bio: "Develops lecture curriculum with Abir. Leads the club's data and Python side, including TESS light curves, Colab notebooks, and model evaluation, and developed the ML-based exoplanet detection curriculum used in club sessions. Outside the club, Dhruv is an aerospace enthusiast, the VP of Design & Strategy for FHS Robotics, and the developer of Orbital Watch, a website tracking the orbital debris crisis." },
   ];
 
@@ -786,7 +786,7 @@
   /* -------------------------------------------------------------------
      Render - Team (polished grid)
      ------------------------------------------------------------------- */
-  const PHOTO_V = "10";   // bump when any assets/*.jpeg portrait changes
+  const PHOTO_V = "11";   // bump when any assets/*.jpeg portrait changes
   function renderTeam() {
     const grid = $("#teamGrid");
     if (grid) {
