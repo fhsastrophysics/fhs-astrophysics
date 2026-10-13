@@ -35,26 +35,29 @@
   /* -------------------------------------------------------------------
      DATA (factual, extracted from decks & handouts)
      ------------------------------------------------------------------- */
+  // `file` is the handout's public name under assets/notes/: <season>/<Topic>.pdf,
+  // knzhou-style compact words, with Sol for an answer key (BlackHoleProblemsSol.pdf).
+  // The old src-<id>.pdf copies stay only so links already posted keep working.
   const NOTES = {
-    6:  { title: "Introduction to Astrophysics",          meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    7:  { title: "Celestial Motion & Orbits",             meeting: 2,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    8:  { title: "Stars & Their Life Cycles",             meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    9:  { title: "Exoplanets",                            meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 7 },
-    10: { title: "Semester 1 Review: Astro Jeopardy",     meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    11: { title: "Exoplanet Detection with Real Data",    meeting: 6,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    12: { title: "Transit Detection + Model Evaluation",  meeting: 7,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    13: { title: "Black Holes",                           meeting: 8,  type: "Lecture Notes", cat: "notes",    pages: 6 },
-    14: { title: "Black Hole Problems",                   meeting: 9,  type: "Worksheet",     cat: "practice", pages: 2 },
-    15: { title: "Black Hole: Table of Constants",        meeting: 9,  type: "Reference",     cat: "practice", pages: 1 },
-    16: { title: "Black Hole Problems: Answer Key",       meeting: 9,  type: "Answer Key",    cat: "keys",     pages: 1 },
-    17: { title: "Composition of the Universe",           meeting: 10, type: "Lecture Notes", cat: "notes",    pages: 7 },
-    18: { title: "Workstation Activity: Dark Matter",     meeting: 11, type: "Activity",      cat: "practice", pages: 6 },
-    19: { title: "Workstation Activity: Answer Key",      meeting: 11, type: "Answer Key",    cat: "keys",     pages: 2 },
-    20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8 },
-    21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7 },
-    22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26" },
-    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26" },
-    24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26" },
+    6:  { title: "Introduction to Astrophysics",          meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/IntroToAstrophysics.pdf" },
+    7:  { title: "Celestial Motion & Orbits",             meeting: 2,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/CelestialMotion.pdf" },
+    8:  { title: "Stars & Their Life Cycles",             meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/StarLifeCycles.pdf" },
+    9:  { title: "Exoplanets",                            meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/Exoplanets.pdf" },
+    10: { title: "Semester 1 Review: Astro Jeopardy",     meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/SemesterReview.pdf" },
+    11: { title: "Exoplanet Detection with Real Data",    meeting: 6,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/ExoplanetDetection.pdf" },
+    12: { title: "Transit Detection + Model Evaluation",  meeting: 7,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/TransitDetection.pdf" },
+    13: { title: "Black Holes",                           meeting: 8,  type: "Lecture Notes", cat: "notes",    pages: 6, file: "2025-26/BlackHoles.pdf" },
+    14: { title: "Black Hole Problems",                   meeting: 9,  type: "Worksheet",     cat: "practice", pages: 2, file: "2025-26/BlackHoleProblems.pdf" },
+    15: { title: "Black Hole: Table of Constants",        meeting: 9,  type: "Reference",     cat: "practice", pages: 1, file: "2025-26/BlackHoleConstants.pdf" },
+    16: { title: "Black Hole Problems: Answer Key",       meeting: 9,  type: "Answer Key",    cat: "keys",     pages: 1, file: "2025-26/BlackHoleProblemsSol.pdf" },
+    17: { title: "Composition of the Universe",           meeting: 10, type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/UniverseComposition.pdf" },
+    18: { title: "Workstation Activity: Dark Matter",     meeting: 11, type: "Activity",      cat: "practice", pages: 6, file: "2025-26/DarkMatterActivity.pdf" },
+    19: { title: "Workstation Activity: Answer Key",      meeting: 11, type: "Answer Key",    cat: "keys",     pages: 2, file: "2025-26/DarkMatterActivitySol.pdf" },
+    20: { title: "Special Relativity",                    meeting: 12, type: "Lecture Notes", cat: "notes",    pages: 8, file: "2025-26/SpecialRelativity.pdf" },
+    21: { title: "The Edges of Time",                     meeting: 13, type: "Lecture Notes", cat: "notes",    pages: 7, file: "2025-26/EdgesOfTime.pdf" },
+    22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26", file: "2026-27/RomanTelescope.pdf" },
+    23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 5, yr: "26", file: "2026-27/SETI.pdf" },
+    24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FermiParadox.pdf" },
   };
 
   const MEETINGS = [
@@ -193,7 +196,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
-  const notePath = (id) => `assets/notes/src-${id}.pdf`;
+  const notePath = (id) => `assets/notes/${(NOTES[id] && NOTES[id].file) || `src-${id}.pdf`}`;
   const noteThumb = (id) => `assets/thumbs/note-${id}.jpg`;
   const deckThumb = (n) => `assets/thumbs/deck-${n}.jpg`;
   const dlName = (id) => { const m = NOTES[id]; return `FHS Astrophysics - M${m.meeting} - ${m.title}.pdf`; };

@@ -47,7 +47,7 @@ Netlify, Vercel, or Cloudflare Pages. All paths are relative.
 | `styles.css` | All styling, tokens at the top under `:root`, responsive breakpoints at the bottom |
 | `app.js` | Meeting + notes + officers data, router, modal, copy toast, back-to-top, starfield with parallax |
 | `assets/thumbs/` | Auto-generated preview images: `deck-1..13.jpg`, `note-6..21.jpg` |
-| `assets/notes/` | Local PDF copies of the 16 LaTeX handouts (`src-6..21.pdf`) |
+| `assets/notes/` | The LaTeX handouts, named by topic: `2025-26/BlackHoles.pdf`, `2025-26/BlackHoleProblemsSol.pdf` (Sol = answer key), `2026-27/FermiParadox.pdf`. Set `file:` in `NOTES`. The old `src-<id>.pdf` copies stay only so links already posted keep working. |
 | `assets/fonts/` | Drop-in Söhne WOFF2 files (see `assets/fonts/README.txt`) |
 
 ## New in this revision (v3 — typography + realism pass)
