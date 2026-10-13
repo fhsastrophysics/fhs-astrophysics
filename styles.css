@@ -2266,3 +2266,8 @@ body[data-route="/"] .footer{ margin-top:0; }
   -webkit-mask-composite:source-over; mask-composite:add; }
 .acard:hover .acard__media, .acard:focus-visible .acard__media{ --ap:150%; }
 @media (prefers-reduced-motion: reduce){ .acard__media{ transition:none; } }
+/* Atlas timing (Abir): slower and gentler, and the open plate keeps a faint
+   vignette. At --ap 118% the edges stay ~95% opaque and the corners ~65%. */
+.acard__media, .acard__media::after{ transition:--ap .8s cubic-bezier(.4,0,.2,1), opacity .8s cubic-bezier(.4,0,.2,1); }
+.acard:hover .acard__media, .acard:focus-visible .acard__media{ --ap:118%; transition:--ap 1.1s cubic-bezier(.45,0,.2,1); }
+.acard:hover .acard__media::after, .acard:focus-visible .acard__media::after{ transition:opacity 1.1s cubic-bezier(.45,0,.2,1); }
