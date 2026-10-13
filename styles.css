@@ -2205,3 +2205,64 @@ body[data-route="/"] .footer{ margin-top:0; }
   .tcard, .tcard:nth-child(even){ grid-template-columns:1fr; gap:1.2rem; }
   .tcard:nth-child(even) .tcard__portrait{ order:0; }
 }
+
+/* =====================================================================
+   ROUND 3 (Abir's notes 23–27)
+   ===================================================================== */
+/* Reading washes behind text fade to nothing well before their own edges
+   (closest-side, centred on the copy), so they never show as a box. */
+.route:not(.route--home) .chapter::after{ inset:-22% 28% -14% -14%;
+  background:radial-gradient(closest-side, rgba(3,5,12,.6) 0%, rgba(3,5,12,.4) 45%, rgba(3,5,12,.14) 78%, transparent 100%); }
+.about__lead::before{ inset:-34% -16% -44% -16%;
+  background:radial-gradient(closest-side, rgba(3,5,12,.62) 0%, rgba(3,5,12,.42) 45%, rgba(3,5,12,.15) 78%, transparent 100%); }
+.faq::before{ inset:-10% -12% -18%;
+  background:radial-gradient(closest-side, rgba(3,5,12,.6) 0%, rgba(3,5,12,.42) 50%, rgba(3,5,12,.15) 80%, transparent 100%); }
+
+/* About timeline: the top rule draws in, in the gradient, up to the hovered meeting. */
+.arc-node, .arc-node:hover{ border-top:1px solid var(--line-2); }
+.arc-node::after{ content:""; position:absolute; left:0; right:0; top:-1px; height:2px; border-radius:2px;
+  background:linear-gradient(90deg,#5C9DFF,#3D74E6); transform:scaleX(0); transform-origin:left center;
+  transition:transform .32s var(--ease-out) var(--d,0ms); }
+.arc-node.is-reached::after{ transform:scaleX(1); }
+.arc-node__n, .arc-node__t{ transition:color .25s var(--ease) var(--d,0ms), opacity .25s var(--ease) var(--d,0ms); }
+.arc-node.is-reached .arc-node__n{ color:var(--accent); opacity:1; }
+.arc-node:hover .arc-node__t{ color:#fff; }
+@media (prefers-reduced-motion: reduce){ .arc-node::after{ transition:none; } }
+
+/* Notes: the title sits up inside the fade, where the shadow is. */
+.ncard__thumb{ -webkit-mask-image:linear-gradient(180deg, #000 40%, rgba(0,0,0,.55) 66%, rgba(0,0,0,.15) 84%, transparent 96%);
+  mask-image:linear-gradient(180deg, #000 40%, rgba(0,0,0,.55) 66%, rgba(0,0,0,.15) 84%, transparent 96%); }
+.ncard__body{ margin-top:-4.2rem; padding-left:.15rem; }
+
+/* Atlas: at rest the photo melts into the sky with a short, eased edge; on
+   hover the edge resolves completely into a crisp rounded plate with a
+   shade under its caption. No half-way state. */
+@property --feather{ syntax:"<percentage>"; inherits:false; initial-value:9%; }
+.acard__media{ --feather:9%; border-radius:var(--r-img); overflow:hidden; transition:--feather .45s var(--ease-out);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, rgba(0,0,0,.4) calc(var(--feather) * .4), rgba(0,0,0,.8) calc(var(--feather) * .75), #000 var(--feather), #000 calc(100% - var(--feather)), rgba(0,0,0,.8) calc(100% - var(--feather) * .75), rgba(0,0,0,.4) calc(100% - var(--feather) * .4), transparent),
+    linear-gradient(180deg, transparent, rgba(0,0,0,.4) calc(var(--feather) * .4), rgba(0,0,0,.8) calc(var(--feather) * .75), #000 var(--feather), #000 calc(100% - var(--feather)), rgba(0,0,0,.8) calc(100% - var(--feather) * .75), rgba(0,0,0,.4) calc(100% - var(--feather) * .4), transparent);
+  mask-image:
+    linear-gradient(90deg, transparent, rgba(0,0,0,.4) calc(var(--feather) * .4), rgba(0,0,0,.8) calc(var(--feather) * .75), #000 var(--feather), #000 calc(100% - var(--feather)), rgba(0,0,0,.8) calc(100% - var(--feather) * .75), rgba(0,0,0,.4) calc(100% - var(--feather) * .4), transparent),
+    linear-gradient(180deg, transparent, rgba(0,0,0,.4) calc(var(--feather) * .4), rgba(0,0,0,.8) calc(var(--feather) * .75), #000 var(--feather), #000 calc(100% - var(--feather)), rgba(0,0,0,.8) calc(100% - var(--feather) * .75), rgba(0,0,0,.4) calc(100% - var(--feather) * .4), transparent); }
+.acard:hover .acard__media, .acard:focus-visible .acard__media, .acard.is-lit .acard__media{ --feather:0%; }
+.acard__media::after{ content:""; position:absolute; inset:auto 0 0 0; height:45%; pointer-events:none;
+  background:linear-gradient(180deg, transparent, rgba(3,6,14,.72)); opacity:0; transition:opacity .45s var(--ease-out); }
+.acard:hover .acard__media::after, .acard:focus-visible .acard__media::after{ opacity:1; }
+.acard__media img, .acard:hover .acard__media img{ filter:none; }
+@supports (corner-shape: squircle){ .acard__media{ corner-shape:squircle; } }
+/* The timeline's right-edge fade was a flat --void strip painted over the photo
+   sky (it read as a black box); fade the track itself instead. */
+.arc__scroller::after{ content:none; }
+.arc__track{ -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 72px), transparent); mask-image:linear-gradient(90deg, #000 calc(100% - 72px), transparent); }
+
+/* Atlas, final: an aperture, not a feathered rectangle. At rest each photo is
+   a soft oval of light that ends inside its own bounds (no straight edge can
+   show); on hover the aperture opens smoothly into the full rounded plate. */
+@property --ap{ syntax:"<percentage>"; inherits:false; initial-value:50%; }
+.acard__media{ --ap:50%; transition:--ap .55s cubic-bezier(.2,.7,.2,1);
+  -webkit-mask-image:radial-gradient(var(--ap) var(--ap) at 50% 50%, #000 0%, #000 40%, rgba(0,0,0,.62) 64%, rgba(0,0,0,.22) 84%, transparent 100%);
+  mask-image:radial-gradient(var(--ap) var(--ap) at 50% 50%, #000 0%, #000 40%, rgba(0,0,0,.62) 64%, rgba(0,0,0,.22) 84%, transparent 100%);
+  -webkit-mask-composite:source-over; mask-composite:add; }
+.acard:hover .acard__media, .acard:focus-visible .acard__media{ --ap:150%; }
+@media (prefers-reduced-motion: reduce){ .acard__media{ transition:none; } }

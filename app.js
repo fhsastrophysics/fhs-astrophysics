@@ -517,6 +517,19 @@
       a.addEventListener("click", (e) => { e.preventDefault(); openMeetingModal(m.n); });
       t.appendChild(a);
     });
+    // Hovering a meeting draws the timeline up to it: every visible node before
+    // it lights its top rule in turn, like progress through the year.
+    const light = (upTo) => {
+      $$(".arc-node", t).filter((n) => n.style.display !== "none").forEach((n, i, list) => {
+        const on = upTo != null && i <= list.indexOf(upTo);
+        n.style.setProperty("--d", on ? `${i * 45}ms` : "0ms");
+        n.classList.toggle("is-reached", on);
+      });
+    };
+    t.addEventListener("pointerover", (e) => { const n = e.target.closest(".arc-node"); if (n) light(n); });
+    t.addEventListener("focusin", (e) => { const n = e.target.closest(".arc-node"); if (n) light(n); });
+    t.addEventListener("pointerleave", () => light(null));
+    t.addEventListener("focusout", (e) => { if (!t.contains(e.relatedTarget)) light(null); });
   }
 
   /* Season switch on the About "arc": '25–'26 shows the 13-meeting scroller;
