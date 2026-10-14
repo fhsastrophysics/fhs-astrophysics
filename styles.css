@@ -249,35 +249,34 @@ main, .nav, .footer{ position:relative; z-index:3; }
 .nav__links{ display:flex; align-items:center; gap:.2rem; }
 .nav__links a{ padding:.55rem .95rem; font-size:.95rem; font-weight:500; color:var(--ink-soft); position:relative; transition:color .25s var(--ease); }
 .nav__links a:not(.nav__cta)::after{ content:""; position:absolute; left:.95rem; right:.95rem; bottom:.35rem; height:1.5px; background:var(--warm); transform:scaleX(0); transform-origin:left; transition:transform .3s var(--ease); }
-.nav__links a:not(.nav__cta):hover{ color:var(--ink); }
-.nav__links a:not(.nav__cta):hover::after,
-.nav__links a.active:not(.nav__cta)::after{ transform:scaleX(1); }
+@media (hover:hover){ .nav__links a:not(.nav__cta):hover{ color:var(--ink); } }
+.nav__links a.active:not(.nav__cta)::after{ transform:scaleX(1); } @media (hover:hover){ .nav__links a:not(.nav__cta):hover::after{ transform:scaleX(1); } }
 .nav__links a.active:not(.nav__cta){ color:var(--ink); }
 /* Login-style outlined pill (matches the inspiration) */
 .nav__cta{ margin-left:.5rem; background:transparent; color:var(--ink) !important; border:1px solid rgba(255,255,255,.55); border-radius:10px; padding:.62rem 1.5rem !important; font-weight:500; transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease); }
-.nav__cta:hover{ background:rgba(255,255,255,.08); border-color:#fff; transform:translateY(-1px); }
+@media (hover:hover){ .nav__cta:hover{ background:rgba(255,255,255,.08); border-color:#fff; transform:translateY(-1px); } }
 
 /* Brand-colored social icons, top-right */
 .nav__social{ display:flex; align-items:center; gap:.4rem; }
 .nav__soc{ display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:11px; border:1px solid var(--line-2); background:rgba(255,255,255,.02); transition:background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease); }
 .nav__soc svg{ width:20px; height:20px; }
-.nav__soc:hover{ transform:translateY(-1px); background:rgba(255,255,255,.06); }
+@media (hover:hover){ .nav__soc:hover{ transform:translateY(-1px); background:rgba(255,255,255,.06); } }
 /* Instagram: the glyph shows the brand gradient by default. On hover the chip fills
    with the same Instagram corner gradient and the glyph flips to white — the app-icon
    look — so the hover clearly reads as Instagram's real gradient, not a flat colour. */
-.nav__soc--ig:hover{ border-color:transparent;
+@media (hover:hover){ .nav__soc--ig:hover{ border-color:transparent;
   background:radial-gradient(circle at 30% 110%, #FDD35C 0%, #F8823C 26%, #E1306C 50%, #C13584 72%, #5B51D8 100%);
-  box-shadow:0 8px 22px -8px rgba(193,53,132,.6); }
-.nav__soc--ig:hover svg [fill="none"]{ stroke:#fff; }
-.nav__soc--ig:hover svg [fill^="url"]{ fill:#fff; }
+  box-shadow:0 8px 22px -8px rgba(193,53,132,.6); } }
+@media (hover:hover){ .nav__soc--ig:hover svg [fill="none"]{ stroke:#fff; } }
+@media (hover:hover){ .nav__soc--ig:hover svg [fill^="url"]{ fill:#fff; } }
 /* Discord: same app-icon hover treatment as Instagram, but Discord is a single
    brand colour — so instead of a multi-hue gradient this is the same blurple with a
    little tonal variance (a touch lighter top-left, the true #5865F2 at rest, a touch
    deeper bottom-right), just enough to read as a gradient rather than a flat fill. */
-.nav__soc--dc:hover{ border-color:transparent;
+@media (hover:hover){ .nav__soc--dc:hover{ border-color:transparent;
   background:radial-gradient(circle at 30% 20%, #8993F5 0%, #5865F2 55%, #4048B0 100%);
-  box-shadow:0 8px 22px -8px rgba(88,101,242,.6); }
-.nav__soc--dc:hover svg{ fill:#fff; }
+  box-shadow:0 8px 22px -8px rgba(88,101,242,.6); } }
+@media (hover:hover){ .nav__soc--dc:hover svg{ fill:#fff; } }
 
 .nav__toggle{ display:none; width:44px; height:44px; background:none; border:1px solid var(--line-2); border-radius:10px; cursor:pointer; flex-direction:column; gap:5px; align-items:center; justify-content:center; }
 .nav__toggle span{ width:18px; height:1.5px; background:var(--ink); transition:transform .3s var(--ease); }
@@ -298,14 +297,14 @@ main, .nav, .footer{ position:relative; z-index:3; }
   border:1px solid rgba(160,196,255,.55);
   box-shadow: 0 2px 0 rgba(16,34,78,.8), 0 6px 14px -6px rgba(0,0,0,.5);
 }
-.btn--solid:hover{ background: linear-gradient(180deg, #6EABFF 0%, #4A82F0 100%); border-color:rgba(190,216,255,.8); transform:translateY(-1px); box-shadow: 0 3px 0 rgba(16,34,78,.8), 0 8px 16px -6px rgba(0,0,0,.5); }
+@media (hover:hover){ .btn--solid:hover{ background: linear-gradient(180deg, #6EABFF 0%, #4A82F0 100%); border-color:rgba(190,216,255,.8); transform:translateY(-1px); box-shadow: 0 3px 0 rgba(16,34,78,.8), 0 8px 16px -6px rgba(0,0,0,.5); } }
 .btn--ghost{ border:1px solid rgba(122,162,236,.55); color:#fff; background:rgba(16,24,48,.5); backdrop-filter:blur(8px); }
-.btn--ghost:hover{ border-color:var(--accent); background:rgba(26,38,72,.7); color:#fff; }
+@media (hover:hover){ .btn--ghost:hover{ border-color:var(--accent); background:rgba(26,38,72,.7); color:#fff; } }
 .btn__arw{ font-family:var(--font-mono); transition:transform .3s var(--ease); }
-.btn:hover .btn__arw{ transform:translate(4px,-4px); }
+@media (hover:hover){ .btn:hover .btn__arw{ transform:translate(4px,-4px); } }
 
 .ulink{ color:var(--accent); border-bottom:1px solid transparent; transition:border-color .2s var(--ease); word-break:break-word; }
-.ulink:hover{ border-bottom-color:var(--accent); }
+@media (hover:hover){ .ulink:hover{ border-bottom-color:var(--accent); } }
 
 /* =====================================================================
    ROUTER + transitions
@@ -317,7 +316,7 @@ main, .nav, .footer{ position:relative; z-index:3; }
    Drop the inherited 8rem bottom padding and pin the route to the viewport so there's
    no black gap below the planet to scroll into (the earth is clipped exactly at the
    viewport edge, so the clip line is never revealed). */
-.route--home{ min-height:100svh; padding-bottom:0; }
+.route--home{ min-height:100vh; min-height:100svh; padding-bottom:0; }
 
 /* Route jump — COMPOSITOR ONLY (opacity + a hair of scale), on EVERY device.
    The transition used to animate filter:blur() across the whole outgoing/incoming
@@ -346,12 +345,26 @@ main, .nav, .footer{ position:relative; z-index:3; }
    pointerdown (see prewarm() in app.js). Laid out in the normal flow position so
    the work the browser does here is the same work the real swap would need, and
    is therefore actually reused rather than redone. */
-.route.prewarm{ display:block; position:absolute; left:0; right:0; top:0;
+/* The :not(.route--home) twin matters: `.route:not(.route--home){position:relative}`
+   further down has the same specificity and comes later, so without it every inner
+   route prewarmed IN FLOW, pushing the page (and the footer under the finger) down
+   by its whole height mid-tap. Footer and in-page route links missed their tap. */
+.route.prewarm, .route.prewarm:not(.route--home){ display:block; position:absolute; left:0; right:0; top:0;
   opacity:0; pointer-events:none; z-index:-1; }
 /* Don't burn frames animating an invisible page while it pre-warms — hold it on a
    static frame (that's all we need to rasterise). */
 .route.prewarm *, .route.prewarm *::before, .route.prewarm *::after{
   animation-play-state:paused !important; }
+/* Touch prewarm must be visibility:hidden, not just opacity:0. iOS Safari watches
+   the touchstart (pointerdown runs inside it) and cancels the click if clickable
+   content went from hidden to visible, treating the tap as a hover menu opening.
+   Its opacity check only looks 4 ancestors up, so links deeper in an opacity:0
+   route counted as "appeared" and the tap was swallowed — every link to a route
+   you had already seen, in the menu, footer and Continue rows. Hidden still lays
+   out, which is what the prewarm is for. */
+@media (any-pointer: coarse){
+  .route.prewarm, .route.prewarm *{ visibility:hidden !important; }
+}
 
 /* During a route jump, freeze the home hero's perpetual animations (spinning
    accretion disk, drifting equations, pulsars, discover ring, ambient specks) so
@@ -434,7 +447,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
 /* =====================================================================
    ROUTE — HOME (outlined display + astronaut + Earth curve)
    ===================================================================== */
-.home{ position:relative; min-height:100svh; padding:4.5rem var(--gutter) 1.5rem; max-width:none; width:100%; margin:0 auto;
+.home{ position:relative; min-height:100vh; min-height:100svh; padding:4.5rem var(--gutter) 1.5rem; max-width:none; width:100%; margin:0 auto;
   display:grid; grid-template-rows: auto 1fr auto; align-items:stretch; overflow:hidden; }
 
 /* Deep-space vignette + subtle blue central glow behind hero letters */
@@ -478,7 +491,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
   text-align:center;
   color:#fff;
   white-space:nowrap;
-  user-select:none;
+  -webkit-user-select:none; user-select:none;
   text-shadow: 0 2px 44px rgba(2,6,18,.55), 0 2px 14px rgba(0,0,0,.4);
 }
 .home__title span{ display:inline; }
@@ -503,7 +516,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
   display:block;
   width:100%; height:auto;
   pointer-events:none;        /* prevent native image drag-ghost */
-  user-select:none; -webkit-user-drag:none;
+  -webkit-user-select:none; user-select:none; -webkit-user-drag:none;
 }
 /* Ice-blue glow aura that tracks the astronaut (inherits the wrapper transform).
    The pulse animates scale only; brightness is driven by cursor proximity via
@@ -527,7 +540,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
    touch the astronaut would otherwise sit dead still. This gentle bob keeps it
    alive; the phone-specific raise is handled by top: in the ≤640 block. */
 @keyframes astroFloat{ 0%,100%{ transform:translate(-50%,-48%); } 50%{ transform:translate(-50%,-52%); } }
-@media (hover:none){
+@media (hover:none), (pointer:coarse){
   /* No JS drag on touch, so let touches over the astronaut scroll the page
      normally (touch-action:none / grab cursor were for the disabled ragdoll). */
   .home__astro-wrap{ animation:astroFloat 6s ease-in-out infinite; touch-action:auto; cursor:default; }
@@ -596,7 +609,7 @@ body.warping .ambient-particles span{ animation-play-state:paused; }
 .cosmo--blackhole{ animation-duration:120s; opacity:.5; filter:blur(.4px); }
 .home__astro-wrap::before{ animation:none; }
 .home__discover-ring{ animation:none; }
-.home__discover:hover .home__discover-ring{ animation:discoverSpin 22s linear infinite; }
+@media (hover:hover){ .home__discover:hover .home__discover-ring{ animation:discoverSpin 22s linear infinite; } }
 .home__equations .eqn:nth-child(2n){ display:none; }   /* ~13 of 27 on desktop */
 .cosmo--pulsar-a{ top:20%; left:66%; }
 .cosmo--pulsar-b{ top:72%; left:78%; animation-delay:-2.2s; }
@@ -753,7 +766,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .arc__years{ align-self:center; display:inline-flex; background:var(--glass-flat); border:1px solid var(--line-2); border-radius:9px; overflow:hidden; flex:0 0 auto; }
 .arc__year{ appearance:none; border:0; background:transparent; color:var(--ink-soft); font-family:var(--font-sans); font-weight:600; font-size:.82rem; letter-spacing:.01em; padding:.52rem .9rem; cursor:pointer; transition:background .18s var(--ease), color .18s var(--ease); }
 .arc__year + .arc__year{ border-left:1px solid var(--line-2); }
-.arc__year:not(.is-active):hover{ color:var(--ink); background:rgba(255,255,255,.05); }
+@media (hover:hover){ .arc__year:not(.is-active):hover{ color:var(--ink); background:rgba(255,255,255,.05); } }
 .arc__year.is-active{ background:var(--accent); color:#04122e; }
 .arc__year:active{ transform:none; }
 .arc__empty{ margin:.4rem 0 1rem; padding:1.6rem 1.7rem; border:1px solid var(--line-2); border-radius:14px; background:var(--glass-flat); color:var(--ink-soft); font-size:1.05rem; line-height:1.55; max-width:60ch; }
@@ -769,9 +782,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .arc__track::-webkit-scrollbar{ height:5px; }
 .arc__track::-webkit-scrollbar-thumb{ background:var(--line-2); border-radius:3px; }
 .arc-node{ scroll-snap-align:start; flex:0 0 auto; width:190px; min-height:118px; padding:1.3rem 1.4rem 1.5rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; transition:transform .35s var(--ease-out), border-color .35s var(--ease); contain:layout paint; text-decoration:none; color:inherit; cursor:pointer; display:block; }
-.arc-node:hover{ transform:translateY(-5px); border-color:var(--glass-brd-hover); }
+@media (hover:hover){ .arc-node:hover{ transform:translateY(-5px); border-color:var(--glass-brd-hover); } }
 .arc-node__n{ font-family:var(--font-display); font-size:1.5rem; color:var(--ink); opacity:.5; line-height:1; transition:opacity .3s var(--ease), color .3s var(--ease); }
-.arc-node:hover .arc-node__n{ opacity:1; color:var(--accent); }
+@media (hover:hover){ .arc-node:hover .arc-node__n{ opacity:1; color:var(--accent); } }
 .arc-node__t{ display:block; margin-top:.7rem; font-family:var(--font-display); font-weight:400; font-size:1.3rem; color:var(--ink); line-height:1.1; letter-spacing:-.01em; }
 
 /* what we do */
@@ -779,7 +792,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .goals__title{ font-family:var(--font-display); font-weight:600; font-size:clamp(2.2rem,4vw,3rem); letter-spacing:-.015em; color:var(--ink); line-height:1.02; }
 .goal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
 .goal{ padding:2rem 1.9rem 2.2rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .35s var(--ease); contain:layout paint; }
-.goal:hover{ transform:translateY(-6px); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
+@media (hover:hover){ .goal:hover{ transform:translateY(-6px); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); } }
 /* No 01/02/03 counter above the title — these are three formats, not three steps. */
 .goal__t{ font-family:var(--font-display); font-weight:400; font-size:1.75rem; color:var(--ink); margin:0 0 .5rem; letter-spacing:-.01em; }
 .goal p{ margin:0; color:var(--ink-soft); font-size:1rem; max-width:34ch; }
@@ -791,9 +804,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .route__next-link{ display:inline-grid; grid-template-columns:auto auto auto; align-items:baseline; gap:1.2rem; padding:1rem 0; }
 .route__next-link .mono{ color:var(--ink-mute); }
 .route__next-title{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.7rem,3vw,2.4rem); color:var(--ink); letter-spacing:-.02em; transition:color .3s var(--ease); }
-.route__next-link:hover .route__next-title{ color:var(--accent); }
+@media (hover:hover){ .route__next-link:hover .route__next-title{ color:var(--accent); } }
 .route__next-arw{ font-family:var(--font-mono); color:var(--ink-mute); font-size:1.2rem; transition:transform .4s var(--ease-out), color .3s var(--ease); }
-.route__next-link:hover .route__next-arw{ color:var(--accent); transform:translateX(8px); }
+@media (hover:hover){ .route__next-link:hover .route__next-arw{ color:var(--accent); transform:translateX(8px); } }
 
 /* The year band ("§ YEAR ONE · 2025–2026 · THIRTEEN SESSIONS") that sat above
    the meetings and notes grids is gone. It was three pills restating the page
@@ -805,8 +818,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    ===================================================================== */
 .meetings-index{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:1rem; margin-bottom:5rem; }
 .mi-item{ display:grid; grid-template-columns:auto 1fr; gap:1rem; align-items:baseline; padding:1.1rem 1.3rem; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:12px; transition:transform .3s var(--ease-out), border-color .3s var(--ease); contain:layout paint; }
-.mi-item:hover{ transform:translateY(-4px); border-color:var(--glass-brd-hover); }
-.mi-item:hover .mi-item__n{ color:var(--accent); }
+@media (hover:hover){ .mi-item:hover{ transform:translateY(-4px); border-color:var(--glass-brd-hover); } }
+@media (hover:hover){ .mi-item:hover .mi-item__n{ color:var(--accent); } }
 .mi-item__n{ font-family:var(--font-display); font-size:1.35rem; color:var(--ink-mute); line-height:1; transition:color .3s var(--ease); }
 .mi-item__t{ font-family:var(--font-sans); font-size:.95rem; color:var(--ink-soft); line-height:1.3; }
 
@@ -826,14 +839,14 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .mcard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:var(--r); overflow:hidden; transition:transform .22s var(--ease-calm), border-color .22s var(--ease-calm), box-shadow .22s var(--ease-calm); cursor:pointer; contain:layout paint; }
 /* A believable shadow, not a blue bloom — the card is lifting off the page, it
    isn't emitting light. */
-.mcard:hover{ transform:translateY(-2px); border-color:var(--glass-brd-hover); box-shadow:0 10px 26px rgba(2,6,18,.5), inset 0 1px 0 rgba(255,255,255,.06); }
+@media (hover:hover){ .mcard:hover{ transform:translateY(-2px); border-color:var(--glass-brd-hover); box-shadow:0 10px 26px rgba(2,6,18,.5), inset 0 1px 0 rgba(255,255,255,.06); } }
 .mcard > .mcard__head, .mcard > .mcard__body{ position:relative; z-index:2; }
 .mcard__head{ display:flex; align-items:flex-start; justify-content:space-between; padding:1.5rem 1.6rem 1.2rem; gap:1rem; }
-.mcard__no{ font-family:var(--font-display); font-size:3rem; font-weight:400; color:var(--ink); opacity:0.14; line-height:.85; letter-spacing:-.03em; user-select:none; transition:opacity .22s var(--ease-calm); }
+.mcard__no{ font-family:var(--font-display); font-size:3rem; font-weight:400; color:var(--ink); opacity:0.14; line-height:.85; letter-spacing:-.03em; -webkit-user-select:none; user-select:none; transition:opacity .22s var(--ease-calm); }
 /* Was 0.14 -> 0.55 AND a colour flip to accent; that much change on a 3rem
    numeral pulled the eye away from the slide itself. A small lift in opacity is
    enough to say the card woke up. */
-.mcard:hover .mcard__no{ opacity:.3; }
+@media (hover:hover){ .mcard:hover .mcard__no{ opacity:.3; } }
 .mcard__kind{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--warm); padding-top:.5rem; }
 
 .mcard__thumb{ position:relative; aspect-ratio:16/10; overflow:hidden; background:#0a0e18; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
@@ -841,7 +854,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    pass first, and that beam is gone, so the image now responds the instant you
    arrive rather than appearing to wait its turn. */
 .mcard__thumb img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.05) brightness(.8); transition:filter .3s var(--ease-calm); }
-.mcard:hover .mcard__thumb img{ filter:grayscale(0) contrast(1.04) brightness(1.02); }
+@media (hover:hover){ .mcard:hover .mcard__thumb img{ filter:grayscale(0) contrast(1.04) brightness(1.02); } }
 
 .mcard__body{ padding:1.6rem 1.6rem 1.7rem; display:flex; flex-direction:column; flex:1; gap:1.1rem; }
 .mcard__title{ font-family:var(--font-display); font-weight:400; font-size:1.85rem; letter-spacing:-.01em; line-height:1.05; margin:0; }
@@ -854,7 +867,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    it stops when you stop. (The old ring animated forever on hover, which the
    animation guidance reserves for loading indicators only.) */
 .mcard__cta-arw{ display:inline-block; opacity:.55; transition:transform .22s var(--ease-calm), opacity .22s var(--ease-calm); }
-.mcard:hover .mcard__cta-arw{ opacity:1; transform:translateX(3px); }
+@media (hover:hover){ .mcard:hover .mcard__cta-arw{ opacity:1; transform:translateX(3px); } }
 
 /* =====================================================================
    MEETING MODAL — deck preview
@@ -872,7 +885,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 }
 @keyframes panelIn{ from{ opacity:0; transform:translateY(20px) scale(.98); } to{ opacity:1; transform:none; } }
 .modal__close{ position:absolute; top:1.1rem; right:1.1rem; width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.04); border:1px solid var(--line-2); color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; line-height:1; transition:background .2s var(--ease), border-color .2s var(--ease); }
-.modal__close:hover{ background:rgba(255,255,255,.08); border-color:var(--accent); color:var(--accent); }
+@media (hover:hover){ .modal__close:hover{ background:rgba(255,255,255,.08); border-color:var(--accent); color:var(--accent); } }
 .modal__eyebrow{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--warm); margin-bottom:.6rem; }
 .modal__title{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.8rem, 3.4vw, 2.6rem); letter-spacing:-.02em; color:var(--ink); margin:0 0 .8rem; }
 .modal__sum{ color:var(--ink-soft); margin:0 0 1.4rem; font-size:1rem; line-height:1.55; max-width:56ch; }
@@ -885,16 +898,16 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .modal__thumbs .mt__n{ position:absolute; top:.5rem; left:.5rem; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); padding:.28rem .55rem; border-radius:6px; z-index:2; }
 .modal__actions{ display:flex; flex-wrap:wrap; gap:.8rem; padding-top:1.2rem; border-top:1px solid var(--line); }
 .modal__primary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:10px; background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); color:#fff; font-weight:600; font-size:.95rem; border:1px solid rgba(160,196,255,.55); box-shadow:0 2px 0 rgba(16,34,78,.8); transition:transform .2s var(--ease), background .2s var(--ease); }
-.modal__primary:hover{ background:var(--warm); border-color:var(--warm); transform:translateY(-1px); }
+@media (hover:hover){ .modal__primary:hover{ background:var(--warm); border-color:var(--warm); transform:translateY(-1px); } }
 .modal__secondary{ display:inline-flex; align-items:center; gap:.55rem; padding:.9rem 1.5rem; border-radius:10px; background:transparent; color:var(--ink); font-weight:500; font-size:.95rem; border:1px solid var(--line-2); transition:border-color .2s var(--ease), color .2s var(--ease); }
-.modal__secondary:hover{ border-color:var(--accent); color:var(--accent); }
+@media (hover:hover){ .modal__secondary:hover{ border-color:var(--accent); color:var(--accent); } }
 
 /* =====================================================================
    NOTES
    ===================================================================== */
 .notes-filter{ display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:3rem; }
 .fbtn{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; padding:.62rem 1.15rem; background:var(--glass); color:var(--ink-soft); border:1px solid var(--glass-brd); border-radius:10px; cursor:pointer; transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease); }
-.fbtn:hover{ color:var(--ink); border-color:var(--line-2); }
+@media (hover:hover){ .fbtn:hover{ color:var(--ink); border-color:var(--line-2); } }
 /* Active filter: a SOLID surface + a warm sodium edge, not a blue glow-bloom.
    The solid fill also restores contrast — a transparent active chip left near-
    white text sitting straight on the bright sky (1.7:1 on phone). */
@@ -906,7 +919,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    the UA [hidden]{display:none}, so force it here. */
 .meetings[hidden], .notes-grid[hidden], .notes-filter[hidden]{ display:none !important; }
 .ncard{ position:relative; display:flex; flex-direction:column; border:1px solid var(--glass-brd); background:var(--glass-flat); box-shadow:var(--glass-glow); border-radius:14px; overflow:hidden; transition:transform .35s var(--ease-out), border-color .35s var(--ease), box-shadow .4s var(--ease); contain:layout paint; }
-.ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
+@media (hover:hover){ .ncard:hover{ transform:translateY(-3px) scale(1.012); border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); } }
 /* Shorter crop: show the handout masthead (title + authors) rather than a whole
    white US-letter page, so the card isn't a tall bright rectangle against the dark
    theme — it reads as a document header. */
@@ -915,7 +928,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    the badges move to the BOTTOM of the strip (see below) so they never sit on the
    title. object-position top keeps the informative header in frame. */
 .ncard__thumb img{ width:100%; height:100%; object-fit:cover; object-position:top center; filter:grayscale(1) brightness(.82) contrast(1.04); transition:filter .5s var(--ease), transform .7s var(--ease); }
-.ncard:hover .ncard__thumb img{ filter:grayscale(0) brightness(.98) contrast(1); transform:scale(1.03); }
+@media (hover:hover){ .ncard:hover .ncard__thumb img{ filter:grayscale(0) brightness(.98) contrast(1); transform:scale(1.03); } }
 /* Bottom scrim so the MEETING / LECTURE-NOTES badges seat on a dark band and the
    grayscale page reads into the card body rather than ending on a hard white edge. */
 .ncard__thumb::after{ content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
@@ -949,9 +962,9 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   pointer-events:none;
   z-index:4;
 }
-.ncard:hover .ncard__cloud, .ncard:focus-within .ncard__cloud{ opacity:1; transform:translateY(0); }
+.ncard:focus-within .ncard__cloud{ opacity:1; transform:translateY(0); } @media (hover:hover){ .ncard:hover .ncard__cloud{ opacity:1; transform:translateY(0); } }
 /* The type badge sits in the same bottom strip; hand it to the topics on hover. */
-.ncard:hover .ncard__type, .ncard:focus-within .ncard__type{ opacity:0; }
+.ncard:focus-within .ncard__type{ opacity:0; } @media (hover:hover){ .ncard:hover .ncard__type{ opacity:0; } }
 .ncard__cloud-k{ font-family:var(--font-mono); font-size:.58rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
 .ncard__cloud-list{ display:flex; flex-wrap:wrap; gap:.35rem; }
 .ncard__cloud-list .chip{ background:rgba(188,215,255,.05); border-color:rgba(188,215,255,.14); color:var(--ink); font-size:.62rem; }
@@ -972,16 +985,16 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   background:none;
   pointer-events:none;
 }
-.tcard:hover{ border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); }
+@media (hover:hover){ .tcard:hover{ border-color:var(--glass-brd-hover); box-shadow:var(--hover-lift); } }
 .tcard__portrait{ position:relative; z-index:1; aspect-ratio:4/5; overflow:hidden; background:#050914; border-bottom:1px solid var(--line-2); display:flex; align-items:center; justify-content:center; }
 .tcard__portrait img{ width:100%; height:100%; object-fit:cover; filter:none; transition:transform .8s var(--ease); }   /* full original colour — no grayscale */
-.tcard:hover .tcard__portrait img{ transform:scale(1.04); }
+@media (hover:hover){ .tcard:hover .tcard__portrait img{ transform:scale(1.04); } }
 /* Circular-avatar treatment for a source that is already a round crop on black
    (Dhruv). border-radius clips the baked-in black corners, and a soft accent halo
    fills the surround so it reads as a deliberate avatar, not dead space. */
 .tcard__portrait--avatar{ aspect-ratio:1/1; background:radial-gradient(circle at 50% 46%, rgba(106,164,255,.16), rgba(106,164,255,.04) 48%, transparent 68%), #070C1A; }
 .tcard__portrait--avatar img{ width:100%; height:auto; aspect-ratio:1; border-radius:50%; object-fit:cover; border:1px solid var(--glass-brd); box-shadow:0 10px 34px -10px rgba(0,0,0,.65); }
-.tcard:hover .tcard__portrait--avatar img{ transform:scale(1.035); }
+@media (hover:hover){ .tcard:hover .tcard__portrait--avatar img{ transform:scale(1.035); } }
 .tcard__initials{ font-family:var(--font-display); font-weight:620; font-size:3rem; color:rgba(174,190,217,.55); letter-spacing:-.02em; }
 .tcard__body{ position:relative; z-index:1; padding:1.5rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
 .tcard__badge{ align-self:flex-start; padding:.3rem .7rem; border:1px solid var(--line-2); border-radius:10px; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:rgba(188,215,255,.05); }
@@ -992,7 +1005,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   color:var(--ink-soft); font-size:.94rem; line-height:1.55; margin:.6rem 0 0; overflow:visible;
 }
 .tcard__mail{ margin-top:auto; padding-top:1rem; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:.72rem; color:var(--ink-soft); display:inline-flex; align-items:center; gap:.4rem; transition:color .2s var(--ease); word-break:break-all; }
-.tcard__mail:hover{ color:var(--accent); }
+@media (hover:hover){ .tcard__mail:hover{ color:var(--accent); } }
 
 /* =====================================================================
    JOIN — one primary action, calm supporting context.
@@ -1044,7 +1057,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   border:1px solid rgba(160,196,255,.55); border-radius:10px; font-weight:600; font-size:1.05rem; white-space:nowrap;
   cursor:pointer; transition:transform .2s var(--ease), box-shadow .3s var(--ease);
   box-shadow:0 10px 26px -10px rgba(0,0,0,.6); }
-.signup__btn:hover{ transform:translateY(-1px); box-shadow:0 14px 30px -10px rgba(0,0,0,.66); }
+@media (hover:hover){ .signup__btn:hover{ transform:translateY(-1px); box-shadow:0 14px 30px -10px rgba(0,0,0,.66); } }
 .signup__btn-arw{ font-family:var(--font-mono); }
 .signup__meta{ display:block; margin-top:.95rem; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.06em; color:var(--ink-mute); text-transform:uppercase; line-height:1.65; }
 
@@ -1077,14 +1090,14 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
    email wall), then the two social links. */
 .joincard__mailrow{ display:flex; align-items:center; gap:.5rem; }
 .joincard__mail{ min-width:0; font-size:1.05rem; color:var(--accent); overflow-wrap:anywhere; border-bottom:1px solid transparent; transition:border-color .2s var(--ease); }
-.joincard__mail:hover{ border-bottom-color:var(--accent); }
+@media (hover:hover){ .joincard__mail:hover{ border-bottom-color:var(--accent); } }
 .joincard__note{ margin:.9rem 0 1rem; color:var(--ink-soft); font-size:.96rem; line-height:1.55; }
 .joincard__note .ulink{ white-space:nowrap; }
 /* Direct officer contacts — one row each, President first. */
 .joincard__officers{ list-style:none; margin:0 0 1rem; padding:0; display:flex; flex-direction:column; gap:.45rem; }
 /* Compact 2-line contact: name + role share one line, email below — keeps Reach-us short. */
 .joincard__officers a{ display:block; padding:.7rem .9rem; border:1px solid var(--line-2); border-radius:10px; background:rgba(255,255,255,.02); transition:border-color .2s var(--ease), background .2s var(--ease); }
-.joincard__officers a:hover{ border-color:var(--glass-brd-hover); background:rgba(106,164,255,.06); }
+@media (hover:hover){ .joincard__officers a:hover{ border-color:var(--glass-brd-hover); background:rgba(106,164,255,.06); } }
 .jo__name{ font-family:var(--font-display); font-weight:600; font-size:1rem; color:var(--ink); }
 .jo__role{ display:inline; margin-left:.55rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); }
 .jo__mail{ display:block; font-family:var(--font-mono); font-size:.78rem; color:var(--accent); overflow-wrap:anywhere; margin-top:.3rem; }
@@ -1092,8 +1105,8 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 
 /* Ghost copy button on the club email — subtle, reveals on row hover / focus */
 .field__copy{ flex:none; display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:7px; background:transparent; border:1px solid transparent; color:var(--ink-mute); cursor:pointer; opacity:0; transition:opacity .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease); }
-.joincard__mailrow:hover .field__copy, .field__copy:focus-visible{ opacity:1; }
-.field__copy:hover{ color:var(--accent); border-color:var(--line-2); }
+.field__copy:focus-visible{ opacity:1; } @media (hover:hover){ .joincard__mailrow:hover .field__copy{ opacity:1; } }
+@media (hover:hover){ .field__copy:hover{ color:var(--accent); border-color:var(--line-2); } }
 .field__copy svg{ width:13px; height:13px; }
 @media (hover: none){ .field__copy{ opacity:1; } }
 
@@ -1105,7 +1118,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .nextmeet__k{ font-family:var(--font-mono); font-weight:700; font-size:.6875rem; letter-spacing:.02em; text-transform:uppercase; color:var(--warm); }
 /* RSVP pill — top-right of the next-meeting card, for meetings that need a sign-up. */
 .nextmeet__rsvp{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--font-mono); font-weight:700; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); border:1px solid var(--warm); border-radius:8px; padding:.36rem .72rem; white-space:nowrap; transition:background .2s var(--ease), color .2s var(--ease); }
-.nextmeet__rsvp:hover{ background:var(--accent); color:#04122e; }
+@media (hover:hover){ .nextmeet__rsvp:hover{ background:var(--accent); color:#04122e; } }
 /* State pill. The dot pulses only while the meeting is actually live. */
 .nextmeet__status{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--line); border-radius:8px; padding:.3rem .6rem; white-space:nowrap; }
 .nextmeet__status::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--ink-mute); flex:0 0 auto; }
@@ -1152,19 +1165,18 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
 .slink__ico svg{ width:21px; height:21px; }
 .slink__name{ line-height:1; }
 .slink__arw{ font-family:var(--font-mono); font-size:.85rem; color:var(--ink-mute); transition:transform .3s var(--ease), color .2s var(--ease); }
-.slink:hover .slink__arw{ transform:translate(3px,-3px); color:inherit; }
-.slink:hover .slink__ico{ transform:scale(1.08); }
+@media (hover:hover){ .slink:hover .slink__arw{ transform:translate(3px,-3px); color:inherit; } }
+@media (hover:hover){ .slink:hover .slink__ico{ transform:scale(1.08); } }
 /* Instagram hover — paint the glyph strokes + dot with the real brand gradient
    (url(#igGrad)) and clip the same gradient into the "Instagram" label. */
-.slink--ig:hover{ color:#C13584; }
-.slink--ig:hover .ig-glyph rect,
-.slink--ig:hover .ig-glyph circle:not([fill]){ stroke:url(#igGrad); }
-.slink--ig:hover .ig-glyph circle[fill]{ fill:url(#igGrad); }
-.slink--ig:hover .slink__name{
+@media (hover:hover){ .slink--ig:hover{ color:#C13584; } }
+@media (hover:hover){ .slink--ig:hover .ig-glyph rect, .slink--ig:hover .ig-glyph circle:not([fill]){ stroke:url(#igGrad); } }
+@media (hover:hover){ .slink--ig:hover .ig-glyph circle[fill]{ fill:url(#igGrad); } }
+@media (hover:hover){ .slink--ig:hover .slink__name{
   background:linear-gradient(45deg, #FDD35C 0%, #F8823C 26%, #E1306C 50%, #C13584 72%, #5B51D8 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-}
-.slink--dc:hover{ color:#5865F2; }
+} }
+@media (hover:hover){ .slink--dc:hover{ color:#5865F2; } }
 
 /* =====================================================================
    REVEAL
@@ -1203,7 +1215,7 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   transition:opacity .35s var(--ease), transform .35s var(--ease-out), border-color .2s var(--ease), background .2s var(--ease);
 }
 .back-top.on{ opacity:1; transform:none; pointer-events:auto; }
-.back-top:hover{ border-color:var(--accent); background:rgba(20,30,60,.9); }
+@media (hover:hover){ .back-top:hover{ border-color:var(--accent); background:rgba(20,30,60,.9); } }
 .back-top svg{ width:22px; height:22px; }
 
 .toast{
@@ -1213,7 +1225,10 @@ body.intro .nav{ animation: heroNav .5s 1.5s var(--ease-out) both; }
   background:rgba(6,10,24,.92); backdrop-filter:blur(12px);
   border:1px solid var(--warm);
   border-radius:10px;
-  color:var(--ink); font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  /* A plain sentence-case line (no small tracked caps), wide enough for an email
+     address instead of shrink-wrapping to half the screen and wrapping. */
+  color:var(--ink); font-family:var(--font-sans); font-size:.92rem; letter-spacing:0; text-transform:none; line-height:1.4;
+  width:max-content; max-width:calc(100vw - 2rem); text-align:center; overflow-wrap:anywhere;
   box-shadow: 0 12px 34px rgba(0,0,0,.5);
   opacity:0; pointer-events:none;
   transition:opacity .3s var(--ease), transform .3s var(--ease-out);
@@ -1236,7 +1251,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 .footer__sub{ margin:0; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute); }
 .footer__nav{ display:flex; flex-wrap:wrap; gap:.4rem 1.3rem; justify-content:center; }
 .footer__nav a{ font-size:.92rem; color:var(--ink-soft); transition:color .2s var(--ease); }
-.footer__nav a:hover{ color:var(--accent); }
+@media (hover:hover){ .footer__nav a:hover{ color:var(--accent); } }
 .footer__legal{ margin:0; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.02em; color:var(--ink-mute); text-align:right; text-transform:none; }
 
 /* =====================================================================
@@ -1537,10 +1552,11 @@ body[data-route="/"] .footer{ margin-top:0; }
   .modal__thumbs{ grid-template-columns:repeat(2, 1fr); }
   .join__pair{ grid-template-columns:1fr; }
 }
-@media (max-width:640px){
-  body{ font-size:16px; }
-  /* Lighter backdrop blur across every glass surface — big GPU win on phones. */
-  :root{ --glass-blur:10px; }
+/* NAV DRAWER — up to 860px, not just phones. The full row (brand + 8 links + Join
+   + socials) needs ~830px, so between 641 and ~830 it ran off the right edge: Join
+   cut to a sliver and Instagram/Discord unreachable on every landscape phone
+   (667–932 wide, ~750 on a notched iPhone in Safari) and on iPad mini portrait. */
+@media (max-width:860px){
   .nav__inner{ display:flex; justify-content:space-between; }
   .nav__social{ display:none; }
   /* Off-canvas drawer. It fades in with only a TINY (14px) slide and is toggled
@@ -1559,19 +1575,42 @@ body[data-route="/"] .footer{ margin-top:0; }
   .nav__links a{ padding:1.15rem .3rem; font-size:1.15rem; border-bottom:1px solid var(--line); }
   .nav__links a:not(.nav__cta)::after{ display:none; }
   .nav__cta{ margin:1rem 0 0; justify-content:center; padding:1rem !important; text-align:center; }
-  .nav__toggle{ display:flex; z-index:110; }
+  /* flex:none — at 320px the brand doesn't shrink, so the toggle absorbed the
+     overflow and was squeezed to 33px wide. */
+  .nav__toggle{ display:flex; z-index:110; flex:none; }
+  /* Opening the menu must not happen inside a transformed or backdrop-filtered
+     header: either makes .nav the containing block for the fixed drawer + scrim,
+     which then shrink to the 79px bar (a 120px clipped strip). The intro's nav
+     slide (body.intro) and .nav.scrolled's blur on non-touch narrow windows both
+     did that. The header sits under the drawer anyway while it's open. */
+  body.nav-open .nav{ animation:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  /* The back-to-top disc (z 200) painted over the drawer (inside .nav's z 100
+     context) and covered the drawer's Join button on an iPhone SE. */
+  body.nav-open .back-top{ opacity:0; pointer-events:none; }
+  /* The drawer can be taller than a landscape phone; it scrolls (overflow-y:auto)
+     and keeps the safe area clear of the home indicator. */
+  .nav__links{ padding-bottom:calc(2rem + env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width:640px){
+  body{ font-size:16px; }
+  /* Lighter backdrop blur across every glass surface — big GPU win on phones. */
+  :root{ --glass-blur:10px; }
   .home{ padding-top:5rem; padding-bottom:1.5rem; }
   .home__eyebrow{ font-size:.58rem; letter-spacing:.13em; padding:0 1rem; white-space:normal; line-height:1.5; }
   .home__tag{ padding:0 .5rem; }
-  .home__stage{ min-height:40vh; }
+  .home__stage{ min-height:40vh; min-height:40svh; }   /* svh: iOS vh is the toolbar-hidden height, which pushed "Join the club" off the bottom */
   /* Wordmark sits behind the astronaut like desktop, but sized with breathing
      room on both sides so it reads centred, not cramped edge-to-edge. */
-  .home__title{ white-space:normal; font-size:clamp(1.85rem, 9vw, 3rem); line-height:1.04; padding:0 1rem; }
+  /* nowrap + a lower floor: at 320px (SE 1st gen, mini with Display Zoom) the
+     29.6px floor overflowed, "Club" wrapped under the astronaut and vanished. */
+  .home__title{ white-space:nowrap; font-size:clamp(1.6rem, 9vw, 3rem); line-height:1.04; padding:0 1rem; }
   /* Astronaut floats ABOVE the wordmark (raised via top:, which is orthogonal to
      the transform so it works whether the JS ragdoll or the CSS float drives it)
      so the wordmark reads as one clean, centred line with only the boots grazing
      the letters — and it's smaller, so much lighter for the GPU. */
-  .home__astro-wrap{ top:60%; left:50%; width:min(58vw, 270px); filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(90,140,220,.22)); }
+  /* No filter here: the touch block's single drop-shadow applies. Re-declaring the
+     pair (later in the file) handed both blur passes back to an always-animating layer. */
+  .home__astro-wrap{ top:60%; left:50%; width:min(58vw, 270px); }
   /* Make the wordmark centring bulletproof: normal centred block (no full-bleed
      100vw + negative-margin trick, which can drift), flex-centred in the stage. */
   .home__title{ width:auto; max-width:100%; margin-inline:0; }
@@ -1703,8 +1742,8 @@ body[data-route="/"] .footer{ margin-top:0; }
 .home__discover-arw{ display:grid; place-items:center; width:40px; height:40px; border-radius:50%;
   border:1px solid rgba(255,255,255,.3); font-family:var(--font-mono); font-size:1rem;
   transition:border-color .25s var(--ease), background .25s var(--ease), transform .3s var(--ease-out); }
-.home__discover:hover .home__discover-arw{ border-color:var(--accent); background:rgba(188,215,255,.1); transform:translateY(3px); }
-.home__discover:hover .home__discover-ring text{ fill:var(--accent); }
+@media (hover:hover){ .home__discover:hover .home__discover-arw{ border-color:var(--accent); background:rgba(188,215,255,.1); transform:translateY(3px); } }
+@media (hover:hover){ .home__discover:hover .home__discover-ring text{ fill:var(--accent); } }
 
 /* =====================================================================
    DEEP-SKY ATLAS — editorial plate mosaic
@@ -1721,17 +1760,17 @@ body[data-route="/"] .footer{ margin-top:0; }
   border:1px solid var(--glass-brd); border-radius:var(--r); background:#070B16; cursor:pointer;
   transition:border-color .35s var(--ease), box-shadow .4s var(--ease), transform .5s var(--ease-out);
   contain:layout paint; }
-.acard:hover{ border-color:var(--glass-brd-hover); box-shadow:0 16px 40px rgba(2,6,18,.6), inset 0 1px 0 rgba(255,255,255,.05); }
+@media (hover:hover){ .acard:hover{ border-color:var(--glass-brd-hover); box-shadow:0 16px 40px rgba(2,6,18,.6), inset 0 1px 0 rgba(255,255,255,.05); } }
 .acard:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 .acard__media{ position:absolute; inset:0; display:block; }
 .acard__media img{ width:100%; height:100%; object-fit:cover;
   filter:saturate(1.02) brightness(.92); transform:scale(1.01);
   transition:filter .55s var(--ease), transform .9s var(--ease-out); }
-.acard:hover .acard__media img, .acard:focus-visible .acard__media img{ filter:saturate(1.1) brightness(1.04); transform:scale(1.05); }
+.acard:focus-visible .acard__media img{ filter:saturate(1.1) brightness(1.04); transform:scale(1.05); } @media (hover:hover){ .acard:hover .acard__media img{ filter:saturate(1.1) brightness(1.04); transform:scale(1.05); } }
 .acard__top{ position:absolute; top:0; left:0; right:0; z-index:2; display:flex; align-items:flex-start; justify-content:space-between;
   padding:.95rem 1.05rem; }
 .acard__idx{ font-family:var(--font-display); font-size:1.7rem; color:#fff; opacity:.5; line-height:1; text-shadow:0 1px 10px rgba(1,3,10,.9); transition:opacity .3s var(--ease); }
-.acard:hover .acard__idx{ opacity:.95; }
+@media (hover:hover){ .acard:hover .acard__idx{ opacity:.95; } }
 .acard__cat{ font-family:var(--font-mono); font-weight:700; font-size:.58rem; letter-spacing:.14em; text-transform:uppercase;
   color:var(--warm); padding:.34rem .6rem; border:1px solid rgba(106,164,255,.34); border-radius:8px; background:rgba(4,7,15,.55); }
 .acard__info{ position:absolute; left:0; right:0; bottom:0; z-index:2; display:flex; flex-direction:column; gap:.3rem;
@@ -1743,7 +1782,7 @@ body[data-route="/"] .footer{ margin-top:0; }
    lift. Nothing animates height, so nothing reflows mid-gesture. */
 .acard__stats{ display:flex; gap:1.6rem; margin-top:.55rem; opacity:0; transform:translateY(6px);
   transition:opacity .3s var(--ease), transform .3s var(--ease-out); }
-.acard:hover .acard__stats, .acard:focus-visible .acard__stats{ opacity:1; transform:none; }
+.acard:focus-visible .acard__stats{ opacity:1; transform:none; } @media (hover:hover){ .acard:hover .acard__stats{ opacity:1; transform:none; } }
 .acard__stats span{ display:flex; flex-direction:column; gap:.15rem; }
 .acard__stats i{ font-style:normal; font-family:var(--font-mono); font-weight:700; font-size:.55rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-mute); }
 .acard__stats b{ font-family:var(--font-display); font-weight:400; font-size:1.15rem; color:var(--ink); line-height:1; }
@@ -1797,9 +1836,9 @@ body[data-route="/"] .footer{ margin-top:0; }
 .faq-side__desc{ margin:0; color:var(--ink-soft); font-size:.98rem; line-height:1.55; }
 .faq-side__actions{ margin-top:.4rem; padding-top:1.1rem; border-top:1px solid var(--line-2); display:flex; flex-direction:column; gap:.6rem; }
 .faq-side__mail{ font-family:var(--font-sans); font-size:1rem; color:var(--accent); overflow-wrap:anywhere; border-bottom:1px solid transparent; transition:border-color .2s var(--ease); align-self:start; }
-.faq-side__mail:hover{ border-bottom-color:var(--accent); }
+@media (hover:hover){ .faq-side__mail:hover{ border-bottom-color:var(--accent); } }
 .faq-side__discord{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--font-mono); font-weight:700; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-mute); transition:color .2s var(--ease); align-self:start; }
-.faq-side__discord:hover{ color:var(--ink); }
+@media (hover:hover){ .faq-side__discord:hover{ color:var(--ink); } }
 
 /* Questions column — no artificial cap now; it fills the right column of the grid. */
 .faq{ position:relative; margin:0; border-top:1px solid var(--line-2); }
@@ -1819,7 +1858,7 @@ body[data-route="/"] .footer{ margin-top:0; }
   font-size:clamp(1.25rem,1.85vw,1.6rem); letter-spacing:-.012em;
   line-height:1.22; color:var(--ink); transition:color .25s var(--ease); }
 .faq-q::-webkit-details-marker{ display:none; }
-.faq-q:hover{ color:var(--accent); }
+@media (hover:hover){ .faq-q:hover{ color:var(--accent); } }
 .faq-item summary:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
 /* The marker is drawn, not a font glyph, so it stays optically centred. */
 .faq-q::after{ content:"+"; flex:0 0 auto; font-family:var(--font-mono); font-size:1.2rem;
@@ -1919,13 +1958,13 @@ body[data-route="/"] .footer{ margin-top:0; }
 .evideo--soon .evideo__poster{ filter:saturate(.75) brightness(.72); }
 .evideo--ready{ cursor:pointer; }
 .evideo--ready .evideo__poster{ filter:saturate(.95) brightness(.82); transition:filter .5s var(--ease), transform .9s var(--ease-out); }
-.evideo--ready:hover .evideo__poster, .evideo--ready:focus-visible .evideo__poster{ filter:saturate(1.05) brightness(.95); transform:scale(1.02); }
+.evideo--ready:focus-visible .evideo__poster{ filter:saturate(1.05) brightness(.95); transform:scale(1.02); } @media (hover:hover){ .evideo--ready:hover .evideo__poster{ filter:saturate(1.05) brightness(.95); transform:scale(1.02); } }
 .evideo--ready:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 .evideo__play{ position:absolute; left:50%; top:50%; width:84px; height:84px; transform:translate(-50%,-50%); display:flex; align-items:center; justify-content:center;
   border-radius:50%; color:#fff; background:rgba(4,7,15,.55); border:1px solid rgba(160,196,255,.55); backdrop-filter:blur(8px);
   box-shadow:0 0 0 0 rgba(106,164,255,.35); transition:transform .3s var(--ease-out), box-shadow .4s var(--ease), background .3s var(--ease); }
 .evideo__play svg{ width:36px; height:36px; margin-left:4px; }
-.evideo--ready:hover .evideo__play{ transform:translate(-50%,-50%) scale(1.06); background:var(--warm-deep); box-shadow:0 0 0 14px rgba(106,164,255,.14); }
+@media (hover:hover){ .evideo--ready:hover .evideo__play{ transform:translate(-50%,-50%) scale(1.06); background:var(--warm-deep); box-shadow:0 0 0 14px rgba(106,164,255,.14); } }
 .evideo__tag, .evideo__soon{ position:absolute; left:1rem; bottom:1rem; display:inline-flex; align-items:center; gap:.55rem; padding:.5rem .85rem; border-radius:10px;
   font-family:var(--font-mono); font-weight:700; font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:#fff;
   background:rgba(4,7,15,.62); border:1px solid rgba(160,196,255,.35); backdrop-filter:blur(6px); }
@@ -1944,15 +1983,15 @@ body[data-route="/"] .footer{ margin-top:0; }
 .ph:first-child{ grid-column:span 2; grid-row:span 2; }
 .ph img{ width:100%; height:100%; object-fit:cover; filter:brightness(.92) saturate(1.02); transform:scale(1.01);
   transition:filter .45s var(--ease), transform .8s var(--ease-out); }
-.ph:hover, .ph:focus-visible{ border-color:var(--glass-brd-hover); box-shadow:0 14px 32px -10px rgba(2,6,18,.7); }
-.ph:hover img, .ph:focus-visible img{ filter:brightness(1.02) saturate(1.08); transform:scale(1.05); }
+.ph:focus-visible{ border-color:var(--glass-brd-hover); box-shadow:0 14px 32px -10px rgba(2,6,18,.7); } @media (hover:hover){ .ph:hover{ border-color:var(--glass-brd-hover); box-shadow:0 14px 32px -10px rgba(2,6,18,.7); } }
+.ph:focus-visible img{ filter:brightness(1.02) saturate(1.08); transform:scale(1.05); } @media (hover:hover){ .ph:hover img{ filter:brightness(1.02) saturate(1.08); transform:scale(1.05); } }
 .ph:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 .ph--in{ animation:phIn .5s var(--ease-out) both; }
 @keyframes phIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 .gallery__more{ display:flex; align-items:center; justify-content:center; gap:.7rem; width:100%; margin-top:.9rem; padding:1rem; border-radius:12px; cursor:pointer;
   font-family:var(--font-sans); font-weight:500; font-size:.95rem; color:var(--ink); background:rgba(255,255,255,.03); border:1px solid var(--line-2);
   transition:border-color .25s var(--ease), color .25s var(--ease), background .25s var(--ease); }
-.gallery__more:hover{ border-color:var(--accent); color:var(--accent); background:rgba(106,164,255,.06); }
+@media (hover:hover){ .gallery__more:hover{ border-color:var(--accent); color:var(--accent); background:rgba(106,164,255,.06); } }
 
 /* Photo lightbox — edge-to-edge image with side arrows and a caption bar. */
 .plb{ padding:0; }
@@ -1968,7 +2007,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 .plb__nav{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink);
   background:rgba(255,255,255,.04); border:1px solid var(--line-2); transition:background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease); }
 .plb__nav svg{ width:22px; height:22px; }
-.plb__nav:hover, .plb__nav:focus-visible{ background:rgba(106,164,255,.1); border-color:var(--accent); color:var(--accent); }
+.plb__nav:focus-visible{ background:rgba(106,164,255,.1); border-color:var(--accent); color:var(--accent); } @media (hover:hover){ .plb__nav:hover{ background:rgba(106,164,255,.1); border-color:var(--accent); color:var(--accent); } }
 
 @media (max-width: 980px){
   .gallery{ grid-template-columns:repeat(3,1fr); }
@@ -1981,7 +2020,7 @@ body[data-route="/"] .footer{ margin-top:0; }
   .plb__stage{ grid-template-columns:1fr; padding:.6rem; }
   .plb__nav{ position:absolute; top:50%; transform:translateY(-50%); z-index:2; width:42px; height:42px; background:rgba(4,7,15,.55); }
   .plb__nav--prev{ left:.5rem; } .plb__nav--next{ right:.5rem; }
-  .plb__fig img{ max-height:calc(100vh - 6rem); }
+  .plb__fig img{ max-height:calc(100vh - 6rem); max-height:calc(100dvh - 6rem); }
   .evideo__play{ width:64px; height:64px; } .evideo__play svg{ width:28px; height:28px; }
 }
 @media (hover: none){
@@ -2027,7 +2066,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 
 /* -- Meetings: no box, no corner label, no chips, no float ------------- */
 .meetings{ gap:3.2rem 2.4rem; }
-.mcard, .mcard:hover{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; }
+.mcard{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; } @media (hover:hover){ .mcard:hover{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; } }
 .mcard__thumb{ aspect-ratio:16/9; border:0; border-radius:0; }   /* the decks are 16:9; 16:10 cropped their left edge */
 .mcard__body{ padding:1.15rem 0 0; gap:.5rem; }
 .mcard__title{ font-size:clamp(1.45rem,2vw,1.75rem); line-height:1.1; }
@@ -2042,7 +2081,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 .arc__year{ padding:.6rem 1.05rem; border:1px solid transparent; border-radius:10px;
   font-family:var(--font-sans); font-weight:500; font-size:.95rem; letter-spacing:0; color:var(--ink-mute); }
 .arc__year + .arc__year{ border-left:1px solid transparent; }
-.arc__year:not(.is-active):hover{ background:none; color:var(--ink); }
+@media (hover:hover){ .arc__year:not(.is-active):hover{ background:none; color:var(--ink); } }
 .arc__year.is-active{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); color:#fff;
   border-color:rgba(160,196,255,.55); box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; }
 
@@ -2056,22 +2095,23 @@ body[data-route="/"] .footer{ margin-top:0; }
 
 /* -- Notes: no box, no badges, no page count, no "Open", no zoom -------- */
 .notes-grid{ gap:2.8rem 1.8rem; }
-.ncard, .ncard:hover{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; }
+.ncard{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; } @media (hover:hover){ .ncard:hover{ border:0; border-radius:0; background:none; box-shadow:none; transform:none; } }
 .ncard__thumb{ border:0; border-radius:0; }
 .ncard__thumb::after{ content:none; }
-.ncard:hover .ncard__thumb img{ transform:none; }
+@media (hover:hover){ .ncard:hover .ncard__thumb img{ transform:none; } }
 .ncard__body{ padding:.95rem 0 0; gap:.3rem; }
 /* Filters: plain words; the active one is underlined, not boxed. */
 .notes-filter{ gap:.4rem 1.7rem; margin-bottom:2.4rem; }
-.fbtn, .fbtn:hover, .fbtn.active{ padding:.35rem 0; background:none; border:0; border-bottom:2px solid transparent; border-radius:0; box-shadow:none;
-  font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; }
+.fbtn, .fbtn.active{ padding:.35rem 0; background:none; border:0; border-bottom:2px solid transparent; border-radius:0; box-shadow:none;
+  font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; } @media (hover:hover){ .fbtn:hover{ padding:.35rem 0; background:none; border:0; border-bottom:2px solid transparent; border-radius:0; box-shadow:none;
+  font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; } }
 .fbtn{ color:var(--ink-mute); }
-.fbtn:hover{ color:var(--ink); }
+@media (hover:hover){ .fbtn:hover{ color:var(--ink); } }
 .fbtn.active{ color:var(--ink); border-bottom-color:var(--accent); }
 
 /* -- Atlas: no outline, no zoom; catalog number lives in the type line -- */
-.acard, .acard:hover{ border:0; border-radius:0; box-shadow:none; }
-.acard__media img, .acard:hover .acard__media img, .acard:focus-visible .acard__media img{ transform:none; }
+.acard{ border:0; border-radius:0; box-shadow:none; } @media (hover:hover){ .acard:hover{ border:0; border-radius:0; box-shadow:none; } }
+.acard__media img, .acard:focus-visible .acard__media img{ transform:none; } @media (hover:hover){ .acard:hover .acard__media img{ transform:none; } }
 .acard__media img{ transition:filter .4s var(--ease); }
 .acard__meta{ font-family:var(--font-sans); font-weight:400; font-size:.95rem; letter-spacing:0; text-transform:none; color:var(--ink-soft); }
 .lightbox__media{ border:0; border-radius:0; }
@@ -2085,8 +2125,8 @@ body[data-route="/"] .footer{ margin-top:0; }
 .event__when{ margin:.4rem 0 0; }
 .event__gallery-title{ margin:0 0 1rem; font-family:var(--font-display); font-weight:400;
   font-size:clamp(1.4rem,2.2vw,1.7rem); line-height:1.1; letter-spacing:-.02em; color:var(--ink); }
-.evideo, .ph, .ph:hover, .ph:focus-visible{ border:0; border-radius:0; box-shadow:none; }
-.ph img, .ph:hover img, .ph:focus-visible img{ transform:none; }
+.evideo, .ph, .ph:focus-visible{ border:0; border-radius:0; box-shadow:none; } @media (hover:hover){ .ph:hover{ border:0; border-radius:0; box-shadow:none; } }
+.ph img, .ph:focus-visible img{ transform:none; } @media (hover:hover){ .ph:hover img{ transform:none; } }
 .evideo__tag, .evideo__soon{ color:#fff; }
 
 /* -- Join: no boxes around sign-up, next meeting or reach-us ----------- */
@@ -2097,11 +2137,12 @@ body[data-route="/"] .footer{ margin-top:0; }
 .nmu__l{ font-size:.9rem; }
 .nextmeet__metarow{ grid-template-columns:4.4rem 1fr; }
 .joincard__officers{ gap:0; }
-.joincard__officers a, .joincard__officers a:hover{ padding:.75rem 0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:none; }
-.joincard__officers a:hover .jo__name{ color:var(--accent); }
-.gallery__more, .gallery__more:hover{ width:auto; margin-top:1rem; padding:.5rem 0; border:0; border-radius:0; background:none; box-shadow:none;
-  justify-content:flex-start; font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; color:var(--accent); }
-.gallery__more:hover{ color:var(--ink); }
+.joincard__officers a{ padding:.75rem 0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:none; } @media (hover:hover){ .joincard__officers a:hover{ padding:.75rem 0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:none; } }
+@media (hover:hover){ .joincard__officers a:hover .jo__name{ color:var(--accent); } }
+.gallery__more{ width:auto; margin-top:1rem; padding:.5rem 0; border:0; border-radius:0; background:none; box-shadow:none;
+  justify-content:flex-start; font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; color:var(--accent); } @media (hover:hover){ .gallery__more:hover{ width:auto; margin-top:1rem; padding:.5rem 0; border:0; border-radius:0; background:none; box-shadow:none;
+  justify-content:flex-start; font-family:var(--font-sans); font-weight:500; font-size:1rem; letter-spacing:0; text-transform:none; color:var(--accent); } }
+@media (hover:hover){ .gallery__more:hover{ color:var(--ink); } }
 
 /* Deck covers are never cropped, whatever shape the source slide is: the frame
    is 16:9 (the deck format) and the image is fitted, not filled. A 16:10 cover
@@ -2109,9 +2150,11 @@ body[data-route="/"] .footer{ margin-top:0; }
 .mcard__thumb img, .modal__thumbs .mt--hero img{ object-fit:contain; object-position:center; background:#05080F; }
 
 /* -- About, Team, FAQ: the same rule, no boxed cards --------------------- */
-.arc-node, .arc-node:hover, .goal, .goal:hover, .tcard, .tcard:hover, .faq-side, .arc__empty{
+.arc-node, .goal, .tcard, .faq-side, .arc__empty{
   border:0; border-radius:0; background:none; box-shadow:none; transform:none;
-  backdrop-filter:none; -webkit-backdrop-filter:none; }
+  backdrop-filter:none; -webkit-backdrop-filter:none; } @media (hover:hover){ .arc-node:hover, .goal:hover, .tcard:hover{
+  border:0; border-radius:0; background:none; box-shadow:none; transform:none;
+  backdrop-filter:none; -webkit-backdrop-filter:none; } }
 .arc-node{ width:170px; min-height:0; padding:.9rem 0 0; border-top:1px solid var(--line-2); }
 .goal-grid{ gap:2.2rem; }
 .goal{ padding:1.1rem 0 0; border-top:1px solid var(--line-2); }
@@ -2122,10 +2165,8 @@ body[data-route="/"] .footer{ margin-top:0; }
 
 /* -- Hover, everywhere: nothing lifts, floats or zooms. (Arrows still nudge
       toward where the click goes; that's direction, not decoration.) ------ */
-.nav__cta:hover, .nav__soc:hover, .btn--solid:hover, .modal__primary:hover, .signup__btn:hover, .mi-item:hover,
-.tcard:hover .tcard__portrait img, .tcard:hover .tcard__portrait--avatar img, .slink:hover .slink__ico,
-.evideo--ready:hover .evideo__poster, .evideo--ready:focus-visible .evideo__poster{ transform:none; }
-.evideo--ready:hover .evideo__play{ transform:translate(-50%,-50%); box-shadow:none; }
+.evideo--ready:focus-visible .evideo__poster{ transform:none; } @media (hover:hover){ .nav__cta:hover, .nav__soc:hover, .btn--solid:hover, .modal__primary:hover, .signup__btn:hover, .mi-item:hover, .tcard:hover .tcard__portrait img, .tcard:hover .tcard__portrait--avatar img, .slink:hover .slink__ico, .evideo--ready:hover .evideo__poster{ transform:none; } }
+@media (hover:hover){ .evideo--ready:hover .evideo__play{ transform:translate(-50%,-50%); box-shadow:none; } }
 
 /* Text that used to sit on a navy panel now sits on the photograph. A tight
    dark shadow keeps it legible over bright stars; on dark sky it's invisible. */
@@ -2168,7 +2209,7 @@ body[data-route="/"] .footer{ margin-top:0; }
 /* Atlas: no frame at all. Each photo feathers out at its edges; hovering
    brings it into focus (the feather tightens) instead of zooming. */
 @property --feather{ syntax:"<percentage>"; inherits:false; initial-value:16%; }
-.acard, .acard:hover{ background:none; overflow:visible; }
+.acard{ background:none; overflow:visible; } @media (hover:hover){ .acard:hover{ background:none; overflow:visible; } }
 .acard__media{ --feather:16%; transition:--feather .5s var(--ease-out);
   -webkit-mask-image:linear-gradient(90deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent),
                      linear-gradient(180deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent);
@@ -2176,18 +2217,18 @@ body[data-route="/"] .footer{ margin-top:0; }
   mask-image:linear-gradient(90deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent),
              linear-gradient(180deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent);
   mask-composite:intersect; }
-.acard:hover .acard__media, .acard:focus-visible .acard__media{ --feather:5%; }
+.acard:focus-visible .acard__media{ --feather:5%; } @media (hover:hover){ .acard:hover .acard__media{ --feather:5%; } }
 .acard__info{ background:none; padding-bottom:1.6rem; }
 .acard__top{ padding:1.6rem 1.7rem; }
 .acard__info{ padding-left:1.7rem; padding-right:1.7rem; }
 .acard__name, .acard__meta, .acard__idx{ text-shadow:0 1px 3px rgba(1,3,10,.95), 0 0 18px rgba(1,3,10,.8); }
 
 /* -- The gradient as the site's "selected / primary" mark -------------- */
-.fbtn, .fbtn:hover, .fbtn.active{ padding:.5rem .95rem; border:1px solid transparent; border-radius:10px; }
+.fbtn, .fbtn.active{ padding:.5rem .95rem; border:1px solid transparent; border-radius:10px; } @media (hover:hover){ .fbtn:hover{ padding:.5rem .95rem; border:1px solid transparent; border-radius:10px; } }
 .notes-filter{ gap:.4rem; }
 .fbtn.active{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); color:#fff; border-color:rgba(160,196,255,.55); box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; }
-.nav__cta, .nav__cta:hover{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); border-color:rgba(160,196,255,.55); color:#fff !important; box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; }
-.nav__cta:hover{ background:linear-gradient(180deg,#6EABFF 0%,#4A82F0 100%); }
+.nav__cta{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); border-color:rgba(160,196,255,.55); color:#fff !important; box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; } @media (hover:hover){ .nav__cta:hover{ background:linear-gradient(180deg,#5C9DFF 0%,#3D74E6 100%); border-color:rgba(160,196,255,.55); color:#fff !important; box-shadow:0 2px 0 rgba(16,34,78,.8); font-weight:600; } }
+@media (hover:hover){ .nav__cta:hover{ background:linear-gradient(180deg,#6EABFF 0%,#4A82F0 100%); } }
 
 /* -- Team: two officers, so they take the full width ------------------- */
 /* Two officers: one full-width row each, portrait beside the bio, sides
@@ -2219,14 +2260,14 @@ body[data-route="/"] .footer{ margin-top:0; }
   background:radial-gradient(closest-side, rgba(3,5,12,.6) 0%, rgba(3,5,12,.42) 50%, rgba(3,5,12,.15) 80%, transparent 100%); }
 
 /* About timeline: the top rule draws in, in the gradient, up to the hovered meeting. */
-.arc-node, .arc-node:hover{ border-top:1px solid var(--line-2); }
+.arc-node{ border-top:1px solid var(--line-2); } @media (hover:hover){ .arc-node:hover{ border-top:1px solid var(--line-2); } }
 .arc-node::after{ content:""; position:absolute; left:0; right:0; top:-1px; height:2px; border-radius:2px;
   background:linear-gradient(90deg,#5C9DFF,#3D74E6); transform:scaleX(0); transform-origin:left center;
   transition:transform .32s var(--ease-out) var(--d,0ms); }
 .arc-node.is-reached::after{ transform:scaleX(1); }
 .arc-node__n, .arc-node__t{ transition:color .25s var(--ease) var(--d,0ms), opacity .25s var(--ease) var(--d,0ms); }
 .arc-node.is-reached .arc-node__n{ color:var(--accent); opacity:1; }
-.arc-node:hover .arc-node__t{ color:#fff; }
+@media (hover:hover){ .arc-node:hover .arc-node__t{ color:#fff; } }
 @media (prefers-reduced-motion: reduce){ .arc-node::after{ transition:none; } }
 
 /* Notes: the title sits up inside the fade, where the shadow is. */
@@ -2245,11 +2286,11 @@ body[data-route="/"] .footer{ margin-top:0; }
   mask-image:
     linear-gradient(90deg, transparent, rgba(0,0,0,.4) calc(var(--feather) * .4), rgba(0,0,0,.8) calc(var(--feather) * .75), #000 var(--feather), #000 calc(100% - var(--feather)), rgba(0,0,0,.8) calc(100% - var(--feather) * .75), rgba(0,0,0,.4) calc(100% - var(--feather) * .4), transparent),
     linear-gradient(180deg, transparent, rgba(0,0,0,.4) calc(var(--feather) * .4), rgba(0,0,0,.8) calc(var(--feather) * .75), #000 var(--feather), #000 calc(100% - var(--feather)), rgba(0,0,0,.8) calc(100% - var(--feather) * .75), rgba(0,0,0,.4) calc(100% - var(--feather) * .4), transparent); }
-.acard:hover .acard__media, .acard:focus-visible .acard__media, .acard.is-lit .acard__media{ --feather:0%; }
+.acard:focus-visible .acard__media, .acard.is-lit .acard__media{ --feather:0%; } @media (hover:hover){ .acard:hover .acard__media{ --feather:0%; } }
 .acard__media::after{ content:""; position:absolute; inset:auto 0 0 0; height:45%; pointer-events:none;
   background:linear-gradient(180deg, transparent, rgba(3,6,14,.72)); opacity:0; transition:opacity .45s var(--ease-out); }
-.acard:hover .acard__media::after, .acard:focus-visible .acard__media::after{ opacity:1; }
-.acard__media img, .acard:hover .acard__media img{ filter:none; }
+.acard:focus-visible .acard__media::after{ opacity:1; } @media (hover:hover){ .acard:hover .acard__media::after{ opacity:1; } }
+.acard__media img{ filter:none; } @media (hover:hover){ .acard:hover .acard__media img{ filter:none; } }
 @supports (corner-shape: squircle){ .acard__media{ corner-shape:squircle; } }
 /* The timeline's right-edge fade was a flat --void strip painted over the photo
    sky (it read as a black box); fade the track itself instead. */
@@ -2264,27 +2305,236 @@ body[data-route="/"] .footer{ margin-top:0; }
   -webkit-mask-image:radial-gradient(var(--ap) var(--ap) at 50% 50%, #000 0%, #000 40%, rgba(0,0,0,.62) 64%, rgba(0,0,0,.22) 84%, transparent 100%);
   mask-image:radial-gradient(var(--ap) var(--ap) at 50% 50%, #000 0%, #000 40%, rgba(0,0,0,.62) 64%, rgba(0,0,0,.22) 84%, transparent 100%);
   -webkit-mask-composite:source-over; mask-composite:add; }
-.acard:hover .acard__media, .acard:focus-visible .acard__media{ --ap:150%; }
+.acard:focus-visible .acard__media{ --ap:150%; } @media (hover:hover){ .acard:hover .acard__media{ --ap:150%; } }
 @media (prefers-reduced-motion: reduce){ .acard__media{ transition:none; } }
 /* Atlas timing (Abir): slower and gentler, and the open plate keeps a faint
    vignette. At --ap 118% the edges stay ~95% opaque and the corners ~65%. */
 .acard__media, .acard__media::after{ transition:--ap .8s cubic-bezier(.4,0,.2,1), opacity .8s cubic-bezier(.4,0,.2,1); }
-.acard:hover .acard__media, .acard:focus-visible .acard__media{ --ap:118%; transition:--ap 1.1s cubic-bezier(.45,0,.2,1); }
-.acard:hover .acard__media::after, .acard:focus-visible .acard__media::after{ transition:opacity 1.1s cubic-bezier(.45,0,.2,1); }
+.acard:focus-visible .acard__media{ --ap:118%; transition:--ap 1.1s cubic-bezier(.45,0,.2,1); } @media (hover:hover){ .acard:hover .acard__media{ --ap:118%; transition:--ap 1.1s cubic-bezier(.45,0,.2,1); } }
+.acard:focus-visible .acard__media::after{ transition:opacity 1.1s cubic-bezier(.45,0,.2,1); } @media (hover:hover){ .acard:hover .acard__media::after{ transition:opacity 1.1s cubic-bezier(.45,0,.2,1); } }
 
 /* What a meeting looks like (note 28): each item carries a faint line drawing
    of its own work (notes being written, a transit light curve, a boxed
    answer) that draws itself in the accent on hover. The top rule stays put. */
 .arc-node{ position:relative; }
-.goal, .goal:hover{ position:relative; border-top:1px solid var(--line-2); }
+.goal{ position:relative; border-top:1px solid var(--line-2); } @media (hover:hover){ .goal:hover{ position:relative; border-top:1px solid var(--line-2); } }
 .goal__ink{ position:absolute; top:1.35rem; right:0; width:88px; height:28px; overflow:visible; pointer-events:none; }
 .goal__ink path{ fill:none; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
 .goal__base path{ stroke:rgba(214,226,255,.16); }
 .goal__draw path{ stroke:var(--accent); stroke-dasharray:1; stroke-dashoffset:1;
   transition:stroke-dashoffset .35s cubic-bezier(.4,0,.2,1); }
-.goal:hover .goal__draw path, .goal:focus-within .goal__draw path{ stroke-dashoffset:0;
-  transition:stroke-dashoffset .7s cubic-bezier(.45,0,.2,1) calc(var(--k,0) * .22s); }
+.goal:focus-within .goal__draw path{ stroke-dashoffset:0;
+  transition:stroke-dashoffset .7s cubic-bezier(.45,0,.2,1) calc(var(--k,0) * .22s); } @media (hover:hover){ .goal:hover .goal__draw path{ stroke-dashoffset:0;
+  transition:stroke-dashoffset .7s cubic-bezier(.45,0,.2,1) calc(var(--k,0) * .22s); } }
 .goal p{ transition:color .4s var(--ease); }
-.goal:hover p{ color:var(--ink); }
+@media (hover:hover){ .goal:hover p{ color:var(--ink); } }
 @media (prefers-reduced-motion: reduce){ .goal__draw path, .goal:hover .goal__draw path{ transition:none; } }
 @media (max-width:640px){ .goal__ink{ top:1.25rem; width:72px; height:23px; } }
+
+/* =====================================================================
+   MOBILE POLISH (Oct 2026) — fixes from a full phone audit.
+   Last in the file on purpose: each rule settles the earlier touch, phone and
+   plain-label blocks on the properties it names.
+   ===================================================================== */
+
+/* -- Shared ----------------------------------------------------------- */
+/* [hidden] always wins. The touch-density rule gives .fbtn display:inline-flex,
+   which beat the browser's [hidden]{display:none}: the '26–'27 Notes season
+   showed "Worksheets" and "Answer keys" chips that did nothing when tapped. */
+[hidden]{ display:none !important; }
+.nowrap{ white-space:nowrap; }
+/* Anchors the router scrolls to clear the fixed header. */
+.mcard, #nextMeeting{ scroll-margin-top:calc(var(--nav-h, 88px) + 1rem); }
+
+/* Toast sits clear of the back-to-top disc on a phone. */
+@media (max-width:640px){
+  .toast{ bottom:calc(1rem + 46px + .75rem); }
+}
+
+/* -- Viewers (meeting preview, atlas, photos) -------------------------- */
+/* Never taller than the box it's centred in. On iOS, vh is the toolbar-hidden
+   height, so 90vh overran the overlay whenever the toolbar showed. */
+.modal__panel{ overscroll-behavior:contain; }
+@media (any-pointer:coarse), (max-width:640px){
+  .modal__panel{ max-height:min(90vh, 100%); }
+}
+#meetingModal .modal__actions--lead{ border-top:0; padding-top:0; margin:0 0 1.5rem; }
+@media (any-pointer:coarse){
+  /* Without the desktop blur, a .72 scrim left the page crisp and readable around
+     every viewer (the photo caption sat on top of gallery thumbnails). */
+  .modal__scrim{ background:rgba(1,3,10,.9); touch-action:none; }
+  .plb .modal__scrim{ background:rgba(1,3,10,.95); }   /* full-screen photo: the page text read through at .9 */
+  .modal__close{ width:44px; height:44px; }
+  .plb__close{ background:rgba(4,7,15,.92); }
+}
+/* The meeting preview scrolls inside its panel on a phone, and its ✕ scrolled
+   away with the content (and long titles ran under it). A sticky float keeps it
+   in the corner the whole way down and lets only the first title line wrap
+   around it. At rest it sits exactly where the absolute one did. */
+@media (any-pointer:coarse), (max-width:640px){
+  #meetingModal .modal__close{ position:-webkit-sticky; position:sticky; top:-.9rem; float:right; right:auto;
+    margin:-.9rem calc(1.1rem - clamp(1.4rem,3vw,2.2rem)) .35rem .6rem; z-index:3; background:#0A1024; }
+}
+/* The full-screen photo viewer hides the header: on a phone the menu button sat
+   right under its ✕ and showed through it. */
+@media (any-pointer:coarse), (max-width:860px){
+  body.plb-open .nav, body.plb-open .back-top{ visibility:hidden; }
+}
+
+/* Atlas viewer on a phone: a square box for the square plates (16:10 cropped a
+   third off each object), and only the text scrolls, so the ✕ never leaves. */
+@media (max-width:740px){
+  .lightbox__panel{ display:flex; flex-direction:column; gap:1.1rem; overflow:hidden; }
+  .lightbox__media{ flex:none; align-self:center; width:min(100%, 46vh); width:min(100%, 46svh); aspect-ratio:1/1; min-height:0; }
+  .lightbox__body{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; }
+}
+/* Tablets and mid-size windows: the plate cell stretched to the text column's
+   height, taller than it was wide, and cover cropped the sides of the square
+   plates (the Ring Nebula's halo). Keep the cell square on tablets; the desktop
+   panel is left exactly as it was. */
+@media (min-width:741px) and (max-width:1023px){
+  .lightbox__media{ align-self:start; aspect-ratio:1/1; min-height:0; }
+}
+/* Short landscape screens: photo beside the text instead of a photo taller than
+   the screen with the details below the fold. */
+@media (orientation:landscape) and (max-height:500px){
+  .lightbox__panel{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:1.2rem; height:100%; overflow:hidden; padding:1rem; }
+  .lightbox__media{ width:auto; height:100%; aspect-ratio:auto; min-height:0; align-self:stretch; background:transparent;
+    display:flex; align-items:center; justify-content:center; border-radius:0; }
+  /* The picture itself carries the soft corners here: the box is wider than the
+     contained square, so rounding the box left the photo's own corners square. */
+  .lightbox__media img{ width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain; border-radius:var(--r-img); corner-shape:squircle; }
+  .lightbox__body{ min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:0 3rem 0 0; }
+  /* Photo viewer: the caption needs ~3rem, not 8, so the photo can use the screen. */
+  .plb__stage{ padding:.5rem; }
+  .plb__fig{ gap:.4rem; }
+  .plb__fig img{ max-height:calc(100vh - 3.25rem); max-height:calc(100dvh - 3.25rem); }
+}
+
+/* -- Events ------------------------------------------------------------ */
+/* The 2x2 lead photo kept a 3:2 ratio that ignored the row gap, so it ended a
+   few px short of the two tiles beside it. */
+.ph:first-child{ aspect-ratio:auto; }
+@media (any-pointer:coarse){
+  /* GPU budget: a base filter on every gallery tile held 51 offscreen buffers on
+     touch (this section loads after the main touch block, so it was never reset). */
+  .ph img{ filter:none; }
+  .gallery__more{ min-height:44px; }
+}
+@media (any-pointer:coarse) and (max-width:640px){
+  .plb__nav{ width:44px; height:44px; }
+}
+
+/* -- Home hero --------------------------------------------------------- */
+.home__tag{ text-wrap:balance; }
+@media (any-pointer:coarse){
+  /* GPU budget leftovers on the hero: the invisible blur behind the near-opaque
+     ghost button, and the atmosphere rim's screen blend (the touch block reset
+     ::before but missed ::after; over the dark sky normal blending reads the same). */
+  .btn--ghost{ backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .home__earth::after{ mix-blend-mode:normal; }
+}
+/* Phones: the Earth's contrast/saturation nudge is baked into the image instead
+   of a live filter layer over the whole sphere. Same pixels, no filter buffer. */
+@media (any-pointer:coarse) and (max-width:640px), (any-pointer:coarse) and (max-height:500px){
+  .home__earth{ background-image:url("assets/hero-earth-touch.webp"); filter:none; }
+  /* The rim's 2.5px blur held a ~1700px square buffer at 3x; its gradient is
+     already soft at phone size. */
+  .home__earth::after{ filter:none; }
+}
+/* Short portrait phones (iPhone SE in Safari, ~553px visible): "Join the club"
+   was cut off at the bottom of the screen. */
+@media (max-width:640px) and (max-height:620px){
+  .home{ padding-top:4.6rem; }
+  .home__eyebrow{ margin-top:.9rem; }
+  .home__stage{ min-height:0; }
+  .home__foot{ gap:.8rem; }
+}
+/* Landscape phones were getting the tablet hero: a 405px astronaut over the
+   middle of the wordmark and both buttons below the fold. Same composition as
+   portrait, scaled to a 390px-tall screen. */
+@media (any-pointer:coarse) and (orientation:landscape) and (max-height:500px){
+  .home{ padding-top:4.9rem; padding-bottom:1rem; }
+  .home__eyebrow{ margin:.2rem 0 0; }
+  .home__stage{ min-height:0; }
+  .home__title{ font-size:clamp(2rem, 7.4vw, 3.6rem); }
+  .home__astro-wrap{ width:min(30vw, 58vh); top:58%; }
+  .home__foot{ padding-top:.4rem; gap:.7rem; }
+  .home__actions .btn{ padding-top:.8rem; padding-bottom:.8rem; }
+  .home__glow{ filter:none; }
+  /* Below 700px wide the Earth kept its portrait size, which in a 375px-tall hero
+     put its limb behind the header; use the landscape size everywhere here. */
+  .home__earth-wrap{ width:142vmin; height:142vmin; bottom:-80vmin; }
+  /* <=640px landscape (568x320, 640x360) also matches the phone block, which
+     stacks the buttons full-width; side by side they leave the stage its room. */
+  .home__actions{ width:auto; flex-direction:row; }
+  .home__actions .btn{ width:auto; }
+}
+
+/* -- About ------------------------------------------------------------- */
+/* Let the last meeting scroll clear of the 72px fade at the timeline's end. */
+.arc__track::after{ content:""; flex:0 0 56px; }
+/* The line drawings play on hover, which a phone never has (and iOS doesn't give
+   a plain list item :hover on tap). On touch each one draws as it scrolls in. */
+@media (hover:none){
+  .goal.is-visible .goal__draw path{ stroke-dashoffset:0; }
+}
+@media (hover:none) and (prefers-reduced-motion:no-preference){
+  .goal.is-visible .goal__draw path{ transition:stroke-dashoffset .7s cubic-bezier(.45,0,.2,1) calc(.35s + var(--k,0) * .22s); }
+}
+/* "Meeting Archive" wraps at 360px; keep a wrapped Continue title compact. */
+@media (max-width:640px){
+  .route__next-title{ line-height:1.1; }
+}
+
+/* -- Join -------------------------------------------------------------- */
+/* Officer rows: the name + role link to Team, the address is its own mail link.
+   The divider moves from the link to the row so the look is unchanged, and the
+   last row drops its rule (it doubled up with the social row's top border). */
+/* The club address picks up .joincard__mail for its link colour only: same size
+   as before, and its transparent hover border doesn't add height. */
+.field__mail.joincard__mail{ font-size:inherit; margin-bottom:-1px; }
+.joincard__officers li{ padding:.75rem 0; border-bottom:1px solid var(--line); }
+.joincard__officers li:last-child{ border-bottom:0; }
+.joincard__officers a{ padding:0; border:0; border-radius:0; background:none; }
+@media (hover:hover){ .joincard__officers a:hover{ padding:0; border:0; background:none; } }
+.joincard__officers .jo__who{ display:block; }
+.joincard__officers .jo__mail{ display:table; margin-top:.3rem; }
+@media (hover:hover){ .joincard__officers .jo__mail:hover{ text-decoration:underline; text-underline-offset:3px; } }
+/* Next meeting: once it starts, the clock gives way to the label
+   ("Happening now", then "Last meeting") instead of a dead row of zeros. */
+.nextmeet[data-nm-state="now"] .nextmeet__clock,
+.nextmeet[data-nm-state="past"] .nextmeet__clock{ display:none; }
+
+/* -- FAQ --------------------------------------------------------------- */
+@media (max-width:900px){
+  /* With "Ask us" stacked under the list, opening a question made the browser
+     hold that card still (scroll anchoring) and the page jumped by the answer's
+     height, sliding the question under the header. */
+  body[data-route="/faq"]{ overflow-anchor:none; }
+  /* The list's last rule already closes it; a second rule 32px below doubled up. */
+  .faq-side{ border-top:0; }
+}
+
+/* -- Touch targets (44px) without changing how anything looks --------- */
+@media (any-pointer:coarse){
+  .tcard__mail{ min-height:44px; }
+  /* Grow the hit area, not the box. */
+  .arc__year, .field__copy{ position:relative; }
+  .arc__year::after{ content:""; position:absolute; inset:-3px 0; }
+  .field__copy::after{ content:""; position:absolute; inset:-9px; }
+  .slink, .faq-side__discord{ padding-block:11px; margin-block:-11px; }
+  .joincard__officers .jo__mail{ padding-block:11px; margin-block:calc(.3rem - 11px) -11px; }
+  /* The officer's name row reaches up over the row's top padding (Team link). */
+  .joincard__officers .jo__who{ padding-top:.75rem; margin-top:-.75rem; }
+  /* Email links with a hover underline grow their hit area with a pseudo-element,
+     so the underline (on touch laptops) stays under the text, not 13px below it. */
+  .joincard__mail, .faq-side__mail{ position:relative; min-height:0; }
+  .joincard__mail::after, .faq-side__mail::after{ content:""; position:absolute; inset:-9px 0; }
+}
+
+/* -- Phones: less dead air between the last Continue row and the footer -- */
+@media (max-width:640px){
+  .route:not(.route--home){ padding-bottom:4.5rem; }
+  body:not([data-route="/"]) .footer{ margin-top:2.5rem; }
+}

@@ -22,7 +22,7 @@
                 eyebrow): a well-proportioned editorial gothic at a medium weight
                 (500) — an intentional label cut next to Bricolage. (No monospace.) -->
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css?v=20" />
+<link rel="stylesheet" href="styles.css?v=22" />
 </head>
 <body>
 <a class="skip-link" href="#/">Skip to content</a>
@@ -120,7 +120,7 @@
 
     <div class="home__glow" aria-hidden="true"></div>
 
-    <p class="home__eyebrow">Fremont High School · Sunnyvale, California</p>
+    <p class="home__eyebrow">Fremont High School&nbsp;· Sunnyvale,&nbsp;California</p>
 
     <div class="home__stage">
       <h1 class="home__title" aria-label="Astrophysics Club"><span>Astrophysics</span> <span>Club</span></h1>
@@ -133,7 +133,7 @@
              it at 331 KB. Phones still take 720w, desktop still takes the master. -->
         <img class="home__astro" src="assets/astronaut.png"
              srcset="assets/astronaut-sm.png 720w, assets/astronaut-md.png 1024w, assets/astronaut.png 1536w"
-             sizes="(max-width:640px) 214px, (max-width:980px) 440px, 560px"
+             sizes="(max-width:640px) 214px, (any-pointer:coarse) and (max-height:500px) 230px, (max-width:980px) 440px, 560px"
              alt="" aria-hidden="true" draggable="false" decoding="async"
              onerror="this.style.visibility='hidden'" />
       </div>
@@ -253,7 +253,7 @@
 <section class="route route--notes" data-route="/notes">
   <div class="chapter">
     <h1 class="chapter__title split-chars">Lecture Notes</h1>
-    <p class="chapter__lede" id="notesLede">LaTeX handouts compiling notes across all of our meetings. Hover a card to see its topics.</p>
+    <p class="chapter__lede" id="notesLede">LaTeX handouts compiling notes across all of our meetings.</p>
     <div class="chapter__rule"><span></span><span></span><span></span></div>
   </div>
 
@@ -431,7 +431,7 @@
           <div class="field__head"><h2 class="field__title">Reach us</h2></div>
 
           <div class="joincard__mailrow">
-            <a class="field__mail js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=fhsastrophysics@gmail.com" target="_blank" rel="noopener" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+            <a class="field__mail joincard__mail js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=fhsastrophysics@gmail.com" target="_blank" rel="noopener" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
             <button class="field__copy js-copy-btn" data-copy="fhsastrophysics@gmail.com" aria-label="Copy the club email address" title="Copy email">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
             </button>
@@ -440,8 +440,10 @@
           <p class="joincard__note">Email our club email for questions, ideas, or offerings to help run a meeting. Or reach us directly:</p>
 
           <ul class="joincard__officers">
-            <li><a href="#/team" data-route="/team"><span class="jo__name">Abir Mehta</span><span class="jo__role">Co-Founder &amp; President</span><span class="jo__mail">amehta251@student.fuhsd.org</span></a></li>
-            <li><a href="#/team" data-route="/team"><span class="jo__name">Dhruv Lagu</span><span class="jo__role">Co-Founder &amp; Vice President</span><span class="jo__mail">dlagu234@student.fuhsd.org</span></a></li>
+            <!-- Name + role go to the Team page; the address is its own mail link (it
+                 used to sit inside the Team link, so tapping an email opened Team). -->
+            <li><a class="jo__who" href="#/team" data-route="/team"><span class="jo__name">Abir Mehta</span><span class="jo__role">Co-Founder &amp; President</span></a><a class="jo__mail js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=amehta251@student.fuhsd.org" target="_blank" rel="noopener" data-copy="amehta251@student.fuhsd.org">amehta251@student.fuhsd.org</a></li>
+            <li><a class="jo__who" href="#/team" data-route="/team"><span class="jo__name">Dhruv Lagu</span><span class="jo__role">Co-Founder &amp; Vice President</span></a><a class="jo__mail js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=dlagu234@student.fuhsd.org" target="_blank" rel="noopener" data-copy="dlagu234@student.fuhsd.org">dlagu234@student.fuhsd.org</a></li>
           </ul>
 
           <div class="joincard__social">
@@ -499,7 +501,7 @@
         <h2 class="faq-side__title">Anything not covered here?</h2>
         <p class="faq-side__desc">These are the questions we hear before a first meeting. If yours isn't covered, just email us and we'll write back!</p>
         <div class="faq-side__actions">
-          <a class="faq-side__mail" href="mailto:fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
+          <a class="faq-side__mail js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=fhsastrophysics@gmail.com" target="_blank" rel="noopener" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a>
           <a class="faq-side__discord" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener">
             <span>Or ask on Discord</span>
             <span aria-hidden="true">↗</span>
@@ -518,7 +520,7 @@
       </details>
       <details class="faq-item">
         <summary class="faq-q">When and where are meetings held?</summary>
-        <div class="faq-a"><p>Meetings are held biweekly on Wednesdays at lunch in Room 91 (Mr. Bloom’s Room). Meetings will start around 1:00 PM and will last through the end of lunch. Check out when our next meeting is <a class="ulink" href="#/join" data-route="/join">here</a>.</p></div>
+        <div class="faq-a"><p>Meetings are held biweekly on Wednesdays at lunch in Room 91 (Mr. Bloom’s Room). Meetings will start around 1:00 PM and will last through the end of lunch. Check out when our next meeting is <a class="ulink" href="#/join" data-route="/join" data-scroll="#nextMeeting">here</a>.</p></div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Will I have the chance to become a student leader?</summary>
@@ -558,7 +560,7 @@
       </details>
       <details class="faq-item">
         <summary class="faq-q">How do I contact the officers?</summary>
-        <div class="faq-a"><p>You can email us at <a class="ulink" href="mailto:fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a> or send a message via <a class="ulink" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener">Discord</a>. If you want to reach out to individual officers, we have our emails listed in the <a class="ulink" href="#/team" data-route="/team">team</a> section of our website.</p></div>
+        <div class="faq-a"><p>You can email us at <a class="ulink js-copy" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=fhsastrophysics@gmail.com" target="_blank" rel="noopener" data-copy="fhsastrophysics@gmail.com">fhsastrophysics@gmail.com</a> or send a message via <a class="ulink" href="https://discord.gg/CHbXcuYYpp" target="_blank" rel="noopener">Discord</a>. If you want to reach out to individual officers, we have our emails listed in the <a class="ulink" href="#/team" data-route="/team">team</a> section of our website.</p></div>
       </details>
       </div>
     </div>
@@ -667,6 +669,6 @@
   </div>
 </footer>
 
-<script src="app.js?v=39"></script>
+<script src="app.js?v=41"></script>
 </body>
 </html>
