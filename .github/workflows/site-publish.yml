@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
       - name: Promote site-launch to main when due
         env:
-          PUBLISH_AT: "2026-10-21T20:35:00Z"
+          PUBLISH_AT: "2026-10-21T20:34:00Z"
           GH_TOKEN: ${{ github.token }}
         run: |
           now=$(date -u +%s); due=$(date -u -d "$PUBLISH_AT" +%s)
