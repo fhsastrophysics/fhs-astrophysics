@@ -144,7 +144,8 @@
 
   /* -------------------------------------------------------------------
      EVENTS — guest speakers. One entry per event; photos are numbered
-     01..count under dir/{full,mid,thumb}/NN.webp (2400 / 1400 / 800px, colour-graded).
+     01..NN under dir/{full,mid,thumb}/NN.webp (2400 / 1400 / 800px, colour-graded).
+     `photos` lists which files to show, in order; the first 9 sit above "See all".
      `youtube` is the YouTube video ID (the part after v=); null = no video block.
      ------------------------------------------------------------------- */
   const EVENTS = [
@@ -160,10 +161,11 @@
       desc: "Dr. Shostak, who also hosts the Big Picture Science podcast, joined us at lunch for a talk on the search for extraterrestrial intelligence, followed by questions from the room. Our first guest speaker of the ’26–’27 year.",
       youtube: null,
       dir: "assets/events/shostak",
-      count: 51,
       poster: 33,
-      // Photos shown before "See all" — the strongest wide shots first.
-      lead: [33, 23, 31, 29, 22, 30, 20, 4, 16],
+      // 21 of the 51 shots, near-duplicates dropped. Strongest wide shots lead.
+      photos: [33, 23, 31, 29, 22, 30, 20, 4, 16,
+               1, 2, 7, 13, 14, 18, 24, 32, 37, 39, 44, 47],
+      credit: "Photos taken by Puneeth Salgundi",
     },
   ];
   const evPhoto = (ev, n, size) => `${ev.dir}/${size}/${String(n).padStart(2, "0")}.webp`;
@@ -1080,10 +1082,10 @@
       const art = el("article", "event reveal");
       art.style.setProperty("--i", Math.min(i, 5));
       art.id = `event-${ev.slug}`;
-      const order = ev.lead.concat(Array.from({ length: ev.count }, (_, k) => k + 1).filter((n) => !ev.lead.includes(n)));
+      const order = ev.photos;
       art.dataset.order = order.join(",");
       const tiles = order.map((n, k) => `
-        <button type="button" class="ph${k >= GALLERY_LEAD ? " ph--more" : ""}" data-n="${n}" data-k="${k}" aria-label="Open photo ${k + 1} of ${ev.count}" ${k >= GALLERY_LEAD ? "hidden" : ""}>
+        <button type="button" class="ph${k >= GALLERY_LEAD ? " ph--more" : ""}" data-n="${n}" data-k="${k}" aria-label="Open photo ${k + 1} of ${ev.photos.length}" ${k >= GALLERY_LEAD ? "hidden" : ""}>
           <img src="${evPhoto(ev, n, "thumb")}" srcset="${evPhoto(ev, n, "thumb")} 800w, ${evPhoto(ev, n, "mid")} 1400w"
                sizes="${k === 0 ? "(max-width:640px) 100vw, (max-width:980px) 66vw, 640px" : "(max-width:640px) 50vw, (max-width:980px) 33vw, 320px"}"
                alt="" loading="lazy" decoding="async" width="800" height="533">
@@ -1107,7 +1109,8 @@
         <div class="event__gallery">
           <h3 class="event__gallery-title">From the room</h3>
           <div class="gallery" data-ev="${i}">${tiles}</div>
-          ${ev.count > GALLERY_LEAD ? `<button type="button" class="gallery__more" data-more="${i}"><span>See all ${ev.count} photos</span><span aria-hidden="true">↓</span></button>` : ""}
+          ${ev.photos.length > GALLERY_LEAD ? `<button type="button" class="gallery__more" data-more="${i}"><span>See all ${ev.photos.length} photos</span><span aria-hidden="true">↓</span></button>` : ""}
+          ${ev.credit ? `<p class="event__credit">${ev.credit}</p>` : ""}
         </div>`;
       list.appendChild(art);
     });
@@ -1149,10 +1152,10 @@
     const tier = plbTier();
     img.classList.remove("is-in");
     img.src = evPhoto(ev, n, tier);
-    img.alt = `${ev.name} — photo ${PLB.k + 1} of ${ev.count}`;
+    img.alt = `${ev.name} — photo ${PLB.k + 1} of ${ev.photos.length}`;
     img.onload = () => img.classList.add("is-in");
     $("#plbTitle").textContent = `${ev.name} · ${ev.date}`;
-    $("#plbCount").textContent = `${PLB.k + 1} / ${ev.count}`;
+    $("#plbCount").textContent = `${PLB.k + 1} / ${ev.photos.length}`;
     // Warm the neighbours so paging feels instant.
     [1, -1].forEach((d) => { const p = new Image(); p.src = evPhoto(ev, PLB.order[(PLB.k + d + PLB.order.length) % PLB.order.length], tier); });
   }
@@ -1161,7 +1164,7 @@
     const lb = $("#photoLightbox"); if (!lb) return;
     const art = $(`#event-${ev.slug}`);
     PLB.ev = ev;
-    PLB.order = (art && art.dataset.order ? art.dataset.order.split(",").map(Number) : Array.from({ length: ev.count }, (_, i) => i + 1));
+    PLB.order = (art && art.dataset.order ? art.dataset.order.split(",").map(Number) : ev.photos);
     if (!lb.classList.contains("open")) { PLB.last = document.activeElement; pushOverlay("photo"); }
     plbShow(k);
     lb.classList.add("open");

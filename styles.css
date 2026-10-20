@@ -2538,3 +2538,6 @@ body[data-route="/"] .footer{ margin-top:0; }
   .route:not(.route--home){ padding-bottom:4.5rem; }
   body:not([data-route="/"]) .footer{ margin-top:2.5rem; }
 }
+
+/* Events: photographer credit under the gallery */
+.event__credit{ margin:1rem 0 0; font-size:.95rem; color:var(--ink-soft); }
