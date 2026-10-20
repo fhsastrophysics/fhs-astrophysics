@@ -7,6 +7,11 @@ on:
   schedule:
     - cron: '*/5 19-22 * * 3'   # every 5 min, Wed 19:00-22:59 UTC (covers 1:35 PM PT year-round)
   workflow_dispatch: {}
+# Both scheduled workflows push to main; one shared group runs them one at a time
+# so neither push is rejected as non-fast-forward.
+concurrency:
+  group: main-writer
+  cancel-in-progress: false
 permissions:
   contents: write
 jobs:
