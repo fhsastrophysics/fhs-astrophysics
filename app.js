@@ -64,6 +64,7 @@
     22: { title: "The Roman Space Telescope",            meeting: 1,  type: "Lecture Notes", cat: "notes",    pages: 4, yr: "26", file: "2026-27/RomanTelescope.pdf" },
     23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 6, yr: "26", file: "2026-27/SETI.pdf" },
     24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FermiParadox.pdf" },
+    25: { title: "The 2026 Nobel Prize in Physics",       meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/NobelPrize2026.pdf" },
   };
 
   const MEETINGS = [
@@ -131,6 +132,10 @@
       slides: "", deckUrl: "https://www.canva.com/design/DAHXF5xio1o/KlsxOGQwIrWpS5J8WxpikQ/view?embed", notes: [24],
       summary: "If intelligent life is possible, why haven't we seen it? Colonies that launch more colonies could fill the galaxy many times over, so we weigh the ways out: how uncertain the Drake equation really is, the chance that we are alone, and the Great Filter.",
       topics: ["Fermi Paradox", "Colony Growth", "Drake Equation", "Great Filter"] },
+    { n: 17, disp: "4", yr: "26", kind: "Lecture", short: "The 2026 Nobel Prize", title: "The 2026 Nobel Prize in Physics",
+      slides: "", deckUrl: "https://www.canva.com/design/DAHYNQOqiVg/oFgtN8YhYr-hWmXeNzDptQ/view?embed", notes: [25],
+      summary: "The 2026 Nobel Prize in Physics went to Francis Halzen for the IceCube Neutrino Observatory. What a neutrino is, how a cubic kilometre of South Pole ice catches one through a cone of blue light, and what IceCube found: Bert and Ernie, the 2017 blazar, and the Milky Way in neutrinos.",
+      topics: ["Nobel Prize 2026", "Neutrinos", "IceCube", "Blazars"] },
   ];
 
   const OFFICERS = [
