@@ -66,7 +66,7 @@
     24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FermiParadox.pdf" },
     25: { title: "The 2026 Nobel Prize in Physics",       meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/NobelPrize2026.pdf" },
     26: { title: "Light & Distance",                      meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/LightAndDistance.pdf" },
-    27: { title: "Light & Distance: Group Packet",        meeting: 5,  type: "Worksheet",     cat: "practice", pages: 2, yr: "26", file: "2026-27/LightAndDistancePacket.pdf" },
+    27: { title: "Light & Distance: Group Packet",        meeting: 5,  type: "Worksheet",     cat: "practice", pages: 4, yr: "26", file: "2026-27/LightAndDistancePacket.pdf" },
   };
 
   const MEETINGS = [
