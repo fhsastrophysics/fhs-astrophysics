@@ -65,6 +65,8 @@
     23: { title: "The Search for Extraterrestrial Intelligence", meeting: 2, type: "Lecture Notes", cat: "notes", pages: 6, yr: "26", file: "2026-27/SETI.pdf" },
     24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FermiParadox.pdf" },
     25: { title: "The 2026 Nobel Prize in Physics",       meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/NobelPrize2026.pdf" },
+    26: { title: "Light & Distance",                      meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/LightAndDistance.pdf" },
+    27: { title: "Light & Distance: Group Packet",        meeting: 5,  type: "Worksheet",     cat: "practice", pages: 2, yr: "26", file: "2026-27/LightAndDistancePacket.pdf" },
   };
 
   const MEETINGS = [
@@ -136,6 +138,10 @@
       slides: "", deckUrl: "https://www.canva.com/design/DAHYNQOqiVg/oFgtN8YhYr-hWmXeNzDptQ/view?embed", notes: [25],
       summary: "The 2026 Nobel Prize in Physics went to Francis Halzen for the IceCube Neutrino Observatory. What a neutrino is, how a cubic kilometre of South Pole ice catches one through a cone of blue light, and what IceCube found: Bert and Ernie, the 2017 blazar, and the Milky Way in neutrinos.",
       topics: ["Nobel Prize 2026", "Neutrinos", "IceCube", "Blazars"] },
+    { n: 18, disp: "5", yr: "26", kind: "Lecture", short: "Light & Distance", title: "Light & Distance",
+      slides: "", deckUrl: "https://www.canva.com/design/DAHZt8sNWYw/R4iDLvhBXp3IaWZWshhFBA/view?embed", notes: [26, 27],
+      summary: "How do we know how far away a star is if we can never go there? Light as a measuring stick, from the light-year to timing lasers off mirrors left on the Moon, then the small-angle approximation, and finally deriving the parallax formula and the parsec, with a team Kahoot to finish.",
+      topics: ["Speed of Light", "Lunar Laser Ranging", "Small-Angle Approximation", "Parallax"] },
   ];
 
   const OFFICERS = [
