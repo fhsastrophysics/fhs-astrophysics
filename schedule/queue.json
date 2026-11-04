@@ -22,7 +22,8 @@
   {
     "id": "2627-5-recap",
     "sendAtUTC": "2026-11-04T21:35:00Z",
-    "sent": false,
-    "content": "@everyone Meeting Recap, Wednesday, November 4th:\n\nToday we measured the universe with light and angles. We covered the speed of light and light-years, timing lasers off the mirrors Apollo astronauts left on the Moon, the small-angle approximation, and how parallax gives us the parsec, then finished with a team Kahoot.\n\nSlides and notes: https://fhsastrophysics.github.io/fhs-astrophysics/#meeting-2627-5\n\nNEXT MEETING: Wednesday, November 18th in the Fair Oaks Room, featuring guest speaker Dr. Calvin Leung, Miller Fellow at UC Berkeley and former NASA Einstein Fellow, with a PhD in Physics from MIT! He'll talk about fast radio bursts: using neutron stars and radio telescopes to find the missing matter. Don't miss out!\n\nHave a great week everybody, we hope to see you soon!"
+    "sent": true,
+    "content": "@everyone Meeting Recap, Wednesday, November 4th:\n\nToday we measured the universe with light and angles. We covered the speed of light and light-years, timing lasers off the mirrors Apollo astronauts left on the Moon, the small-angle approximation, and how parallax gives us the parsec, then finished with a team Kahoot.\n\nSlides and notes: https://fhsastrophysics.github.io/fhs-astrophysics/#meeting-2627-5\n\nNEXT MEETING: Wednesday, November 18th in the Fair Oaks Room, featuring guest speaker Dr. Calvin Leung, Miller Fellow at UC Berkeley and former NASA Einstein Fellow, with a PhD in Physics from MIT! He'll talk about fast radio bursts: using neutron stars and radio telescopes to find the missing matter. Don't miss out!\n\nHave a great week everybody, we hope to see you soon!",
+    "sentAt": "2026-11-04T21:35:26.052224+00:00"
   }
 ]
