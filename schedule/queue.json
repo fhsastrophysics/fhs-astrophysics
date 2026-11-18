@@ -29,7 +29,8 @@
   {
     "id": "2627-6-recap",
     "sendAtUTC": "2026-11-18T21:35:00Z",
-    "sent": false,
-    "content": "@everyone Meeting Recap, Wednesday, November 18th:\n\nThank you to everyone who came out to hear our guest speaker Dr. Calvin Leung from UC Berkeley talk about fast radio bursts and his research, and to everyone who asked him questions! A huge thank you to Dr. Leung for taking the time to visit our club.\n\nNotes from the talk will be up on our website soon: https://fhsastrophysics.github.io/fhs-astrophysics/\n\nHave a great week everybody, we hope to see you soon!"
+    "sent": true,
+    "content": "@everyone Meeting Recap, Wednesday, November 18th:\n\nThank you to everyone who came out to hear our guest speaker Dr. Calvin Leung from UC Berkeley talk about fast radio bursts and his research, and to everyone who asked him questions! A huge thank you to Dr. Leung for taking the time to visit our club.\n\nNotes from the talk will be up on our website soon: https://fhsastrophysics.github.io/fhs-astrophysics/\n\nHave a great week everybody, we hope to see you soon!",
+    "sentAt": "2026-11-18T21:36:37.982147+00:00"
   }
 ]
