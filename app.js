@@ -161,6 +161,24 @@
      ------------------------------------------------------------------- */
   const EVENTS = [
     {
+      slug: "leung",
+      kind: "Guest talk",
+      talk: "Modern Cosmology",
+      date: "November 18, 2026",
+      iso: "2026-11-18",
+      where: "Fair Oaks Room",
+      name: "Dr. Calvin Leung",
+      role: "Miller Fellow at UC Berkeley",
+      desc: "Dr. Leung, a former NASA Einstein Fellow who works on fast radio bursts with the CHIME telescope, joined us at lunch for a talk on modern cosmology. Our second guest speaker of the ’26-’27 year.",
+      youtube: null,
+      dir: "assets/events/leung",
+      poster: 27,
+      // 12 of the 31 shots, near-duplicates and the empty-room shot dropped. Closest shots lead.
+      photos: [27, 24, 13, 23, 12, 9, 30, 28, 4,
+               8, 20, 25],
+      credit: null,
+    },
+    {
       slug: "shostak",
       kind: "Guest talk",
       talk: "The Search for Extraterrestrial Intelligence",
