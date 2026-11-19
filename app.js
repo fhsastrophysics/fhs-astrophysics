@@ -163,20 +163,20 @@
     {
       slug: "leung",
       kind: "Guest talk",
-      talk: "Modern Cosmology",
+      talk: "Fast Radio Bursts",
       date: "November 18, 2026",
       iso: "2026-11-18",
       where: "Fair Oaks Room",
       name: "Dr. Calvin Leung",
       role: "Miller Fellow at UC Berkeley",
-      desc: "Dr. Leung, a former NASA Einstein Fellow who works on fast radio bursts with the CHIME telescope, joined us at lunch for a talk on modern cosmology. Our second guest speaker of the ’26-’27 year.",
+      desc: "Dr. Leung joined us at lunch to talk about his research on fast radio bursts: split-second flashes of radio waves from far outside our galaxy, and how radio telescopes like CHIME catch them. Our second guest speaker of the ’26-’27 year.",
       youtube: null,
       dir: "assets/events/leung",
       poster: 27,
       // 12 of the 31 shots, near-duplicates and the empty-room shot dropped. Closest shots lead.
       photos: [27, 24, 13, 23, 12, 9, 30, 28, 4,
                8, 20, 25],
-      credit: null,
+      credit: "Photos taken by Arjun Tulpule",
     },
     {
       slug: "shostak",
