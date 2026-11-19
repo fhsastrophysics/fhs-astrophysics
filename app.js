@@ -66,7 +66,7 @@
     24: { title: "The Fermi Paradox",                     meeting: 3,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FermiParadox.pdf" },
     25: { title: "The 2026 Nobel Prize in Physics",       meeting: 4,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/NobelPrize2026.pdf" },
     26: { title: "Light & Distance",                      meeting: 5,  type: "Lecture Notes", cat: "notes",    pages: 6, yr: "26", file: "2026-27/LightAndDistance.pdf" },
-    27: { title: "Light & Distance: Group Packet",        meeting: 5,  type: "Worksheet",     cat: "practice", pages: 4, yr: "26", file: "2026-27/LightAndDistancePacket.pdf" },
+    27: { title: "Light & Distance: Group Packet",        meeting: 5,  type: "Worksheet",     cat: "practice", pages: 4, yr: "26", file: "2026-27/LightAndDistancePacket.pdf" },    28: { title: "Fast Radio Bursts",                     meeting: 6,  type: "Lecture Notes", cat: "notes",    pages: 7, yr: "26", file: "2026-27/FastRadioBursts.pdf" },
   };
 
   const MEETINGS = [
@@ -143,7 +143,7 @@
       summary: "How do we know how far away a star is if we can never go there? Light as a measuring stick, from the light-year to timing lasers off mirrors left on the Moon, then the small-angle approximation, and finally deriving the parallax formula and the parsec, with a team Kahoot to finish.",
       topics: ["Speed of Light", "Lunar Laser Ranging", "Small-Angle Approximation", "Parallax"] },
     { n: 19, disp: "6", yr: "26", kind: "Guest Speaker", short: "Dr. Calvin Leung", title: "Guest Speaker: Dr. Calvin Leung",
-      slides: "", deckUrl: "https://www.canva.com/design/DAHbOgk8Arc/wmmXGUFAaiun9GHCwS6l5w/view?embed", notes: [],
+      slides: "", deckUrl: "https://www.canva.com/design/DAHbOgk8Arc/wmmXGUFAaiun9GHCwS6l5w/view?embed", notes: [28],
       summary: "A guest talk by Dr. Calvin Leung on fast radio bursts: using neutron stars and radio telescopes to find the missing matter.",
       topics: ["Fast Radio Bursts"] },
   ];
