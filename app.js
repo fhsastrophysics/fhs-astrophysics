@@ -177,9 +177,9 @@
       youtube: null,
       dir: "assets/events/leung",
       poster: 27,
-      // 12 of the 31 shots, near-duplicates and the empty-room shot dropped. Closest shots lead.
-      photos: [27, 24, 13, 23, 12, 9, 30, 28, 4,
-               8, 20, 25],
+      // 10 of the 31 shots, near-duplicates and the empty-room shot dropped. Closest shots lead.
+      photos: [27, 24, 23, 9, 30, 28, 4, 8, 20,
+               25],
       credit: "Photos taken by Arjun Tulpule",
     },
     {
