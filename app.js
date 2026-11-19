@@ -142,6 +142,10 @@
       slides: "", deckUrl: "https://www.canva.com/design/DAHZt8sNWYw/R4iDLvhBXp3IaWZWshhFBA/view?embed", notes: [26, 27],
       summary: "How do we know how far away a star is if we can never go there? Light as a measuring stick, from the light-year to timing lasers off mirrors left on the Moon, then the small-angle approximation, and finally deriving the parallax formula and the parsec, with a team Kahoot to finish.",
       topics: ["Speed of Light", "Lunar Laser Ranging", "Small-Angle Approximation", "Parallax"] },
+    { n: 19, disp: "6", yr: "26", kind: "Guest Speaker", short: "Dr. Calvin Leung", title: "Guest Speaker: Dr. Calvin Leung",
+      slides: "", deckUrl: "https://www.canva.com/design/DAHbOgk8Arc/wmmXGUFAaiun9GHCwS6l5w/view?embed", notes: [],
+      summary: "A guest talk by Dr. Calvin Leung on fast radio bursts: using neutron stars and radio telescopes to find the missing matter.",
+      topics: ["Fast Radio Bursts"] },
   ];
 
   const OFFICERS = [
